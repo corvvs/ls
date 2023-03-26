@@ -32,8 +32,12 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	size_t			i = 0;
 	YOYO_ASSERT(names != NULL);
 	while (true) {
+		errno = 0;
 		entry = readdir(dir);
 		if (entry == NULL) {
+			if (errno) {
+				yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, dir_path, strerror(errno));
+			}
 			break;
 		}
 		if (!m->opt->show_dot_files && entry->d_name[0] == '.') {
