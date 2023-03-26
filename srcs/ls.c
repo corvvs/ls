@@ -1,6 +1,12 @@
 #include "ls.h"
 
 
+static void	swap_item(t_file_item** a, t_file_item** b) {
+	t_file_item*	c = *a;
+	*a = *b;
+	*b = c;
+}
+
 static t_filetype	determine_file_type(struct stat* st) {
 	if (S_ISREG(st->st_mode)) {
 		return YO_FT_REGULAR;
@@ -11,12 +17,6 @@ static t_filetype	determine_file_type(struct stat* st) {
 	} else {
 		return YO_FT_OTHER;
 	}
-}
-
-static void	swap(t_file_item** a, t_file_item** b) {
-	t_file_item*	c = *a;
-	*a = *b;
-	*b = c;
 }
 
 // ファイルアイテム(へのポインタ)の配列を, 辞書順にソートする
@@ -36,9 +36,47 @@ static void	sort_by_is_dir(size_t len, t_file_item** pointers) {
 			break;
 		}
 		if (pointers[i]->actual_file_type != YO_FT_DIR && inz < i) {
-			swap(&pointers[i], &pointers[inz]);
+			swap_item(&pointers[i], &pointers[inz]);
 		}
 	}
+}
+
+// item が `.` または `..` かどうか
+static bool	is_dot_dir(const t_file_item* item) {
+	return ft_strncmp(item->name, ".", 1) == 0 || ft_strncmp(item->name, "..", 2) == 0;
+}
+
+// シンボリックリンク item のリンク先に関する情報を取得する
+static bool	investigate_simlink(t_file_item* item) {
+	assert(item->actual_file_type == YO_FT_LINK);
+	const char* path = item->path;
+
+	// [リンク先の名前を取得する]
+	size_t link_len = item->st.st_size + 1;
+	char* link_to = malloc(link_len);
+	assert(link_to != NULL);
+	if (link_to == NULL) {
+		return false;
+	}
+	errno = 0;
+	ssize_t actual_len = readlink(path, link_to, link_len);
+	DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
+	if (actual_len < 0) {
+		item->actual_file_type = YO_FT_BAD_LINK;
+		return true;
+	}
+	link_to[actual_len] = '\0';
+	item->link_to = link_to;
+
+	// [リンク先の情報を取得する]
+	struct stat	st;
+	errno = 0;
+	int rv = lstat(link_to, &st);
+	if (rv < 0) {
+		DEBUGERR("link_to = %s, errno = %d, %s", link_to, errno, strerror(errno));
+		item->actual_file_type = YO_FT_BAD_LINK;
+	}
+	return true;
 }
 
 void	exec_ls(t_master* m, t_lsls* ls) {
@@ -63,6 +101,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 			continue;
 		}
 		t_filetype	ft = determine_file_type(&item->st);
+		item->link_to = NULL;
 		pointers[n_ok] = item;
 		item->actual_file_type = ft;
 		item->nominal_file_type = ft;
@@ -70,8 +109,11 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 		item->path = path;
 		item->path_len = ft_strlen(path);
 		item->errn = errno;
-		if ((ft_strncmp(item->name, ".", 1) == 0 || ft_strncmp(item->name, "..", 2) == 0) && !ls->is_root) {
+		if (is_dot_dir(item) && !ls->is_root) {
 			item->actual_file_type = YO_FT_REGULAR;
+		}
+		if (ft == YO_FT_LINK) {
+			investigate_simlink(item);
 		}
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
@@ -100,6 +142,9 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 	output_dirs(m, n_ok, n_dirs, pointers + n_no_dirs);
 
 	// [後始末]
+	for (size_t i = 0; i < n_ok; ++i) {
+		free(items[i].link_to);
+	}
 	free(items);
 	free(pointers);
 }

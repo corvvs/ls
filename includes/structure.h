@@ -10,6 +10,7 @@ typedef enum e_filetype {
 	YO_FT_REGULAR,
 	YO_FT_DIR,
 	YO_FT_LINK,
+	YO_FT_BAD_LINK,
 	YO_FT_OTHER,
 	YO_FT_ERROR,
 }	t_filetype;
@@ -51,6 +52,8 @@ typedef struct s_file_item {
 	const char*	name;
 	// ファイルのパス(相対または絶対)
 	const char*	path;
+	// シンボリックリンクのリンク先
+	char*	link_to;
 	// path の長さ
 	size_t		path_len;
 	// 実質的なファイルの種別

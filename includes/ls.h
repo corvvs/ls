@@ -16,7 +16,7 @@
 void	exec_ls(t_master* m, t_lsls* ls);
 
 // option.c
-bool	parse_option(t_lsls* lsls, int argc, char **argv);
+bool	parse_arguments(t_lsls* lsls, int argc, char **argv);
 
 // out_files.c
 void	output_files(t_master* m, size_t len, t_file_item** items);
