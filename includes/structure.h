@@ -53,8 +53,10 @@ typedef struct s_file_item {
 	const char*	path;
 	// path の長さ
 	size_t		path_len;
-	// ファイルの種別
-	t_filetype	file_type;
+	// 実質的なファイルの種別
+	t_filetype	actual_file_type;
+	// 名目上のファイルの種別
+	t_filetype	nominal_file_type;
 	// stat構造体
 	struct stat	st;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
