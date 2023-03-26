@@ -20,10 +20,13 @@ static t_filetype	determine_file_type(struct stat* st) {
 }
 
 void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_item** pointers) {
+	const bool sort_reverse = option->sort_reverse;
 	for (size_t i = 0; i < len; ++i) {
 		for (size_t j = 1; j < len - i; ++j) {
 			t_file_item** pa = &pointers[j - 1];
 			t_file_item** pb = &pointers[j];
+			// ディレクトリを後, それ以外を前に
+			// (-r が効かない)
 			if (distinguish_dir) {
 				const bool a_is_dir = (*pa)->actual_file_type == YO_FT_DIR;
 				const bool b_is_dir = (*pb)->actual_file_type == YO_FT_DIR;
@@ -36,9 +39,11 @@ void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_ite
 					continue;
 				}
 			}
+			// 名前 or タイムスタンプ順にソート
+			// (-r が効く)
 			if (!option->sort_in_fs) {
 				int diff = ft_strcmp(pointers[j - 1]->name, pointers[j]->name);
-				if (diff > 0) {
+				if ((!sort_reverse && diff > 0) || (sort_reverse && diff < 0)) {
 					// DEBUGOUT("%s", "SWAP BY NAME");
 					swap_item(pa, pb);
 				}
