@@ -35,12 +35,13 @@ static bool	set_option(t_option* option, char c) {
 	return true;
 }
 
-bool	parse_option(t_lsls* lsls, int argc, char **argv) {
+// argc, argv を読み取り, 初期設定を行う
+bool	parse_arguments(t_lsls* lsls, int argc, char **argv) {
 	int i;
 	for (i = 1; i < argc; ++i) {
 		char*	s = argv[i];
 		if (*s != '-') {
-			// not option
+			// オプションでない文字列を感知 -> これ以降をファイル名とみなす
 			break;
 		}
 		for (size_t k = 1; s[k]; ++k) {

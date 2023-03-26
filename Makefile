@@ -6,7 +6,7 @@ FILES	:=	\
 			ls.c\
 			out_files.c\
 			out_dirs.c\
-			option.c\
+			arguments.c\
 			printf.c\
 			utils.c\
 			debug.c\

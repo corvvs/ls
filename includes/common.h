@@ -7,12 +7,16 @@
 # include <stdio.h>
 # include "printf.h"
 
-# define TX_RED "\e[31m"
-# define BG_RED "\e[41m"
-# define TX_GRN "\e[32m"
-# define TX_BLU "\e[34m"
-# define TX_YLW "\e[33m"
+# define TX_BLD "\e[1m"
 # define TX_GRY "\e[30m"
+# define TX_RED "\e[31m"
+# define TX_GRN "\e[32m"
+# define TX_YLW "\e[33m"
+# define TX_BLU "\e[34m"
+# define TX_MAZ "\e[35m"
+# define TX_CYN "\e[36m"
+# define BG_BLK "\e[40m"
+# define BG_RED "\e[41m"
 # define TX_RST "\e[0m"
 
 # define YOYO_DPRINTF(...) {\
