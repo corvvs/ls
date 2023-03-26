@@ -36,6 +36,9 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 		if (entry == NULL) {
 			break;
 		}
+		if (!m->opt->show_dot_files && entry->d_name[0] == '.') {
+			continue;
+		}
 		char* path = malloc(sizeof(char) * (dir_item->path_len + 1 + ft_strlen(entry->d_name) + 1));
 		assert(path != NULL);
 		char* tpath = path;

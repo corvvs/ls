@@ -3,7 +3,7 @@
 int main(int argc, char **argv) {
 	// argc がまともな値ではない場合は即座に終了する
 	if (argc < 1) {
-		exit(1);
+		return 1;
 	}
 
 	// [初期設定]

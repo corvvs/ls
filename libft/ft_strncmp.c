@@ -6,12 +6,19 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 18:26:43 by corvvs            #+#    #+#             */
-/*   Updated: 2023/02/27 17:40:57 by corvvs           ###   ########.fr       */
+/*   Updated: 2023/03/27 04:10:02 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
+
+int	ft_strcmp(const char *s1, const char *s2) {
+	while (*s1 && *s1 == *s2) {
+		++s1; ++s2;
+	}
+	return (unsigned char)*s1 - (unsigned char)*s2;
+}
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {

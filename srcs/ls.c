@@ -20,12 +20,21 @@ static t_filetype	determine_file_type(struct stat* st) {
 }
 
 // ファイルアイテム(へのポインタ)の配列を, 辞書順にソートする
-// time: O(len), space: O(1)
-// static void	sort_by_name(size_t len, t_file_item** pointers) {
-// }
+// time O(len^2), space O(1), stable
+// TODO: time O(len log(len))
+static void	sort_by_name(size_t len, t_file_item** pointers) {
+	for (size_t i = 0; i < len; ++i) {
+		for (size_t j = 1; j < len - i; ++j) {
+			if (ft_strcmp(pointers[j - 1]->name, pointers[j]->name) > 0) {
+				swap_item(&pointers[j - 1], &pointers[j]);
+			}
+		}
+	}
+}
 
 // ファイルアイテム(へのポインタ)の配列を, ディレクトリ以外が後に来るようにソートする
-// time: O(len), space: O(1)
+// time O(len), space O(1), unstable
+// TODO: stable
 static void	sort_by_is_dir(size_t len, t_file_item** pointers) {
 	size_t	inz = 0;
 	for (size_t i = 0; i < len; ++i) {
@@ -126,7 +135,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 	}
 
 	// [ファイル情報を(オプションに従って)ソートする]
-	// TODO
+	sort_by_name(n_ok, pointers);
 
 	// [ファイル情報を ディレクトリ以外 -> ディレクトリ の順にソートする]
 	if (distinguish_dir) {
