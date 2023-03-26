@@ -96,7 +96,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 	YOYO_ASSERT(pointers != NULL);
 
 	// ディレクトリを区別して処理すべきか？
-	const bool		distinguish_dir = m->opt->recursive || ls->is_root;
+	const bool		distinguish_dir = !m->opt->show_dir_as_file && (m->opt->recursive || ls->is_root);
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
 	// [ファイル情報を読み取る]
