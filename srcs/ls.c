@@ -29,13 +29,13 @@ static void	swap(t_file_item** a, t_file_item** b) {
 static void	sort_by_is_dir(size_t len, t_file_item** pointers) {
 	size_t	inz = 0;
 	for (size_t i = 0; i < len; ++i) {
-		while (inz < len && pointers[inz]->file_type != YO_FT_DIR) {
+		while (inz < len && pointers[inz]->actual_file_type != YO_FT_DIR) {
 			++inz;
 		}
 		if (inz == len) {
 			break;
 		}
-		if (pointers[i]->file_type != YO_FT_DIR && inz < i) {
+		if (pointers[i]->actual_file_type != YO_FT_DIR && inz < i) {
 			swap(&pointers[i], &pointers[inz]);
 		}
 	}
@@ -47,6 +47,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 	t_file_item**	pointers = malloc(sizeof(t_file_item*) * ls->len);
 	YOYO_ASSERT(pointers != NULL);
 
+	// ディレクトリを区別して処理すべきか？
 	const bool		distinguish_dir = m->opt->recursive || ls->is_root;
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
@@ -63,13 +64,21 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 		}
 		t_filetype	ft = determine_file_type(&item->st);
 		pointers[n_ok] = item;
-		item->file_type = ft;
+		item->actual_file_type = ft;
+		item->nominal_file_type = ft;
 		item->name = yo_basename(path);
 		item->path = path;
 		item->path_len = ft_strlen(path);
 		item->errn = errno;
+		if ((ft_strncmp(item->name, ".", 1) == 0 || ft_strncmp(item->name, "..", 2) == 0) && !ls->is_root) {
+			item->actual_file_type = YO_FT_REGULAR;
+		}
 		n_ok += 1;
-		if (distinguish_dir && ft == YO_FT_DIR && ft_strncmp(item->name, ".", 1) && ft_strncmp(item->name, "..", 2)) {
+		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
+		if (!distinguish_dir) {
+			continue;
+		}
+		if (item->actual_file_type == YO_FT_DIR) {
 			n_dirs += 1;
 		}
 	}
@@ -84,7 +93,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 
 	// [非ディレクトリ情報を出力]
 	size_t	n_no_dirs = n_ok - n_dirs;
-	DEBUGOUT("n_ok = %zu, n_dirs = %zu, n_no_dirs = %zu", n_ok, n_dirs, n_no_dirs);
+	// DEBUGOUT("n_ok = %zu, n_dirs = %zu, n_no_dirs = %zu", n_ok, n_dirs, n_no_dirs);
 	output_files(m, n_no_dirs, pointers);
 
 	// [ディレクトリ情報を出力]
@@ -92,4 +101,5 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 
 	// [後始末]
 	free(items);
+	free(pointers);
 }

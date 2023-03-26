@@ -20,4 +20,5 @@ int main(int argc, char **argv) {
 		.opt = &option,
 	};
 	exec_ls(&m, &root);
+	free(root.path);
 }
