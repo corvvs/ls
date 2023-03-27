@@ -11,6 +11,12 @@
 # include <string.h>
 # include <errno.h>
 # include <assert.h>
+# include <sys/types.h>
+# include <pwd.h>
+# include <grp.h>
+# ifdef __MACH__
+#  include <uuid/uuid.h>
+# endif
 
 
 # ifdef __MACH__
