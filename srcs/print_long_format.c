@@ -96,24 +96,38 @@ static void	print_link_number_part(const t_file_item* item) {
 }
 
 // 所有者名
-static void	print_owner_name(const t_file_item* item) {
-	struct passwd*	ud = getpwuid(item->st.st_uid);
-	if (ud == NULL) {
-		DEBUGFATAL("no user: %d", item->st.st_uid);
-		return;
+static void	print_owner_name(t_cache* cache, const t_file_item* item) {
+	uid_t uid = item->st.st_uid;
+	int	index = uid % N_CACHE;
+	const bool hit = cache->passwd[index].cached && cache->passwd[index].passwd.pw_uid == uid;
+	if (!hit) {
+		struct passwd*	ud = getpwuid(uid);
+		if (ud == NULL) {
+			DEBUGFATAL("no user: %d", uid);
+			return;
+		}
+		cache->passwd[index].cached = true;
+		cache->passwd[index].passwd = *ud;
 	}
-	yoyo_dprintf(STDOUT_FILENO, " %s", ud->pw_name);
+	yoyo_dprintf(STDOUT_FILENO, " %s", cache->passwd[index].passwd.pw_name);
 }
 
 
 // グループ名
-static void	print_group_name(const t_file_item* item) {
-	struct group*	gd = getgrgid(item->st.st_gid);
-	if (gd == NULL) {
-		DEBUGFATAL("no group: %d", item->st.st_gid);
-		return;
+static void	print_group_name(t_cache* cache, const t_file_item* item) {
+	gid_t gid = item->st.st_gid;
+	int	index = gid % N_CACHE;
+	const bool hit = cache->group[index].cached && cache->group[index].group.gr_gid == gid;
+	if (!hit) {
+		struct group*	gd = getgrgid(item->st.st_gid);
+		if (gd == NULL) {
+			DEBUGFATAL("no group: %d", item->st.st_gid);
+			return;
+		}
+		cache->group[index].cached = true;
+		cache->group[index].group = *gd;
 	}
-	yoyo_dprintf(STDOUT_FILENO, " %s", gd->gr_name);
+	yoyo_dprintf(STDOUT_FILENO, " %s", cache->group[index].group.gr_name);
 }
 
 static void	print_datetime(const t_file_item* item) {
@@ -129,8 +143,8 @@ void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items)
 		const t_file_item*	item  = items[i];
 		print_filemode_part(item);
 		print_link_number_part(item);
-		print_owner_name(item);
-		print_group_name(item);
+		print_owner_name(&m->cache, item);
+		print_group_name(&m->cache, item);
 		// ファイルサイズ
 		yoyo_dprintf(STDOUT_FILENO, " %zu", item->st.st_size);
 		// 日時

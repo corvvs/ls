@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
 		.exec_name = yo_basename(argv[0]),
 		.root = &root,
 		.opt = &option,
+		.cache = {},
 	};
 	// [lsのメイン処理開始]
 	exec_ls(&m, &root);

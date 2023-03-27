@@ -5,6 +5,12 @@
 # include <stdlib.h>
 # include <stdint.h>
 # include <sys/stat.h>
+# include <sys/types.h>
+# include <pwd.h>
+# include <grp.h>
+# ifdef __MACH__
+#  include <uuid/uuid.h>
+# endif
 
 typedef enum e_filetype {
 	YO_FT_REGULAR,
@@ -76,10 +82,28 @@ typedef struct	s_lsls {
 	t_option*	opt;
 }	t_lsls;
 
+typedef struct	s_passwd_cache {
+	bool			cached;
+	struct passwd	passwd;
+}	t_passwd_cache;
+
+typedef struct	s_group_cache {
+	bool			cached;
+	struct group	group;
+}	t_group_cache;
+
+#define N_CACHE	128
+
+typedef struct	s_cache {
+	t_passwd_cache	passwd[N_CACHE];
+	t_group_cache	group[N_CACHE];
+}	t_cache;
+
 typedef struct	s_master {
 	const char*	exec_name;
 	t_lsls*		root;
 	t_option*	opt;
+	t_cache		cache;
 }	t_master;
 
 #endif
