@@ -32,7 +32,7 @@ void	exec_ls(t_master* m, t_lsls* ls);
 bool	parse_arguments(t_lsls* lsls, int argc, char **argv);
 
 // out_files.c
-void	output_files(t_master* m, size_t len, t_file_item** items);
+void	output_files(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
 
 // out_dirs.c
 void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items);

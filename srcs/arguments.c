@@ -3,7 +3,7 @@
 static bool	set_option(t_option* option, char c) {
 	switch (c) {
 		case 'l':
-			option->show_list = true;
+			option->long_format = true;
 			break;
 		case 'R':
 			option->recursive = true;
@@ -22,6 +22,7 @@ static bool	set_option(t_option* option, char c) {
 			break;
 		case 'f':
 			option->sort_in_fs = true;
+			option->show_dot_files = true;
 			break;
 		case 'g':
 			option->show_group = true;

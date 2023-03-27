@@ -17,7 +17,7 @@ typedef enum e_filetype {
 
 typedef struct	s_option {
 	// -l
-	bool	show_list;
+	bool	long_format;
 	// -R
 	// サブディレクトリがあれば、再帰的にリスト表示する。
 	bool	recursive;
@@ -45,6 +45,9 @@ typedef struct	s_option {
 	// -d
 	// Directories are listed as plain files (not searched recursively).
 	bool	show_dir_as_file;
+	// --col
+	// カラーリングする
+	bool	color;
 }	t_option;
 
 typedef struct s_file_item {

@@ -182,8 +182,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 
 	// [非ディレクトリ情報を出力]
 	size_t	n_no_dirs = n_ok - n_dirs;
-	// DEBUGOUT("n_ok = %zu, n_dirs = %zu, n_no_dirs = %zu", n_ok, n_dirs, n_no_dirs);
-	output_files(m, n_no_dirs, pointers);
+	output_files(m, ls, n_no_dirs, pointers);
 
 	// [ディレクトリ情報を出力]
 	output_dirs(m, n_ok, n_dirs, pointers + n_no_dirs);
