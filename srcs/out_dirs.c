@@ -83,7 +83,7 @@ void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items)
 			yoyo_dprintf(STDOUT_FILENO, "\n");
 		}
 		if (show_header) {
-			yoyo_dprintf(STDOUT_FILENO, "%s:\n", item->name);
+			yoyo_dprintf(STDOUT_FILENO, "%s:\n", item->path);
 		}
 		output_dir(m, item);
 	}
