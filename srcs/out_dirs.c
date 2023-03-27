@@ -40,6 +40,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 			}
 			break;
 		}
+		// DEBUGOUT("%d: names[%zu] = %s", entry->d_ino, i, entry->d_name);
 		if (!m->opt->show_dot_files && entry->d_name[0] == '.') {
 			continue;
 		}
@@ -57,7 +58,6 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 			// DEBUGOUT("len -> %zu, %p", len, names);
 		}
 		names[i] = path;
-		// DEBUGOUT("names[%zu] = %s", i, path);
 		++i;
 	}
 	closedir(dir);

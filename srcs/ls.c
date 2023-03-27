@@ -1,5 +1,15 @@
 #include "ls.h"
 
+#ifdef __MACH__
+static uint64_t	timeval(t_stat_time* ts) {
+	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
+	// return ts->tv_sec;
+}
+#else
+static uint64_t	timeval(t_stat_time* ts) {
+	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
+}
+#endif
 
 static void	swap_item(t_file_item** a, t_file_item** b) {
 	t_file_item*	c = *a;
@@ -19,9 +29,22 @@ static t_filetype	determine_file_type(struct stat* st) {
 	}
 }
 
+// 時間 ta, tb の値に基づき pa, pb を入れ替える.
+// その後, 比較がこれで十分かどうかを返す.
+static bool	swap_by_time(t_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
+	int64_t diff = timeval(ta) - timeval(tb);
+	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
+		DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, timeval(ta), (*pb)->name, timeval(tb));
+		swap_item(pa, pb);
+	}
+	return diff != 0;
+}
+
+// ファイルをオプションに応じてソートする
 void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_item** pointers) {
 	const bool sort_reverse = option->sort_reverse;
 	for (size_t i = 0; i < len; ++i) {
+		// DEBUGWARN("n = %zu", len - i);
 		for (size_t j = 1; j < len - i; ++j) {
 			t_file_item** pa = &pointers[j - 1];
 			t_file_item** pb = &pointers[j];
@@ -39,20 +62,34 @@ void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_ite
 					continue;
 				}
 			}
-			// 名前 or タイムスタンプ順にソート
+			if (option->sort_in_fs) {
+				continue;
+			}
+			// タイムスタンプ順にソート
 			// (-r が効く)
-			if (!option->sort_in_fs) {
-				int diff = ft_strcmp(pointers[j - 1]->name, pointers[j]->name);
-				if ((!sort_reverse && diff > 0) || (sort_reverse && diff < 0)) {
-					// DEBUGOUT("%s", "SWAP BY NAME");
-					swap_item(pa, pb);
-				}
-				if (diff != 0) {
-					continue;
+			if (option->sort_by_time) {
+				bool over;
+				if (!option->time_access) {
+					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.MTIME), &pointers[j - 1], (&pointers[j - 1]->st.MTIME));
+					if (over) {
+						continue;
+					}
+				} else {
+					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.ATIME), &pointers[j - 1], (&pointers[j - 1]->st.ATIME));
+					if (over) {
+						continue;
+					}
 				}
 			}
+			int diff;
+			diff = ft_strcmp(pointers[j - 1]->name, pointers[j]->name);
+			if ((!sort_reverse && diff > 0) || (sort_reverse && diff < 0)) {
+				swap_item(pa, pb);
+			}
+			if (diff != 0) {
+				continue;
+			}
 		}
-		// DEBUGINFO("-> %s %d", pointers[len - 1 - i]->name, pointers[len - 1 - i]->actual_file_type);
 	}
 }
 
@@ -75,7 +112,7 @@ static bool	investigate_simlink(t_file_item* item) {
 	}
 	errno = 0;
 	ssize_t actual_len = readlink(path, link_to, link_len);
-	DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
+	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
 	if (actual_len < 0) {
 		item->actual_file_type = YO_FT_BAD_LINK;
 		return true;

@@ -12,6 +12,19 @@
 # include <errno.h>
 # include <assert.h>
 
+
+# ifdef __MACH__
+#  define ATIME st_atimespec
+#  define CTIME st_ctimespec
+#  define MTIME st_mtimespec
+typedef struct timespec	t_stat_time;
+# else
+#  define ATIME st_atim
+#  define CTIME st_ctim
+#  define MTIME st_mtim
+typedef struct timespec	t_stat_time;
+# endif
+
 // ls.c
 void	exec_ls(t_master* m, t_lsls* ls);
 
