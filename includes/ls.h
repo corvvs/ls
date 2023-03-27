@@ -37,6 +37,12 @@ void	output_files(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
 // out_dirs.c
 void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items);
 
+// print_long_format.c
+void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
+
+// print_utils.c
+void	print_filename(const t_option* option, const t_file_item* item);
+
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
 
