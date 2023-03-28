@@ -8,6 +8,7 @@
 # include <sys/types.h>
 # include <pwd.h>
 # include <grp.h>
+# include <time.h>
 # ifdef __MACH__
 #  include <uuid/uuid.h>
 # endif
@@ -71,6 +72,8 @@ typedef struct s_file_item {
 	t_filetype	nominal_file_type;
 	// stat構造体
 	struct stat	st;
+	// 時刻構造体
+	struct tm	time_st;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
 	int			errn;
 }	t_file_item;
@@ -114,6 +117,9 @@ typedef struct	s_long_format_measure {
 	uint64_t	owner_width;
 	uint64_t	group_width;
 	uint64_t	size_width;
+	uint64_t	mon_width;
+	uint64_t	day_width;
+	uint64_t	year_time_width;
 }	t_long_format_measure;
 
 #endif

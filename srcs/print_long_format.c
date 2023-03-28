@@ -179,16 +179,69 @@ static void	print_file_size(t_long_format_measure* measure, const t_file_item* i
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
 }
 
-static void	print_datetime(t_cache* cache, const t_file_item* item) {
-	struct tm	ts;
+static void	measure_datetime(t_long_format_measure* measure) {
+#ifdef __MACH__
+	measure->mon_width = 2;
+#else
+	measure->mon_width = 3;
+#endif
+	measure->day_width = 2;
+	measure->year_time_width = 5;
+}
+
+
+#ifdef __MACH__
+
+static void	print_month(const t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t w = number_width(item->time_st.tm_mon);
+	print_spaces(measure->mon_width - w + 1);
+	yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_mon);
+}
+
+#else
+
+static const char*	month_en[] = {
+	"???",
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec",
+};
+
+static void	print_month(const t_long_format_measure* measure, const t_file_item* item) {
+	(void)measure;
+	yoyo_dprintf(STDOUT_FILENO, " %s", month_en[item->time_st.tm_mon]);
+}
+
+#endif
+
+static void	print_datetime(const t_long_format_measure* measure, t_cache* cache, t_file_item* item) {
 	uint64_t	ut_s = unixtime_s(&item->st.MTIME);
-	unixtime_to_date(ut_s, &ts);
+	unixtime_to_date(ut_s, &item->time_st);
 	const bool show_years = cache->current_unixtime_s < ut_s || (cache->current_unixtime_s - ut_s) / 86400 > (365 / 2);
-	yoyo_dprintf(STDOUT_FILENO, " %d %d", ts.tm_mon, ts.tm_mday);
+	print_month(measure, item);
+	{
+		const uint64_t w = number_width(item->time_st.tm_mday);
+		print_spaces(measure->day_width - w + 1);
+		yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_mday);
+	}
 	if (show_years) {
-		yoyo_dprintf(STDOUT_FILENO, " %d", ts.tm_year);
+		const uint64_t w = number_width(item->time_st.tm_year);
+		print_spaces(measure->year_time_width - w + 1);
+		yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_year);
 	} else {
-		yoyo_dprintf(STDOUT_FILENO, " %d:%d", ts.tm_hour, ts.tm_min);
+		yoyo_dprintf(STDOUT_FILENO, " %d%d:%d%d",
+			item->time_st.tm_hour / 10, item->time_st.tm_hour % 10,
+			item->time_st.tm_min / 10, item->time_st.tm_min % 10
+		);
 	}
 }
 
@@ -221,9 +274,10 @@ void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items)
 			measure.size_width = MAX(measure.size_width, number_width(size));
 		}
 	}
+	measure_datetime(&measure);
 	// [ファイルごとの出力]
 	for (size_t i = 0; i < len; ++i) {
-		const t_file_item*	item  = items[i];
+		t_file_item*	item  = items[i];
 		print_filemode_part(item);
 		print_link_number_part(&measure, item);
 		print_owner_name(&measure, &m->cache, item);
@@ -231,9 +285,9 @@ void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items)
 		// ファイルサイズ
 		print_file_size(&measure, item);
 		// 日時
-		print_datetime(&m->cache, item);
+		print_datetime(&measure, &m->cache, item);
 		// 名前
-		yoyo_dprintf(STDOUT_FILENO, " ");
+		print_spaces(1);
 		print_filename(m->opt, item);
 		// (optional)リンク先
 

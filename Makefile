@@ -6,8 +6,12 @@ FILES	:=	\
 			ls.c\
 			out_files.c\
 			out_dirs.c\
+			print_long_format.c\
+			print_utils.c\
 			arguments.c\
 			printf.c\
+			cache.c\
+			time.c\
 			utils.c\
 			debug.c\
 			assert.c\
