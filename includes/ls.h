@@ -46,6 +46,10 @@ void	print_filename(const t_option* option, const t_file_item* item);
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
 
+// cache.c
+struct passwd*	retrieve_user(t_cache* cache, uid_t uid);
+struct group*	retrieve_group(t_cache* cache, gid_t gid);
+
 // utils.c
 const char*	yo_basename(const char* path);
 

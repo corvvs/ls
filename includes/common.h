@@ -47,4 +47,6 @@
 // a を bの倍数に切り下げる
 # define FLOOR_BY(a, b) (a / b * b)
 
+# define MAX(a, b) (a > b ? a : b)
+
 #endif

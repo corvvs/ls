@@ -75,6 +75,7 @@ typedef struct s_file_item {
 	int			errn;
 }	t_file_item;
 
+// この名前はないわ
 typedef struct	s_lsls {
 	bool		is_root;
 	char**		path;
@@ -105,5 +106,13 @@ typedef struct	s_master {
 	t_option*	opt;
 	t_cache		cache;
 }	t_master;
+
+// long-format における各種寸法
+typedef struct	s_long_format_measure {
+	uint64_t	link_number_width;
+	uint64_t	owner_width;
+	uint64_t	group_width;
+	uint64_t	size_width;
+}	t_long_format_measure;
 
 #endif

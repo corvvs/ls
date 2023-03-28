@@ -1,6 +1,24 @@
 #include "ls.h"
 
 #define BLOCKSIZE_FOR_LINUX_LS 1024
+#define SPACES "                                                                                                   "
+
+static uint64_t	number_width(uint64_t i) {
+	if (i == 0) {
+		return 1;
+	}
+	uint64_t	n = 0;
+	while (i) {
+		i /= 10;
+		n += 1;
+	}
+	return n;
+}
+
+static void	print_spaces(uint64_t n) {
+	int rv = write(STDOUT_FILENO, SPACES, n);
+	(void)rv;
+}
 
 // "Total:" 用のブロックサイズの計算
 static size_t	subtotal_blocks(const t_file_item* item) {
@@ -91,43 +109,67 @@ static void	print_filemode_part(const t_file_item* item) {
 }
 
 // リンク数
-static void	print_link_number_part(const t_file_item* item) {
-	yoyo_dprintf(STDOUT_FILENO, " %zu", item->st.st_nlink);
+static uint64_t	get_link_number(const t_file_item* item) {
+	return item->st.st_nlink;
+}
+
+// リンク数
+static void	print_link_number_part(const t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t n = get_link_number(item);
+	const uint64_t w = number_width(n);
+	print_spaces(measure->link_number_width - w + 1);
+	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_nlink);
 }
 
 // 所有者名
-static void	print_owner_name(t_cache* cache, const t_file_item* item) {
-	uid_t uid = item->st.st_uid;
-	int	index = uid % N_CACHE;
-	const bool hit = cache->passwd[index].cached && cache->passwd[index].passwd.pw_uid == uid;
-	if (!hit) {
-		struct passwd*	ud = getpwuid(uid);
-		if (ud == NULL) {
-			DEBUGFATAL("no user: %d", uid);
-			return;
-		}
-		cache->passwd[index].cached = true;
-		cache->passwd[index].passwd = *ud;
+static char*	get_owner_name(t_cache* cache, const t_file_item* item) {
+	struct passwd*	ud = retrieve_user(cache, item->st.st_uid);
+	if (ud == NULL) {
+		return NULL;
 	}
-	yoyo_dprintf(STDOUT_FILENO, " %s", cache->passwd[index].passwd.pw_name);
+	return ud->pw_name;
 }
 
+// 所有者名
+static void	print_owner_name(const t_long_format_measure* measure, t_cache* cache, const t_file_item* item) {
+	const char*	name = get_owner_name(cache, item);
+	if (name == NULL) {
+		return;
+	}
+	const uint64_t w = ft_strlen(name);
+	yoyo_dprintf(STDOUT_FILENO, " %s", name);
+	print_spaces(measure->owner_width - w);
+}
 
 // グループ名
-static void	print_group_name(t_cache* cache, const t_file_item* item) {
-	gid_t gid = item->st.st_gid;
-	int	index = gid % N_CACHE;
-	const bool hit = cache->group[index].cached && cache->group[index].group.gr_gid == gid;
-	if (!hit) {
-		struct group*	gd = getgrgid(item->st.st_gid);
-		if (gd == NULL) {
-			DEBUGFATAL("no group: %d", item->st.st_gid);
-			return;
-		}
-		cache->group[index].cached = true;
-		cache->group[index].group = *gd;
+static char*	get_group_name(t_cache* cache, const t_file_item* item) {
+	struct group*	gd = retrieve_group(cache, item->st.st_gid);
+	if (gd == NULL) {
+		return NULL;
 	}
-	yoyo_dprintf(STDOUT_FILENO, " %s", cache->group[index].group.gr_name);
+	return gd->gr_name;
+}
+
+// グループ名
+static void	print_group_name(const t_long_format_measure* measure, t_cache* cache, const t_file_item* item) {
+	const char*	name = get_group_name(cache, item);
+	if (name == NULL) {
+		return;
+	}
+	const uint64_t w = ft_strlen(name);
+	yoyo_dprintf(STDOUT_FILENO, " %s", name);
+	print_spaces(measure->group_width - w);
+}
+
+static uint64_t	get_file_size(const t_file_item* item) {
+	return item->st.st_size;
+}
+
+static void	print_file_size(t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t n = get_file_size(item);
+	const uint64_t w = number_width(n);
+	print_spaces(measure->size_width - w + 1);
+	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
 }
 
 static void	print_datetime(const t_file_item* item) {
@@ -136,17 +178,42 @@ static void	print_datetime(const t_file_item* item) {
 
 // long-format の出力
 void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items) {
-	(void)m;
+	// ["Total:" の出力]
 	print_total_blocks(ls, len, items);
-	// ファイルごとの出力
+	// [幅の測定]
+	t_long_format_measure	measure = {};
+	for (size_t i = 0; i < len; ++i) {
+		const t_file_item*	item  = items[i];
+		{
+			uint64_t	link_number = get_link_number(item);
+			measure.link_number_width = MAX(measure.link_number_width, number_width(link_number));
+		}
+		{
+			char*		name = get_owner_name(&m->cache, item);
+			if (name != NULL) {
+				measure.owner_width = MAX(measure.owner_width, ft_strlen(name));
+			}
+		}
+		{
+			char*		name = get_group_name(&m->cache, item);
+			if (name != NULL) {
+				measure.group_width = MAX(measure.group_width, ft_strlen(name));
+			}
+		}
+		{
+			uint64_t	size = get_file_size(item);
+			measure.size_width = MAX(measure.size_width, number_width(size));
+		}
+	}
+	// [ファイルごとの出力]
 	for (size_t i = 0; i < len; ++i) {
 		const t_file_item*	item  = items[i];
 		print_filemode_part(item);
-		print_link_number_part(item);
-		print_owner_name(&m->cache, item);
-		print_group_name(&m->cache, item);
+		print_link_number_part(&measure, item);
+		print_owner_name(&measure, &m->cache, item);
+		print_group_name(&measure, &m->cache, item);
 		// ファイルサイズ
-		yoyo_dprintf(STDOUT_FILENO, " %zu", item->st.st_size);
+		print_file_size(&measure, item);
 		// 日時
 		print_datetime(item);
 		// 名前
