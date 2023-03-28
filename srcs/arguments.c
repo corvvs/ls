@@ -38,6 +38,7 @@ static bool	set_option(t_option* option, char c) {
 
 // argc, argv を読み取り, 初期設定を行う
 bool	parse_arguments(t_lsls* lsls, int argc, char **argv) {
+	lsls->opt->tty = isatty(STDOUT_FILENO);
 	int i;
 	for (i = 1; i < argc; ++i) {
 		char*	s = argv[i];

@@ -22,7 +22,17 @@ typedef enum e_filetype {
 	YO_FT_ERROR,
 }	t_filetype;
 
+typedef enum e_quote_type {
+	// クオートなし
+	YO_QT_NONE,
+	// ダブルクオーテーションで囲む
+	YO_QT_DQ,
+	// シングルクオーテーションで囲む
+	YO_QT_SQ,
+}	t_quote_type;
+
 typedef struct	s_option {
+	bool	tty;
 	// -l
 	bool	long_format;
 	// -R
@@ -60,6 +70,10 @@ typedef struct	s_option {
 typedef struct s_file_item {
 	// ファイルのbasename
 	const char*	name;
+	// ファイル名が表示されるときの長さ
+	size_t		display_len;
+	// ファイル名をクオートして表示すべきか
+	t_quote_type	quote_type;
 	// ファイルのパス(相対または絶対)
 	const char*	path;
 	// シンボリックリンクのリンク先
