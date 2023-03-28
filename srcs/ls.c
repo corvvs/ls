@@ -1,15 +1,5 @@
 #include "ls.h"
 
-#ifdef __MACH__
-static uint64_t	timeval(t_stat_time* ts) {
-	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
-	// return ts->tv_sec;
-}
-#else
-static uint64_t	timeval(t_stat_time* ts) {
-	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
-}
-#endif
 
 static void	swap_item(t_file_item** a, t_file_item** b) {
 	t_file_item*	c = *a;
@@ -32,9 +22,9 @@ static t_filetype	determine_file_type(struct stat* st) {
 // 時間 ta, tb の値に基づき pa, pb を入れ替える.
 // その後, 比較がこれで十分かどうかを返す.
 static bool	swap_by_time(t_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
-	int64_t diff = timeval(ta) - timeval(tb);
+	int64_t diff = unixtime_us(ta) - unixtime_us(tb);
 	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
-		DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, timeval(ta), (*pb)->name, timeval(tb));
+		// DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, unixtime_us(ta), (*pb)->name, unixtime_us(tb));
 		swap_item(pa, pb);
 	}
 	return diff != 0;
@@ -131,6 +121,72 @@ static bool	investigate_simlink(t_file_item* item) {
 	return true;
 }
 
+#ifdef __MACH__
+#else
+static size_t	strquotedlen(const char* s) {
+	size_t	len = 0;
+	for (size_t i = 0; s[i]; ++i) {
+		if (s[i] == '\'') {
+			len += 3; // シングルクオート2つとバックスラッシュ1つ
+		}
+		len += 1;
+	}
+	return len + 2;
+}
+
+static t_quote_type	should_quote_char(char c) {
+	// 以下のいずれかを満たすならクオートすべき
+	// - 非表示文字である
+	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
+	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^", c);
+}
+#endif
+
+static void	determine_file_name(const t_master* m, t_file_item* item, const char* path) {
+	const char* name = yo_basename(path);
+	item->name = name;
+	item->path = path;
+	item->quote_type = YO_QT_NONE;
+	item->path_len = ft_strlen(path);
+	if (!m->opt->tty) {
+		return;
+	}
+#ifdef __MACH__
+#else
+	bool	has_sq = false;
+	bool	has_dq = false;
+	bool	has_sp = false;
+	bool	has_ex_sp = false;
+	for (size_t i = 0; name[i]; ++i) {
+		if (should_quote_char(name[i])) {
+			if (name[i] == '\'') {
+				has_sq = true;
+			} else if (name[i] == '"') {
+				has_dq = true;
+			} else if (name[i] == ' ') {
+				has_sp = true;
+			} else {
+				has_ex_sp = true;
+			}
+		}
+	}
+	(void)has_dq;
+	if (!has_sq && !has_dq && !has_sp && !has_ex_sp) {
+		item->quote_type = YO_QT_NONE;
+		item->display_len = ft_strlen(name) + 2;
+	} else if (has_sq && has_sp && !has_ex_sp) {
+		item->quote_type =YO_QT_DQ;
+		item->display_len = ft_strlen(name) + 2;
+	} else if (has_sq && !has_dq && !has_sp && !has_ex_sp) {
+		item->quote_type =YO_QT_DQ;
+		item->display_len = ft_strlen(name) + 2;
+	} else {
+		item->quote_type =YO_QT_SQ;
+		item->display_len = strquotedlen(name);
+	}
+#endif
+}
+
 void	exec_ls(t_master* m, t_lsls* ls) {
 	t_file_item*	items = malloc(sizeof(t_file_item) * ls->len);
 	YOYO_ASSERT(items != NULL);
@@ -157,10 +213,8 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 		pointers[n_ok] = item;
 		item->actual_file_type = ft;
 		item->nominal_file_type = ft;
-		item->name = yo_basename(path);
-		item->path = path;
-		item->path_len = ft_strlen(path);
 		item->errn = errno;
+		determine_file_name(m, item, path);
 		if (is_dot_dir(item) && !ls->is_root) {
 			item->actual_file_type = YO_FT_REGULAR;
 		}
@@ -182,8 +236,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 
 	// [非ディレクトリ情報を出力]
 	size_t	n_no_dirs = n_ok - n_dirs;
-	// DEBUGOUT("n_ok = %zu, n_dirs = %zu, n_no_dirs = %zu", n_ok, n_dirs, n_no_dirs);
-	output_files(m, n_no_dirs, pointers);
+	output_files(m, ls, n_no_dirs, pointers);
 
 	// [ディレクトリ情報を出力]
 	output_dirs(m, n_ok, n_dirs, pointers + n_no_dirs);

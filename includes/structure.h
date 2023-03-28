@@ -5,6 +5,13 @@
 # include <stdlib.h>
 # include <stdint.h>
 # include <sys/stat.h>
+# include <sys/types.h>
+# include <pwd.h>
+# include <grp.h>
+# include <time.h>
+# ifdef __MACH__
+#  include <uuid/uuid.h>
+# endif
 
 typedef enum e_filetype {
 	YO_FT_REGULAR,
@@ -15,9 +22,19 @@ typedef enum e_filetype {
 	YO_FT_ERROR,
 }	t_filetype;
 
+typedef enum e_quote_type {
+	// クオートなし
+	YO_QT_NONE,
+	// ダブルクオーテーションで囲む
+	YO_QT_DQ,
+	// シングルクオーテーションで囲む
+	YO_QT_SQ,
+}	t_quote_type;
+
 typedef struct	s_option {
+	bool	tty;
 	// -l
-	bool	show_list;
+	bool	long_format;
 	// -R
 	// サブディレクトリがあれば、再帰的にリスト表示する。
 	bool	recursive;
@@ -45,11 +62,18 @@ typedef struct	s_option {
 	// -d
 	// Directories are listed as plain files (not searched recursively).
 	bool	show_dir_as_file;
+	// --col
+	// カラーリングする
+	bool	color;
 }	t_option;
 
 typedef struct s_file_item {
 	// ファイルのbasename
 	const char*	name;
+	// ファイル名が表示されるときの長さ
+	size_t		display_len;
+	// ファイル名をクオートして表示すべきか
+	t_quote_type	quote_type;
 	// ファイルのパス(相対または絶対)
 	const char*	path;
 	// シンボリックリンクのリンク先
@@ -62,10 +86,13 @@ typedef struct s_file_item {
 	t_filetype	nominal_file_type;
 	// stat構造体
 	struct stat	st;
+	// 時刻構造体
+	struct tm	time_st;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
 	int			errn;
 }	t_file_item;
 
+// この名前はないわ
 typedef struct	s_lsls {
 	bool		is_root;
 	char**		path;
@@ -73,10 +100,40 @@ typedef struct	s_lsls {
 	t_option*	opt;
 }	t_lsls;
 
+typedef struct	s_passwd_cache {
+	bool			cached;
+	struct passwd	passwd;
+}	t_passwd_cache;
+
+typedef struct	s_group_cache {
+	bool			cached;
+	struct group	group;
+}	t_group_cache;
+
+#define N_CACHE	128
+
+typedef struct	s_cache {
+	uint64_t		current_unixtime_s;
+	t_passwd_cache	passwd[N_CACHE];
+	t_group_cache	group[N_CACHE];
+}	t_cache;
+
 typedef struct	s_master {
 	const char*	exec_name;
 	t_lsls*		root;
 	t_option*	opt;
+	t_cache		cache;
 }	t_master;
+
+// long-format における各種寸法
+typedef struct	s_long_format_measure {
+	uint64_t	link_number_width;
+	uint64_t	owner_width;
+	uint64_t	group_width;
+	uint64_t	size_width;
+	uint64_t	mon_width;
+	uint64_t	day_width;
+	uint64_t	year_time_width;
+}	t_long_format_measure;
 
 #endif

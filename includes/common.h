@@ -42,4 +42,11 @@
 # endif
 # define DEBUGFATAL(format, ...) YOYO_DPRINTF("%s[F] [%s:%d %s] " format "%s\n", BG_RED, __FILE__, __LINE__, __func__, __VA_ARGS__, TX_RST)
 
+// a を bの倍数に切り上げる
+# define CEIL_BY(a, b) (a ? ((a - 1) / b + 1) * b : b)
+// a を bの倍数に切り下げる
+# define FLOOR_BY(a, b) (a / b * b)
+
+# define MAX(a, b) (a > b ? a : b)
+
 #endif

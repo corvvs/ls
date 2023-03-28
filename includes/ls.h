@@ -11,8 +11,9 @@
 # include <string.h>
 # include <errno.h>
 # include <assert.h>
+# include <time.h>
 
-
+// stat構造体の時刻フィールド名の差異を吸収するためのマクロ
 # ifdef __MACH__
 #  define ATIME st_atimespec
 #  define CTIME st_ctimespec
@@ -32,13 +33,29 @@ void	exec_ls(t_master* m, t_lsls* ls);
 bool	parse_arguments(t_lsls* lsls, int argc, char **argv);
 
 // out_files.c
-void	output_files(t_master* m, size_t len, t_file_item** items);
+void	output_files(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
 
 // out_dirs.c
 void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items);
 
+// print_long_format.c
+void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
+
+// print_utils.c
+void	print_filename(const t_option* option, const t_file_item* item);
+
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
+
+// cache.c
+struct passwd*	retrieve_user(t_cache* cache, uid_t uid);
+struct group*	retrieve_group(t_cache* cache, gid_t gid);
+
+// time.c
+uint64_t	unixtime_us(const t_stat_time* ts);
+uint64_t	unixtime_s(const t_stat_time* ts);
+void		unixtime_to_date_utc(time_t unixtime, struct tm* time_s);
+void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
 // utils.c
 const char*	yo_basename(const char* path);

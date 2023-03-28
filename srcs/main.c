@@ -20,9 +20,21 @@ int main(int argc, char **argv) {
 		.exec_name = yo_basename(argv[0]),
 		.root = &root,
 		.opt = &option,
+		.cache = {},
 	};
+	m.cache.current_unixtime_s = time(NULL);
 	// [lsのメイン処理開始]
 	exec_ls(&m, &root);
 	// [後始末]
 	free(root.path);
+	for (size_t i = 0; i < N_CACHE; ++i) {
+		if (m.cache.passwd[i].cached) {
+			free(m.cache.passwd[i].passwd.pw_name);
+		}
+	}
+	for (size_t i = 0; i < N_CACHE; ++i) {
+		if (m.cache.group[i].cached) {
+			free(m.cache.group[i].group.gr_name);
+		}
+	}
 }
