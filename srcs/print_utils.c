@@ -3,8 +3,10 @@
 
 void	print_filename(const t_option* option, const t_file_item* item) {
 	const char*	color;
+	const char*	suffix = TX_RST;
 	if (!option->color) {
 		color = YO_COLOR_REGULAR;
+		suffix = "";
 	} else if (item->nominal_file_type == YO_FT_DIR) {
 		color = YO_COLOR_DIR;
 	} else if (item->actual_file_type == YO_FT_LINK) {
@@ -15,6 +17,7 @@ void	print_filename(const t_option* option, const t_file_item* item) {
 		color = YO_COLOR_EXE;
 	} else {
 		color = YO_COLOR_REGULAR;
+		suffix = "";
 	}
-	yoyo_dprintf(STDOUT_FILENO, "%s%s%s", color, item->name, TX_RST);
+	yoyo_dprintf(STDOUT_FILENO, "%s%s%s", color, item->name, suffix);
 }

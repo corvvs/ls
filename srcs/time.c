@@ -20,7 +20,7 @@ uint64_t	unixtime_s(const t_stat_time* ts) {
 	return unixtime_us(ts) / 1000000;
 }
 
-void unixtime_to_date(time_t unix_time, struct tm* time_s) {
+void unixtime_to_date_utc(time_t unix_time, struct tm* time_s) {
 	time_t	ss = unix_time % 60;
 	unix_time = (unix_time - ss) / 60;
 	time_t	mi = unix_time % 60;
@@ -50,4 +50,11 @@ void unixtime_to_date(time_t unix_time, struct tm* time_s) {
 	time_s->tm_hour = hh;
 	time_s->tm_min = mi;
 	time_s->tm_sec = ss;
+}
+
+// unix_time からローカルの時刻情報を取得する
+// localtime を使っていることに注意
+// (使用可能関数の中にタイムゾーン情報を得られるものがないため)
+void unixtime_to_date_local(time_t unix_time, struct tm* time_s) {
+	*time_s = *localtime(&unix_time);
 }

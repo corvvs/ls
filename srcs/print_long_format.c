@@ -189,19 +189,17 @@ static void	measure_datetime(t_long_format_measure* measure) {
 	measure->year_time_width = 5;
 }
 
-
 #ifdef __MACH__
 
 static void	print_month(const t_long_format_measure* measure, const t_file_item* item) {
-	const uint64_t w = number_width(item->time_st.tm_mon);
+	const uint64_t w = number_width(item->time_st.tm_mon + 1);
 	print_spaces(measure->mon_width - w + 1);
-	yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_mon);
+	yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_mon + 1);
 }
 
 #else
 
 static const char*	month_en[] = {
-	"???",
 	"Jan",
 	"Feb",
 	"Mar",
@@ -223,10 +221,18 @@ static void	print_month(const t_long_format_measure* measure, const t_file_item*
 
 #endif
 
+#ifdef __MACH__
+# define NEAR_TIME_DAYS (86400 * (365 + 1) / 2)
+#else
+# define NEAR_TIME_DAYS (86400 * 365 / 2)
+#endif
+
 static void	print_datetime(const t_long_format_measure* measure, t_cache* cache, t_file_item* item) {
 	uint64_t	ut_s = unixtime_s(&item->st.MTIME);
-	unixtime_to_date(ut_s, &item->time_st);
-	const bool show_years = cache->current_unixtime_s < ut_s || (cache->current_unixtime_s - ut_s) / 86400 > (365 / 2);
+	// unixtime_to_date_utc(ut_s, &item->time_st);
+	unixtime_to_date_local(ut_s, &item->time_st);
+
+	const bool show_years = cache->current_unixtime_s < ut_s || (cache->current_unixtime_s - ut_s) > NEAR_TIME_DAYS;
 	print_month(measure, item);
 	{
 		const uint64_t w = number_width(item->time_st.tm_mday);
@@ -234,9 +240,9 @@ static void	print_datetime(const t_long_format_measure* measure, t_cache* cache,
 		yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_mday);
 	}
 	if (show_years) {
-		const uint64_t w = number_width(item->time_st.tm_year);
+		const uint64_t w = number_width(item->time_st.tm_year + 1900);
 		print_spaces(measure->year_time_width - w + 1);
-		yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_year);
+		yoyo_dprintf(STDOUT_FILENO, "%d", item->time_st.tm_year + 1900);
 	} else {
 		yoyo_dprintf(STDOUT_FILENO, " %d%d:%d%d",
 			item->time_st.tm_hour / 10, item->time_st.tm_hour % 10,
