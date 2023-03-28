@@ -96,6 +96,7 @@ typedef struct	s_group_cache {
 #define N_CACHE	128
 
 typedef struct	s_cache {
+	uint64_t		current_unixtime_s;
 	t_passwd_cache	passwd[N_CACHE];
 	t_group_cache	group[N_CACHE];
 }	t_cache;

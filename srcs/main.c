@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
 		.opt = &option,
 		.cache = {},
 	};
+	m.cache.current_unixtime_s = time(NULL);
 	// [lsのメイン処理開始]
 	exec_ls(&m, &root);
 	// [後始末]

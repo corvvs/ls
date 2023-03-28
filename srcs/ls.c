@@ -1,16 +1,5 @@
 #include "ls.h"
 
-#ifdef __MACH__
-static uint64_t	timeval(t_stat_time* ts) {
-	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
-	// return ts->tv_sec;
-}
-#else
-static uint64_t	timeval(t_stat_time* ts) {
-	return ts->tv_sec * 1000000 + ts->tv_nsec / 1000;
-}
-#endif
-
 static void	swap_item(t_file_item** a, t_file_item** b) {
 	t_file_item*	c = *a;
 	*a = *b;
@@ -32,9 +21,9 @@ static t_filetype	determine_file_type(struct stat* st) {
 // 時間 ta, tb の値に基づき pa, pb を入れ替える.
 // その後, 比較がこれで十分かどうかを返す.
 static bool	swap_by_time(t_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
-	int64_t diff = timeval(ta) - timeval(tb);
+	int64_t diff = unixtime_us(ta) - unixtime_us(tb);
 	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
-		DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, timeval(ta), (*pb)->name, timeval(tb));
+		DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, unixtime_us(ta), (*pb)->name, unixtime_us(tb));
 		swap_item(pa, pb);
 	}
 	return diff != 0;

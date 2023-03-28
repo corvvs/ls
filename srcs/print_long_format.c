@@ -179,8 +179,17 @@ static void	print_file_size(t_long_format_measure* measure, const t_file_item* i
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
 }
 
-static void	print_datetime(const t_file_item* item) {
-	(void)item;
+static void	print_datetime(t_cache* cache, const t_file_item* item) {
+	struct tm	ts;
+	uint64_t	ut_s = unixtime_s(&item->st.MTIME);
+	unixtime_to_date(ut_s, &ts);
+	const bool show_years = cache->current_unixtime_s < ut_s || (cache->current_unixtime_s - ut_s) / 86400 > (365 / 2);
+	yoyo_dprintf(STDOUT_FILENO, " %d %d", ts.tm_mon, ts.tm_mday);
+	if (show_years) {
+		yoyo_dprintf(STDOUT_FILENO, " %d", ts.tm_year);
+	} else {
+		yoyo_dprintf(STDOUT_FILENO, " %d:%d", ts.tm_hour, ts.tm_min);
+	}
 }
 
 // long-format の出力
@@ -222,7 +231,7 @@ void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items)
 		// ファイルサイズ
 		print_file_size(&measure, item);
 		// 日時
-		print_datetime(item);
+		print_datetime(&m->cache, item);
 		// 名前
 		yoyo_dprintf(STDOUT_FILENO, " ");
 		print_filename(m->opt, item);

@@ -11,8 +11,9 @@
 # include <string.h>
 # include <errno.h>
 # include <assert.h>
+# include <time.h>
 
-
+// stat構造体の時刻フィールド名の差異を吸収するためのマクロ
 # ifdef __MACH__
 #  define ATIME st_atimespec
 #  define CTIME st_ctimespec
@@ -49,6 +50,11 @@ int		yoyo_dprintf(int fd, const char* format, ...);
 // cache.c
 struct passwd*	retrieve_user(t_cache* cache, uid_t uid);
 struct group*	retrieve_group(t_cache* cache, gid_t gid);
+
+// time.c
+uint64_t	unixtime_us(const t_stat_time* ts);
+uint64_t	unixtime_s(const t_stat_time* ts);
+void		unixtime_to_date(time_t unixtime, struct tm* time_s);
 
 // utils.c
 const char*	yo_basename(const char* path);
