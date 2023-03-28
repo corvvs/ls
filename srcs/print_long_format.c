@@ -2,6 +2,11 @@
 
 #define BLOCKSIZE_FOR_LINUX_LS 1024
 #define SPACES "                                                                                                   "
+#ifdef __MACH__
+# define COL_PADDING 2
+#else
+# define COL_PADDING 1
+#endif
 
 static uint64_t	number_width(uint64_t i) {
 	if (i == 0) {
@@ -117,7 +122,7 @@ static uint64_t	get_link_number(const t_file_item* item) {
 static void	print_link_number_part(const t_long_format_measure* measure, const t_file_item* item) {
 	const uint64_t n = get_link_number(item);
 	const uint64_t w = number_width(n);
-	print_spaces(measure->link_number_width - w + 1);
+	print_spaces(measure->link_number_width - w + COL_PADDING);
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_nlink);
 }
 
@@ -137,7 +142,8 @@ static void	print_owner_name(const t_long_format_measure* measure, t_cache* cach
 		return;
 	}
 	const uint64_t w = ft_strlen(name);
-	yoyo_dprintf(STDOUT_FILENO, " %s", name);
+	print_spaces(1);
+	yoyo_dprintf(STDOUT_FILENO, "%s", name);
 	print_spaces(measure->owner_width - w);
 }
 
@@ -157,7 +163,8 @@ static void	print_group_name(const t_long_format_measure* measure, t_cache* cach
 		return;
 	}
 	const uint64_t w = ft_strlen(name);
-	yoyo_dprintf(STDOUT_FILENO, " %s", name);
+	print_spaces(COL_PADDING);
+	yoyo_dprintf(STDOUT_FILENO, "%s", name);
 	print_spaces(measure->group_width - w);
 }
 
@@ -168,7 +175,7 @@ static uint64_t	get_file_size(const t_file_item* item) {
 static void	print_file_size(t_long_format_measure* measure, const t_file_item* item) {
 	const uint64_t n = get_file_size(item);
 	const uint64_t w = number_width(n);
-	print_spaces(measure->size_width - w + 1);
+	print_spaces(measure->size_width - w + COL_PADDING);
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
 }
 
