@@ -18,7 +18,7 @@ FILES	:=	\
 
 SRCS	:=	$(FILES:%.c=$(SRCDIR)/%.c)
 OBJS	:=	$(FILES:%.c=$(OBJDIR)/%.o)
-NAME	:=	ls
+NAME	:=	ft_ls
 
 LIBFT		:=	libft.a
 LIBFT_DIR	:=	libft

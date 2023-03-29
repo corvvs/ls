@@ -93,12 +93,12 @@ typedef struct s_file_item {
 }	t_file_item;
 
 // この名前はないわ
-typedef struct	s_lsls {
+typedef struct	s_file_batch {
 	bool		is_root;
 	char**		path;
 	size_t		len;
 	t_option*	opt;
-}	t_lsls;
+}	t_file_batch;
 
 typedef struct	s_passwd_cache {
 	bool			cached;
@@ -120,7 +120,7 @@ typedef struct	s_cache {
 
 typedef struct	s_master {
 	const char*	exec_name;
-	t_lsls*		root;
+	t_file_batch*		root;
 	t_option*	opt;
 	t_cache		cache;
 }	t_master;

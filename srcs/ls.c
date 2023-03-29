@@ -187,19 +187,19 @@ static void	determine_file_name(const t_master* m, t_file_item* item, const char
 #endif
 }
 
-void	exec_ls(t_master* m, t_lsls* ls) {
-	t_file_item*	items = malloc(sizeof(t_file_item) * ls->len);
+void	list_files(t_master* m, t_file_batch* batch) {
+	t_file_item*	items = malloc(sizeof(t_file_item) * batch->len);
 	YOYO_ASSERT(items != NULL);
-	t_file_item**	pointers = malloc(sizeof(t_file_item*) * ls->len);
+	t_file_item**	pointers = malloc(sizeof(t_file_item*) * batch->len);
 	YOYO_ASSERT(pointers != NULL);
 
 	// ディレクトリを区別して処理すべきか？
-	const bool		distinguish_dir = !m->opt->show_dir_as_file && (m->opt->recursive || ls->is_root);
+	const bool		distinguish_dir = !m->opt->show_dir_as_file && (m->opt->recursive || batch->is_root);
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
 	// [ファイル情報を読み取る]
-	for (size_t i = 0; i < ls->len; ++i) {
-		const char* path = ls->path[i];
+	for (size_t i = 0; i < batch->len; ++i) {
+		const char* path = batch->path[i];
 		t_file_item*	item = &items[i];
 
 		errno = 0;
@@ -215,7 +215,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 		item->nominal_file_type = ft;
 		item->errn = errno;
 		determine_file_name(m, item, path);
-		if (is_dot_dir(item) && !ls->is_root) {
+		if (is_dot_dir(item) && !batch->is_root) {
 			item->actual_file_type = YO_FT_REGULAR;
 		}
 		if (ft == YO_FT_LINK) {
@@ -236,7 +236,7 @@ void	exec_ls(t_master* m, t_lsls* ls) {
 
 	// [非ディレクトリ情報を出力]
 	size_t	n_no_dirs = n_ok - n_dirs;
-	output_files(m, ls, n_no_dirs, pointers);
+	output_files(m, batch, n_no_dirs, pointers);
 
 	// [ディレクトリ情報を出力]
 	output_dirs(m, n_ok, n_dirs, pointers + n_no_dirs);

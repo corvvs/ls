@@ -58,8 +58,8 @@ static size_t	subtotal_blocks(const t_file_item* item) {
 // }
 
 // "Total: " 部分の出力
-static void	print_total_blocks(t_lsls* ls, size_t len, t_file_item** items) {
-	if (ls->is_root) {
+static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** items) {
+	if (batch->is_root) {
 		return;
 	}
 	size_t total_blocks = 0;
@@ -252,9 +252,9 @@ static void	print_datetime(const t_long_format_measure* measure, t_cache* cache,
 }
 
 // long-format の出力
-void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items) {
+void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	// ["Total:" の出力]
-	print_total_blocks(ls, len, items);
+	print_total_blocks(batch, len, items);
 	// [幅の測定]
 	t_long_format_measure	measure = {};
 	for (size_t i = 0; i < len; ++i) {

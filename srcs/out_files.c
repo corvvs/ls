@@ -11,10 +11,10 @@ static void	print_regular_format(t_master* m, size_t len, t_file_item** items) {
 }
 
 
-void	output_files(t_master* m, t_lsls* ls, size_t len, t_file_item** items) {
+void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	(void)m;
 	if (m->opt->long_format) {
-		print_long_format(m, ls, len, items);
+		print_long_format(m, batch, len, items);
 	} else {
 		print_regular_format(m, len, items);
 	}
