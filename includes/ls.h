@@ -42,7 +42,8 @@ void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items)
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
 
 // print_utils.c
-void	print_filename(const t_option* option, const t_file_item* item);
+void	print_filename(const t_option* option, const t_file_item* item, bool end);
+void	print_spaces(uint64_t n);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);

@@ -1,7 +1,6 @@
 #include "ls.h"
 
 #define BLOCKSIZE_FOR_LINUX_LS 1024
-#define SPACES "                                                                                                   "
 #ifdef __MACH__
 # define COL_PADDING 2
 #else
@@ -18,11 +17,6 @@ static uint64_t	number_width(uint64_t i) {
 		n += 1;
 	}
 	return n;
-}
-
-static void	print_spaces(uint64_t n) {
-	int rv = write(STDOUT_FILENO, SPACES, n);
-	(void)rv;
 }
 
 // "Total:" 用のブロックサイズの計算
@@ -294,7 +288,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(m->opt, item);
+		print_filename(m->opt, item, true);
 		// (optional)リンク先
 
 		yoyo_dprintf(STDOUT_FILENO, "\n");

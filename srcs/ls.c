@@ -115,7 +115,7 @@ static bool	investigate_simlink(t_file_item* item) {
 	errno = 0;
 	int rv = lstat(link_to, &st);
 	if (rv < 0) {
-		DEBUGERR("link_to = %s, errno = %d, %s", link_to, errno, strerror(errno));
+		// DEBUGERR("link_to = %s, errno = %d, %s", link_to, errno, strerror(errno));
 		item->actual_file_type = YO_FT_BAD_LINK;
 	}
 	return true;
