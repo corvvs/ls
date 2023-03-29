@@ -1,14 +1,28 @@
 #include "ls.h"
 #include "color.h"
 
-static void	print_filename_body(const t_option* option, const t_file_item* item) {
+static void	print_filename_body(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
 #ifdef __MACH__
 	(void)option;
+	(void)batch;
+	(void)end;
 	yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
 #else
 	if (item->quote_type == YO_QT_NONE) {
 		if (option->tty) {
-			yoyo_dprintf(STDOUT_FILENO, " %s", item->name);
+			if (batch->bopt.some_quoted) {
+				if (end) {
+					yoyo_dprintf(STDOUT_FILENO, " %s", item->name);
+				} else {
+					yoyo_dprintf(STDOUT_FILENO, " %s ", item->name);
+				}
+			} else {
+				if (end) {
+					yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
+				} else {
+					yoyo_dprintf(STDOUT_FILENO, "%s ", item->name);
+				}
+			}
 		} else {
 			yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
 		}
@@ -29,7 +43,7 @@ static void	print_filename_body(const t_option* option, const t_file_item* item)
 #endif
 }
 
-void	print_filename(const t_option* option, const t_file_item* item) {
+void	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
 	const char*	color;
 	const char*	suffix = TX_RST;
 	if (!option->color) {
@@ -48,6 +62,17 @@ void	print_filename(const t_option* option, const t_file_item* item) {
 		suffix = "";
 	}
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
-	print_filename_body(option, item);
+	print_filename_body(option, batch, item, end);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
+}
+
+#define SPACES "                                                                                                   "
+
+void	print_spaces(uint64_t n) {
+	while (n > 0) {
+		uint64_t	m = n > 80 ? 80 : n;
+		n -= m;
+		int rv = write(STDOUT_FILENO, SPACES, m);
+		(void)rv;
+	}
 }

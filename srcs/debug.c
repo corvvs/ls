@@ -1,5 +1,5 @@
 #include "ls.h"
 
-void	print_ls(const t_lsls* ls) {
-	yoyo_dprintf(STDOUT_FILENO, "len: %zu\n", ls->len);
+void	print_ls(const t_file_batch* batch) {
+	yoyo_dprintf(STDOUT_FILENO, "len: %zu\n", batch->len);
 }

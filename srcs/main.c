@@ -7,8 +7,8 @@ int main(int argc, char **argv) {
 	}
 
 	// [初期設定]
-	t_option	option = {};
-	t_lsls		root = (t_lsls){
+	t_global_option	option = {};
+	t_file_batch		root = (t_file_batch){
 		.is_root = true,
 		.opt = &option,
 	};
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 	};
 	m.cache.current_unixtime_s = time(NULL);
 	// [lsのメイン処理開始]
-	exec_ls(&m, &root);
+	list_files(&m, &root);
 	// [後始末]
 	free(root.path);
 	for (size_t i = 0; i < N_CACHE; ++i) {

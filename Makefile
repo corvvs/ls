@@ -7,6 +7,8 @@ FILES	:=	\
 			out_files.c\
 			out_dirs.c\
 			print_long_format.c\
+			print_column_linux.c\
+			print_column_macos.c\
 			print_utils.c\
 			arguments.c\
 			printf.c\
@@ -18,7 +20,7 @@ FILES	:=	\
 
 SRCS	:=	$(FILES:%.c=$(SRCDIR)/%.c)
 OBJS	:=	$(FILES:%.c=$(OBJDIR)/%.o)
-NAME	:=	ls
+NAME	:=	ft_ls
 
 LIBFT		:=	libft.a
 LIBFT_DIR	:=	libft

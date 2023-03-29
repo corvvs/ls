@@ -1,6 +1,6 @@
 #include "ls.h"
 
-static bool	set_option(t_option* option, char c) {
+static bool	set_option(t_global_option* option, char c) {
 	switch (c) {
 		case 'l':
 			option->long_format = true;
@@ -37,8 +37,8 @@ static bool	set_option(t_option* option, char c) {
 }
 
 // argc, argv を読み取り, 初期設定を行う
-bool	parse_arguments(t_lsls* lsls, int argc, char **argv) {
-	lsls->opt->tty = isatty(STDOUT_FILENO);
+bool	parse_arguments(t_file_batch* batch, int argc, char **argv) {
+	batch->opt->tty = isatty(STDOUT_FILENO);
 	int i;
 	for (i = 1; i < argc; ++i) {
 		char*	s = argv[i];
@@ -47,7 +47,7 @@ bool	parse_arguments(t_lsls* lsls, int argc, char **argv) {
 			break;
 		}
 		for (size_t k = 1; s[k]; ++k) {
-			if (!set_option(lsls->opt, s[k])) {
+			if (!set_option(batch->opt, s[k])) {
 				DEBUGERR("error?: %c", s[k]);
 				return false;
 			}
@@ -67,7 +67,8 @@ bool	parse_arguments(t_lsls* lsls, int argc, char **argv) {
 			paths[j] = argv[i];
 		}
 	}
-	lsls->len = len;
-	lsls->path = paths;
+	batch->len = len;
+	batch->path = paths;
+	batch->opt->color = true;
 	return true;
 }

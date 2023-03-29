@@ -27,22 +27,27 @@ typedef struct timespec	t_stat_time;
 # endif
 
 // ls.c
-void	exec_ls(t_master* m, t_lsls* ls);
+void	list_files(t_master* m, t_file_batch* batch);
 
 // option.c
-bool	parse_arguments(t_lsls* lsls, int argc, char **argv);
+bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
 
 // out_files.c
-void	output_files(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
+void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
 
 // out_dirs.c
 void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items);
 
 // print_long_format.c
-void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items);
+void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
+
+// print_column_linux.c
+// print_column_macos.c
+void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_width, size_t len, t_file_item** items);
 
 // print_utils.c
-void	print_filename(const t_option* option, const t_file_item* item);
+void	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end);
+void	print_spaces(uint64_t n);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
@@ -61,7 +66,7 @@ void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 const char*	yo_basename(const char* path);
 
 // debug.c
-void	print_ls(const t_lsls* ls);
+void	print_ls(const t_file_batch* batch);
 
 // assert.c
 void	yoyo_assert(const char* strexp, bool exp, const char* file, unsigned int line, const char* func);

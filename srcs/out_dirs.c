@@ -13,7 +13,7 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 
 static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	const char*	dir_path = dir_item->path;
-	t_lsls		info = (t_lsls){
+	t_file_batch		info = (t_file_batch){
 		.is_root = false,
 		.opt = m->opt,
 		.len = 0,
@@ -63,7 +63,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	closedir(dir);
 	info.len = i;
 	info.path = names;
-	exec_ls(m, &info);
+	list_files(m, &info);
 	for (size_t i = 0; i < info.len; ++i) {
 		free(names[i]);
 	}

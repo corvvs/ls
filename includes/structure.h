@@ -31,7 +31,12 @@ typedef enum e_quote_type {
 	YO_QT_SQ,
 }	t_quote_type;
 
-typedef struct	s_option {
+typedef struct	s_batch_option {
+	bool	distinguish_dir;
+	bool	some_quoted;
+}	t_batch_option;
+
+typedef struct	s_global_option {
 	bool	tty;
 	// -l
 	bool	long_format;
@@ -65,7 +70,7 @@ typedef struct	s_option {
 	// --col
 	// カラーリングする
 	bool	color;
-}	t_option;
+}	t_global_option;
 
 typedef struct s_file_item {
 	// ファイルのbasename
@@ -93,12 +98,13 @@ typedef struct s_file_item {
 }	t_file_item;
 
 // この名前はないわ
-typedef struct	s_lsls {
-	bool		is_root;
-	char**		path;
-	size_t		len;
-	t_option*	opt;
-}	t_lsls;
+typedef struct	s_file_batch {
+	bool				is_root;
+	char**				path;
+	size_t				len;
+	t_global_option*	opt;
+	t_batch_option		bopt;
+}	t_file_batch;
 
 typedef struct	s_passwd_cache {
 	bool			cached;
@@ -120,8 +126,8 @@ typedef struct	s_cache {
 
 typedef struct	s_master {
 	const char*	exec_name;
-	t_lsls*		root;
-	t_option*	opt;
+	t_file_batch*		root;
+	t_global_option*	opt;
 	t_cache		cache;
 }	t_master;
 

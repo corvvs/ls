@@ -1,7 +1,6 @@
 #include "ls.h"
 
 #define BLOCKSIZE_FOR_LINUX_LS 1024
-#define SPACES "                                                                                                   "
 #ifdef __MACH__
 # define COL_PADDING 2
 #else
@@ -18,11 +17,6 @@ static uint64_t	number_width(uint64_t i) {
 		n += 1;
 	}
 	return n;
-}
-
-static void	print_spaces(uint64_t n) {
-	int rv = write(STDOUT_FILENO, SPACES, n);
-	(void)rv;
 }
 
 // "Total:" 用のブロックサイズの計算
@@ -58,8 +52,8 @@ static size_t	subtotal_blocks(const t_file_item* item) {
 // }
 
 // "Total: " 部分の出力
-static void	print_total_blocks(t_lsls* ls, size_t len, t_file_item** items) {
-	if (ls->is_root) {
+static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** items) {
+	if (batch->is_root) {
 		return;
 	}
 	size_t total_blocks = 0;
@@ -252,9 +246,9 @@ static void	print_datetime(const t_long_format_measure* measure, t_cache* cache,
 }
 
 // long-format の出力
-void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items) {
+void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	// ["Total:" の出力]
-	print_total_blocks(ls, len, items);
+	print_total_blocks(batch, len, items);
 	// [幅の測定]
 	t_long_format_measure	measure = {};
 	for (size_t i = 0; i < len; ++i) {
@@ -294,7 +288,7 @@ void	print_long_format(t_master* m, t_lsls* ls, size_t len, t_file_item** items)
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(m->opt, item);
+		print_filename(m->opt, batch, item, true);
 		// (optional)リンク先
 
 		yoyo_dprintf(STDOUT_FILENO, "\n");
