@@ -21,7 +21,7 @@ static t_filetype	determine_file_type(struct stat* st) {
 
 // 時間 ta, tb の値に基づき pa, pb を入れ替える.
 // その後, 比較がこれで十分かどうかを返す.
-static bool	swap_by_time(t_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
+static bool	swap_by_time(t_global_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
 	int64_t diff = unixtime_us(ta) - unixtime_us(tb);
 	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
 		// DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, unixtime_us(ta), (*pb)->name, unixtime_us(tb));
@@ -31,10 +31,11 @@ static bool	swap_by_time(t_option* option, t_file_item** pa, t_stat_time* ta, t_
 }
 
 // ファイルをオプションに応じてソートする
-void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_item** pointers) {
+void	sort_entries(t_global_option* option, bool distinguish_dir, size_t len, t_file_item** pointers) {
 	const bool sort_reverse = option->sort_reverse;
 	for (size_t i = 0; i < len; ++i) {
 		// DEBUGWARN("n = %zu", len - i);
+		bool	swapped = false;
 		for (size_t j = 1; j < len - i; ++j) {
 			t_file_item** pa = &pointers[j - 1];
 			t_file_item** pb = &pointers[j];
@@ -46,6 +47,7 @@ void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_ite
 				if (a_is_dir && !b_is_dir) {
 					// DEBUGOUT("%s", "SWAP BY DIR");
 					swap_item(pa, pb);
+					swapped = true;
 					continue;
 				}
 				if (a_is_dir != b_is_dir) {
@@ -62,11 +64,13 @@ void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_ite
 				if (!option->time_access) {
 					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.MTIME), &pointers[j - 1], (&pointers[j - 1]->st.MTIME));
 					if (over) {
+						swapped = true;
 						continue;
 					}
 				} else {
 					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.ATIME), &pointers[j - 1], (&pointers[j - 1]->st.ATIME));
 					if (over) {
+						swapped = true;
 						continue;
 					}
 				}
@@ -75,10 +79,14 @@ void	sort_entries(t_option* option, bool distinguish_dir, size_t len, t_file_ite
 			diff = ft_strcmp(pointers[j - 1]->name, pointers[j]->name);
 			if ((!sort_reverse && diff > 0) || (sort_reverse && diff < 0)) {
 				swap_item(pa, pb);
+				swapped = true;
 			}
 			if (diff != 0) {
 				continue;
 			}
+		}
+		if (!swapped) {
+			break;
 		}
 	}
 }
@@ -173,7 +181,7 @@ static void	determine_file_name(const t_master* m, t_file_item* item, const char
 	(void)has_dq;
 	if (!has_sq && !has_dq && !has_sp && !has_ex_sp) {
 		item->quote_type = YO_QT_NONE;
-		item->display_len = ft_strlen(name) + 2;
+		item->display_len = ft_strlen(name);
 	} else if (has_sq && has_sp && !has_ex_sp) {
 		item->quote_type =YO_QT_DQ;
 		item->display_len = ft_strlen(name) + 2;
@@ -194,10 +202,11 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	YOYO_ASSERT(pointers != NULL);
 
 	// ディレクトリを区別して処理すべきか？
-	const bool		distinguish_dir = !m->opt->show_dir_as_file && (m->opt->recursive || batch->is_root);
+	batch->bopt.distinguish_dir = !m->opt->show_dir_as_file && (m->opt->recursive || batch->is_root);
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
 	// [ファイル情報を読み取る]
+	batch->bopt.some_quoted = false;
 	for (size_t i = 0; i < batch->len; ++i) {
 		const char* path = batch->path[i];
 		t_file_item*	item = &items[i];
@@ -215,6 +224,9 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		item->nominal_file_type = ft;
 		item->errn = errno;
 		determine_file_name(m, item, path);
+		if (item->quote_type != YO_QT_NONE) {
+			batch->bopt.some_quoted = true;
+		}
 		if (is_dot_dir(item) && !batch->is_root) {
 			item->actual_file_type = YO_FT_REGULAR;
 		}
@@ -223,16 +235,21 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		}
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
-		if (!distinguish_dir) {
+		if (!batch->bopt.distinguish_dir) {
 			continue;
 		}
 		if (item->actual_file_type == YO_FT_DIR) {
 			n_dirs += 1;
 		}
 	}
+	for (size_t i = 0; i < batch->len; ++i) {
+		if (batch->bopt.some_quoted && items[i].quote_type == YO_QT_NONE) {
+			items[i].display_len += 2;
+		}
+	}
 
 	// [ファイル情報を(オプションに従って)ソートする]
-	sort_entries(m->opt, distinguish_dir, n_ok, pointers);
+	sort_entries(m->opt, batch->bopt.distinguish_dir, n_ok, pointers);
 
 	// [非ディレクトリ情報を出力]
 	size_t	n_no_dirs = n_ok - n_dirs;

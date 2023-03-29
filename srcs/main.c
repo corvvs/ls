@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
 	}
 
 	// [初期設定]
-	t_option	option = {};
+	t_global_option	option = {};
 	t_file_batch		root = (t_file_batch){
 		.is_root = true,
 		.opt = &option,

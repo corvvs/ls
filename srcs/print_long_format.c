@@ -288,7 +288,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(m->opt, item, true);
+		print_filename(m->opt, batch, item, true);
 		// (optional)リンク先
 
 		yoyo_dprintf(STDOUT_FILENO, "\n");

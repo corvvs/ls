@@ -1,6 +1,6 @@
 #include "ls.h"
 
-static bool	set_option(t_option* option, char c) {
+static bool	set_option(t_global_option* option, char c) {
 	switch (c) {
 		case 'l':
 			option->long_format = true;
