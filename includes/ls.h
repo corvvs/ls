@@ -41,6 +41,10 @@ void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items)
 // print_long_format.c
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
 
+// print_column_linux.c
+// print_column_macos.c
+void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_width, size_t len, t_file_item** items);
+
 // print_utils.c
 void	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end);
 void	print_spaces(uint64_t n);

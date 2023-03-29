@@ -160,6 +160,7 @@ static void	determine_file_name(const t_master* m, t_file_item* item, const char
 		return;
 	}
 #ifdef __MACH__
+	item->display_len = ft_strlen(name);
 #else
 	bool	has_sq = false;
 	bool	has_dq = false;
