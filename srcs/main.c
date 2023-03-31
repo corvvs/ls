@@ -1,5 +1,19 @@
 #include "ls.h"
 
+static void	destroy(t_master* m) {
+	free(m->root->path);
+	for (size_t i = 0; i < N_CACHE; ++i) {
+		if (m->cache.passwd[i].cached) {
+			free(m->cache.passwd[i].passwd.pw_name);
+		}
+	}
+	for (size_t i = 0; i < N_CACHE; ++i) {
+		if (m->cache.group[i].cached) {
+			free(m->cache.group[i].group.gr_name);
+		}
+	}
+}
+
 int main(int argc, char **argv) {
 	// argc がまともな値ではない場合は即座に終了する
 	if (argc < 1) {
@@ -26,15 +40,5 @@ int main(int argc, char **argv) {
 	// [lsのメイン処理開始]
 	list_files(&m, &root);
 	// [後始末]
-	free(root.path);
-	for (size_t i = 0; i < N_CACHE; ++i) {
-		if (m.cache.passwd[i].cached) {
-			free(m.cache.passwd[i].passwd.pw_name);
-		}
-	}
-	for (size_t i = 0; i < N_CACHE; ++i) {
-		if (m.cache.group[i].cached) {
-			free(m.cache.group[i].group.gr_name);
-		}
-	}
+	destroy(&m);
 }

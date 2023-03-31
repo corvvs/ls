@@ -150,13 +150,13 @@ static t_quote_type	should_quote_char(char c) {
 }
 #endif
 
-static void	determine_file_name(const t_master* m, t_file_item* item, const char* path) {
-	const char* name = yo_basename(path);
+static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
+	const char* name = batch->is_root ? path : yo_basename(path);
 	item->name = name;
 	item->path = path;
 	item->quote_type = YO_QT_NONE;
 	item->path_len = ft_strlen(path);
-	if (!m->opt->tty) {
+	if (!batch->opt->tty) {
 		return;
 	}
 #ifdef __MACH__
@@ -224,7 +224,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		item->actual_file_type = ft;
 		item->nominal_file_type = ft;
 		item->errn = errno;
-		determine_file_name(m, item, path);
+		determine_file_name(batch, item, path);
 		if (item->quote_type != YO_QT_NONE) {
 			batch->bopt.some_quoted = true;
 		}
