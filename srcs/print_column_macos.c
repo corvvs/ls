@@ -69,9 +69,9 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			if (len <= k) {
 				break;
 			}
-			bool end = j + 1 == column_number;
-			print_filename(m->opt, batch, items[k], end);
-			if (!end) {
+			bool row_end = j + 1 == column_number || len <= k + row_number;
+			print_filename(m->opt, batch, items[k], row_end);
+			if (!row_end) {
 				unsigned int tabs = term_tabs - items[k]->display_len / 8;
 				while (tabs--) {
 					yoyo_dprintf(STDOUT_FILENO, "\t");

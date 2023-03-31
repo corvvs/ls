@@ -146,7 +146,7 @@ static t_quote_type	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
 	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
-	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^", c);
+	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|", c);
 }
 #endif
 
@@ -243,9 +243,11 @@ void	list_files(t_master* m, t_file_batch* batch) {
 			n_dirs += 1;
 		}
 	}
-	for (size_t i = 0; i < batch->len; ++i) {
-		if (batch->bopt.some_quoted && items[i].quote_type == YO_QT_NONE) {
-			items[i].display_len += 2;
+	if (batch->bopt.some_quoted) {
+		for (size_t i = 0; i < batch->len; ++i) {
+			if (items[i].quote_type == YO_QT_NONE) {
+				items[i].display_len += 2;
+			}
 		}
 	}
 
