@@ -72,3 +72,14 @@ down:
 .PHONY:	it
 it:
 	docker-compose exec app bash
+
+.PHONY:	t
+ifeq  ($(shell uname),Darwin)
+t:	re
+	bash test_mac.sh > test_result.mac.txt
+	cat test_result.mac.txt
+else
+t:	re
+	bash test_linux.sh > test_result.linux.txt
+	cat test_result.linux.txt
+endif
