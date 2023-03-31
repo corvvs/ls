@@ -8,37 +8,16 @@
 [32m[ OK ][m /usr
 [32m[ OK ][m /usr/local
 [32m[ OK ][m /usr/bin
---- /dev/fd/63	2023-03-31 05:29:53.145785009 +0000
-+++ /dev/fd/62	2023-03-31 05:29:53.146785009 +0000
-@@ -1,7 +1,4 @@
- Script started on 2023-03-31 05:29:52+00:00 [TERM="xterm" TTY="/dev/pts/1" COLUMNS="-1" LINES="-1"]
--/usr:
--bin  games  include  lib  libexec  local  sbin	share  src
--
- /usr/bin:
- '['				   chmod		        find		     link			        pod2man		   tail
-  aarch64-linux-gnu-addr2line	   choom		        findmnt		     linux32			        pod2text	   tar
-@@ -95,4 +92,7 @@
-  chcon				   false		        lesskey		     pldd			        sync		   zmore
-  chfn				   fgrep		        lesspipe	     pmap			        tabs		   znew
-  chgrp				   fincore		        libnetcfg	     pod2html			        tac
-+
-+/usr:
-+bin  games  include  lib  libexec  local  sbin	share  src
- 
-[31m[FAIL] /usr/bin /usr[m
+[32m[ OK ][m /usr/bin /usr
 [32m[ OK ][m /usr/bin /usr/bin
 [32m[ OK ][m -l ./srcs
 [32m[ OK ][m -l ./includes
 [32m[ OK ][m -l ./srcs ./includes
 [32m[ OK ][m srcs/
---- /dev/fd/63	2023-03-31 05:29:58.944785012 +0000
-+++ /dev/fd/62	2023-03-31 05:29:58.944785012 +0000
-@@ -1,4 +1,4 @@
- Script started on 2023-03-31 05:29:58+00:00 [TERM="xterm" TTY="/dev/pts/1" COLUMNS="-1" LINES="-1"]
--srcs/arguments.c  srcs/cache.c	srcs/ls.c    srcs/out_dirs.c   srcs/print_column_linux.c  srcs/print_long_format.c  srcs/printf.c  srcs/time.c
--srcs/assert.c	  srcs/debug.c	srcs/main.c  srcs/out_files.c  srcs/print_column_macos.c  srcs/print_utils.c	    srcs/sss	   srcs/utils.c
-+arguments.c  cache.c  ls.c    out_dirs.c   print_column_linux.c  print_long_format.c  printf.c	time.c
-+assert.c     debug.c  main.c  out_files.c  print_column_macos.c  print_utils.c	      sss	utils.c
- 
-[31m[FAIL] srcs/*[m
+[32m[ OK ][m srcs/*
+[32m[ OK ][m ./includes/../srcs/
+[32m[ OK ][m ./includes/../srcs/*
+[32m[ OK ][m -l srcs/
+[32m[ OK ][m -l srcs/*
+[32m[ OK ][m -l ./includes/../srcs/
+[32m[ OK ][m -l ./includes/../srcs/*
