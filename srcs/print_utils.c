@@ -1,49 +1,35 @@
 #include "ls.h"
 #include "color.h"
 
-static void	print_filename_body(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
-#ifdef __MACH__
+static int	print_filename_body(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
+	(void)end;
 	(void)option;
 	(void)batch;
-	(void)end;
-	yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
+#ifdef __MACH__
+	return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
 #else
 	if (item->quote_type == YO_QT_NONE) {
-		if (option->tty) {
-			if (batch->bopt.some_quoted) {
-				if (end) {
-					yoyo_dprintf(STDOUT_FILENO, " %s", item->name);
-				} else {
-					yoyo_dprintf(STDOUT_FILENO, " %s ", item->name);
-				}
-			} else {
-				if (end) {
-					yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
-				} else {
-					yoyo_dprintf(STDOUT_FILENO, "%s ", item->name);
-				}
-			}
-		} else {
-			yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
-		}
+		return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
 	} else if (item->quote_type == YO_QT_DQ) {
-		yoyo_dprintf(STDOUT_FILENO, "\"%s\"", item->name);
+		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", item->name);
 	} else {
-		yoyo_dprintf(STDOUT_FILENO, "'");
+		int rv = 0;
+		rv += yoyo_dprintf(STDOUT_FILENO, "'");
 		for (size_t i = 0; item->name[i]; ++i) {
 			char c = item->name[i];
 			if (c == '\'') {
-				yoyo_dprintf(STDOUT_FILENO, "'\\%c'", c);
+				rv += yoyo_dprintf(STDOUT_FILENO, "'\\%c'", c);
 			} else {
-				yoyo_dprintf(STDOUT_FILENO, "%c", c);
+				rv += yoyo_dprintf(STDOUT_FILENO, "%c", c);
 			}
 		}
-		yoyo_dprintf(STDOUT_FILENO, "'");
+		rv += yoyo_dprintf(STDOUT_FILENO, "'");
+		return rv;
 	}
 #endif
 }
 
-void	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
+int	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
 	const char*	color;
 	const char*	suffix = TX_RST;
 	if (!option->color) {
@@ -62,8 +48,9 @@ void	print_filename(const t_global_option* option, const t_file_batch* batch, co
 		suffix = "";
 	}
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
-	print_filename_body(option, batch, item, end);
+	int size = print_filename_body(option, batch, item, end);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
+	return size;
 }
 
 #define SPACES "                                                                                                   "

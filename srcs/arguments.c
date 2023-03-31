@@ -69,6 +69,5 @@ bool	parse_arguments(t_file_batch* batch, int argc, char **argv) {
 	}
 	batch->len = len;
 	batch->path = paths;
-	batch->opt->color = true;
 	return true;
 }
