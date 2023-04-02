@@ -215,7 +215,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		errno = 0;
 		int rv = lstat(path, &item->st);
 		if (rv) {
-			yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, path, strerror(errno));
+			print_error(m, "reading directory", path);
 			continue;
 		}
 		t_filetype	ft = determine_file_type(&item->st);

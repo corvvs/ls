@@ -22,7 +22,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	errno = 0;
 	DIR*	dir = opendir(dir_path);
 	if (dir == NULL) {
-		yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, dir_path, strerror(errno));
+		print_error(m, "reading directory", dir_path);
 		return;
 	}
 	// DEBUGOUT("opened dir: %s, %p", dir_path, dir);
@@ -36,7 +36,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 		entry = readdir(dir);
 		if (entry == NULL) {
 			if (errno) {
-				yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, dir_path, strerror(errno));
+				print_error(m, "reading directory", dir_path);
 			}
 			break;
 		}
