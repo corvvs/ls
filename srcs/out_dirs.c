@@ -12,6 +12,7 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 
 
 static void	output_dir(t_master* m, const t_file_item* dir_item) {
+	// DEBUGINFO("[%s]", dir_item->name);
 	const char*	dir_path = dir_item->path;
 	t_file_batch		info = (t_file_batch){
 		.is_root = false,
@@ -22,7 +23,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	errno = 0;
 	DIR*	dir = opendir(dir_path);
 	if (dir == NULL) {
-		yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, dir_path, strerror(errno));
+		print_error(m, "reading directory", dir_path);
 		return;
 	}
 	// DEBUGOUT("opened dir: %s, %p", dir_path, dir);
@@ -36,7 +37,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 		entry = readdir(dir);
 		if (entry == NULL) {
 			if (errno) {
-				yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, dir_path, strerror(errno));
+				print_error(m, "reading directory", dir_path);
 			}
 			break;
 		}
@@ -70,19 +71,31 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 	free(names);
 }
 
-void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items) {
-	if (len == 0) {
+void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_len, t_file_item** items) {
+	// DEBUGINFO("total_len = %zu, dir_len = %zu", total_len, dir_len);
+	(void)batch;
+	if (total_len == 0) {
 		return;
 	}
 	(void)m;
+#ifdef __MACH__
 	const bool show_header = total_len > 1;
-	const bool has_leading = total_len - len > 0;
-	for (size_t i = 0; i < len; ++i) {
+#else
+	const bool show_header = total_len > 1 ||
+		(batch->is_root && batch->opt->recursive && total_len == 1 && dir_len == 1);
+#endif
+	const bool has_leading = total_len - dir_len > 0;
+	for (size_t i = 0; i < total_len; ++i) {
 		t_file_item*	item = items[i];
+		if (item->actual_file_type != YO_FT_DIR) {
+			continue;
+		}
 		if (has_leading || 0 < i) {
 			yoyo_dprintf(STDOUT_FILENO, "\n");
 		}
+		// DEBUGOUT("HEADER: %d for %s", show_header, item->path);
 		if (show_header) {
+			// ヘッダ出力
 			yoyo_dprintf(STDOUT_FILENO, "%s:\n", item->path);
 		}
 		output_dir(m, item);

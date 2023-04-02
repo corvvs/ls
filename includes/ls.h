@@ -28,6 +28,7 @@ typedef struct timespec	t_stat_time;
 
 // ls.c
 void	list_files(t_master* m, t_file_batch* batch);
+bool	is_dot_dir(const t_file_item* item);
 
 // option.c
 bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
@@ -36,7 +37,7 @@ bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
 void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
 
 // out_dirs.c
-void	output_dirs(t_master* m, size_t total_len, size_t len, t_file_item** items);
+void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_len, t_file_item** items);
 
 // print_long_format.c
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
@@ -48,6 +49,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 // print_utils.c
 int		print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end);
 void	print_spaces(uint64_t n);
+void	print_error(const t_master* m, const char* operation, const char* path);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);

@@ -22,3 +22,13 @@
 [32m[ OK ][m -l srcs/*
 [32m[ OK ][m -l ./includes/../srcs/
 [32m[ OK ][m -l ./includes/../srcs/*
+[32m[ OK ][m -l ./includes/../srcs/*
+[32m[ OK ][m Makefile
+[32m[ OK ][m Makefile src/
+[32m[ OK ][m libft libft
+[32m[ OK ][m -l libft libft
+[32m[ OK ][m -R libft libft
+[32m[ OK ][m -lR libft libft
+[32m[ OK ][m -R
+[32m[ OK ][m .
+[32m[ OK ][m -R .

@@ -75,11 +75,13 @@ it:
 
 .PHONY:	t
 ifeq  ($(shell uname),Darwin)
-t:	re
+t:	$(NAME)
 	bash test_mac.sh > test_result.mac.txt
 	cat test_result.mac.txt
 else
-t:	re
+t:	$(NAME)
 	bash test_linux.sh > test_result.linux.txt
 	cat test_result.linux.txt
 endif
+
+rt:	fclean t

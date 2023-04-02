@@ -59,8 +59,16 @@ run_case "-l srcs/*"
 run_case "-l ./includes/../srcs/"
 run_case "-l ./includes/../srcs/*"
 
-# run_case "Makefile"
-# run_case "Makefile Makefile"
-# run_case "Makefile Makefile"
-# run_case "Makefile src/main.c"
-# run_case "src/main.c Makefile"
+run_case "-l ./includes/../srcs/*"
+
+run_case "Makefile"
+run_case "Makefile src/"
+
+run_case "libft libft"
+run_case "-l libft libft"
+run_case "-R libft libft"
+run_case "-lR libft libft"
+
+run_case "-R"
+run_case "."
+run_case "-R ."
