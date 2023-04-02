@@ -27,6 +27,9 @@ static bool	set_option(t_global_option* option, char c) {
 		case 'g':
 			option->show_group = true;
 			break;
+		case 'G':
+			option->color = true;
+			break;
 		case 'd':
 			option->show_dir_as_file = true;
 			break;

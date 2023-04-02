@@ -99,13 +99,13 @@ bool	is_dot_dir(const t_file_item* item) {
 
 // シンボリックリンク item のリンク先に関する情報を取得する
 static bool	investigate_simlink(t_file_item* item) {
-	assert(item->actual_file_type == YO_FT_LINK);
+	YOYO_ASSERT(item->actual_file_type == YO_FT_LINK);
 	const char* path = item->path;
 
 	// [リンク先の名前を取得する]
 	size_t link_len = item->st.st_size + 1;
 	char* link_to = malloc(link_len);
-	assert(link_to != NULL);
+	YOYO_ASSERT(link_to != NULL);
 	if (link_to == NULL) {
 		return false;
 	}

@@ -17,7 +17,7 @@
 # define TX_CYN "\e[36m"
 # define BG_BLK "\e[40m"
 # define BG_RED "\e[41m"
-# define TX_RST "\e[0m"
+# define TX_RST "\e[39;49m\e[0m"
 
 # define YOYO_DPRINTF(...) {\
 	yoyo_dprintf(STDERR_FILENO, __VA_ARGS__);\

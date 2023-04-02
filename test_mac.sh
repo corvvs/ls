@@ -72,3 +72,5 @@ run_case "-lR libft libft"
 run_case "-R"
 run_case "."
 run_case "-R ."
+
+run_case "-G"
