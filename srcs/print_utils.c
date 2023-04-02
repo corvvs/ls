@@ -41,6 +41,8 @@ int	print_filename(const t_global_option* option, const t_file_batch* batch, con
 		color = YO_COLOR_GOODLINK;
 	} else if (item->actual_file_type == YO_FT_BAD_LINK) {
 		color = YO_COLOR_BADLINK;
+	} else if (item->st.st_mode & S_ISUID) {
+		color = YO_COLOR_UID;
 	} else if (item->st.st_mode & S_IXUSR) {
 		color = YO_COLOR_EXE;
 	} else {

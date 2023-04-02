@@ -15,6 +15,7 @@
 # define TX_BLU "\e[34m"
 # define TX_MAZ "\e[35m"
 # define TX_CYN "\e[36m"
+# define TX_WHT "\e[36m"
 # define BG_BLK "\e[40m"
 # define BG_RED "\e[41m"
 # define TX_RST "\e[39;49m\e[0m"

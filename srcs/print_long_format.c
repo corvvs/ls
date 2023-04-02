@@ -88,7 +88,10 @@ static void	print_filemode_part(const t_file_item* item) {
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IRUSR) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWUSR) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_IXUSR) ? 'x' : '-';
+		perm[2] = (item->st.st_mode & S_ISUID)
+			? 's' : (item->st.st_mode & S_ISGID)
+			? 'S' : (item->st.st_mode & S_IXUSR)
+			? 'x' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
 	{ // グループ

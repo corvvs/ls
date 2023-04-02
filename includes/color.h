@@ -5,6 +5,7 @@
 
 # ifdef __MACH__ 
 #  define YO_COLOR_DIR TX_BLU
+#  define YO_COLOR_UID TX_GRY BG_RED
 #  define YO_COLOR_EXE TX_RED
 #  define YO_COLOR_GOODLINK TX_MAZ
 #  define YO_COLOR_BADLINK TX_MAZ
