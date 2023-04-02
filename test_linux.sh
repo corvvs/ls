@@ -5,7 +5,7 @@ REAL_FILE="real.txt"
 MINE_FILE="mine.txt"
 
 function compare_evidence() {
-	diff -u <(head -n-1 ${TEST_DIR}${REAL_FILE} | tail -n+1) <(head -n-1 ${TEST_DIR}${MINE_FILE} | tail -n+1)
+	diff -u <(head -n-1 ${TEST_DIR}${REAL_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_FILE} | tail -n+2)
 }
 
 function print_result() {
@@ -57,6 +57,17 @@ run_case "-l srcs/*"
 run_case "-l ./includes/../srcs/"
 run_case "-l ./includes/../srcs/*"
 
+run_case "-l ./includes/../srcs/*"
+
+run_case "Makefile"
+run_case "Makefile src/"
+
+run_case "libft libft"
+run_case "-l libft libft"
+run_case "-R libft libft"
+run_case "-lR libft libft"
+
 run_case "-R"
 run_case "."
 run_case "-R ."
+run_case "-R test1"

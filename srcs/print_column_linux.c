@@ -18,7 +18,7 @@ static bool	check_placement(t_master* m, t_file_batch* batch, unsigned int term_
 	while (i < len) {
 		size_t	dl = items[i]->display_len;
 		if (items[i]->quote_type != YO_QT_NONE) {
-			dl += 2;
+			dl += 1;
 		}
 		if (max_len < dl) {
 			max_len = dl;
@@ -94,7 +94,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			}
 			size_t	dl = items[k]->display_len;
 			if (items[k]->quote_type != YO_QT_NONE) {
-				dl += 2;
+				dl += 1;
 			}
 			if (max_len < dl) {
 				max_len = dl;
