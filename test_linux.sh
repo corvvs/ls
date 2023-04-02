@@ -56,3 +56,7 @@ run_case "-l srcs/"
 run_case "-l srcs/*"
 run_case "-l ./includes/../srcs/"
 run_case "-l ./includes/../srcs/*"
+
+run_case "-R"
+run_case "."
+run_case "-R ."

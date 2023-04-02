@@ -59,7 +59,14 @@ run_case "-l srcs/*"
 run_case "-l ./includes/../srcs/"
 run_case "-l ./includes/../srcs/*"
 
-# run_case "Makefile"
+run_case "-l ./includes/../srcs/*"
+
+run_case "-R"
+run_case "."
+run_case "-R ."
+run_case "Makefile"
+run_case "Makefile src/"
+
 # run_case "Makefile Makefile"
 # run_case "Makefile Makefile"
 # run_case "Makefile src/main.c"
