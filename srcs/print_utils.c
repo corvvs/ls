@@ -30,25 +30,43 @@ static int	print_filename_body(const t_global_option* option, const t_file_batch
 }
 
 int	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
+	static bool	colored = false;
 	const char*	color;
 	const char*	suffix = TX_RST;
+	const bool	was_colored = colored;
 	if (!option->color) {
 		color = YO_COLOR_REGULAR;
 		suffix = "";
 	} else if (item->nominal_file_type == YO_FT_DIR) {
 		color = YO_COLOR_DIR;
+		colored = true;
 	} else if (item->actual_file_type == YO_FT_LINK) {
 		color = YO_COLOR_GOODLINK;
+		colored = true;
 	} else if (item->actual_file_type == YO_FT_BAD_LINK) {
 		color = YO_COLOR_BADLINK;
+		colored = true;
 	} else if (item->st.st_mode & S_ISUID) {
 		color = YO_COLOR_UID;
+		colored = true;
+	} else if (item->st.st_mode & S_ISGID) {
+		color = YO_COLOR_GID;
+		colored = true;
 	} else if (item->st.st_mode & S_IXUSR) {
 		color = YO_COLOR_EXE;
+		colored = true;
 	} else {
 		color = YO_COLOR_REGULAR;
 		suffix = "";
 	}
+	(void)colored;
+	(void)was_colored;
+#ifdef __MACH__
+#else
+	if (!was_colored && colored) {
+		yoyo_dprintf(STDOUT_FILENO, "%s", TX_RST);
+	}
+#endif
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
 	int size = print_filename_body(option, batch, item, end);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);

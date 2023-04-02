@@ -1,13 +1,39 @@
+[32m[ OK ][m ./
+[32m[ OK ][m ./srcs
+[32m[ OK ][m ./includes
+[32m[ OK ][m ./srcs ./includes
+[32m[ OK ][m . ./srcs ./includes
+[32m[ OK ][m . .
+[32m[ OK ][m .. .. .
+[32m[ OK ][m /usr
+[32m[ OK ][m /usr/local
+[32m[ OK ][m /usr/bin
+[32m[ OK ][m /usr/bin /usr
+[32m[ OK ][m /usr/bin /usr/bin
+[32m[ OK ][m -l ./srcs
+[32m[ OK ][m -l ./includes
+[32m[ OK ][m -l ./srcs ./includes
+[32m[ OK ][m srcs/
+[32m[ OK ][m srcs/*
+[32m[ OK ][m ./includes/../srcs/
+[32m[ OK ][m ./includes/../srcs/*
+[32m[ OK ][m -l srcs/
+[32m[ OK ][m -l srcs/*
+[32m[ OK ][m -l ./includes/../srcs/
+[32m[ OK ][m -l ./includes/../srcs/*
+[32m[ OK ][m -l ./includes/../srcs/*
+[32m[ OK ][m Makefile
+[32m[ OK ][m Makefile src/
+[32m[ OK ][m libft libft
+[32m[ OK ][m -l libft libft
+[32m[ OK ][m -R libft libft
+[32m[ OK ][m -lR libft libft
+[32m[ OK ][m -R
+[32m[ OK ][m .
+[32m[ OK ][m -R .
+[32m[ OK ][m -G
+[32m[ OK ][m -G srcs
+[32m[ OK ][m -G includes
+[32m[ OK ][m -G minimini
 [32m[ OK ][m -G /usr
---- ./real.txt	2023-04-03 02:51:37.000000000 +0900
-+++ ./mine.txt	2023-04-03 02:51:37.000000000 +0900
-@@ -75,7 +75,7 @@
- [31mbsdtar[39;49m[0m                      [31measy_install[39;49m[0m                [31mippfind[39;49m[0m                     [31mmdls[39;49m[0m                        [31mpost-grohtml[39;49m[0m                [31mspfquery5.30[39;49m[0m                [31mwhois[39;49m[0m
- [31mbspatch[39;49m[0m                     [31measy_install-2.7[39;49m[0m            [31mipptool[39;49m[0m                     [31mmdutil[39;49m[0m                      [31mpower_report.sh[39;49m[0m             [31msplain[39;49m[0m                      [35mwish[39;49m[0m
- [31mbundle[39;49m[0m                      [31megrep[39;49m[0m                       [31miptab[39;49m[0m                       [31mmemory_pressure[39;49m[0m             [31mpowermetrics[39;49m[0m                [31msplain5.18[39;49m[0m                  [31mwish8.5[39;49m[0m
--[31mbundler[39;49m[0m                     [31menc2xs[39;49m[0m                      [31miptab5.18[39;49m[0m                   [31mmesg[39;49m[0m                        [31mpp[39;49m[0m                          [31msplain5.30[39;49m[0m                  [30m[46mwrite[39;49m[0m
-+[31mbundler[39;49m[0m                     [31menc2xs[39;49m[0m                      [31miptab5.18[39;49m[0m                   [31mmesg[39;49m[0m                        [31mpp[39;49m[0m                          [31msplain5.30[39;49m[0m                  [31mwrite[39;49m[0m
- [31mbunzip2[39;49m[0m                     [31menc2xs5.18[39;49m[0m                  [31miptab5.30[39;49m[0m                   [31mmg[39;49m[0m                          [31mpp5.30[39;49m[0m                      [31msplit[39;49m[0m                       [31mwsgen[39;49m[0m
- [31mbzcat[39;49m[0m                       [31menc2xs5.30[39;49m[0m                  [31mirb[39;49m[0m                         [31mmib2c[39;49m[0m                       [31mppdc[39;49m[0m                        [31msqlite3[39;49m[0m                     [31mwsimport[39;49m[0m
- [35mbzcmp[39;49m[0m                       [31mencguess[39;49m[0m                    [31mjar[39;49m[0m                         [31mmib2c-update[39;49m[0m                [31mppdhtml[39;49m[0m                     [31mssh[39;49m[0m                         [31mxar[39;49m[0m
-[31m[FAIL] -G /usr/bin[m
+[32m[ OK ][m -G /usr/bin

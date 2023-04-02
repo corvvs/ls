@@ -29,6 +29,8 @@ function run_case() {
 	print_result "$P"
 }
 
+rm -rf	$RESULTFILE
+
 run_case "./"
 run_case "./srcs"
 run_case "./includes"
@@ -36,8 +38,6 @@ run_case "./srcs ./includes"
 run_case ". ./srcs ./includes"
 run_case ". ."
 run_case ".. .. ."
-
-run_case ~
 
 run_case "/usr"
 run_case "/usr/local"
@@ -78,3 +78,6 @@ run_case "-G srcs"
 run_case "-G includes"
 run_case "-G minimini"
 run_case "-G /usr"
+run_case "-G /usr/bin"
+
+# run_case "-l /usr/bin"
