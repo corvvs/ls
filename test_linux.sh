@@ -29,6 +29,8 @@ function run_case() {
 	print_result "$P"
 }
 
+rm -rf	$RESULTFILE
+
 run_case "./"
 run_case "./srcs"
 run_case "./includes"

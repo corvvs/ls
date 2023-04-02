@@ -74,3 +74,7 @@ run_case "."
 run_case "-R ."
 
 run_case "-G"
+run_case "-G srcs"
+run_case "-G includes"
+run_case "-G minimini"
+run_case "-G /usr"

@@ -61,7 +61,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			max_len = items[i]->display_len;
 		}
 	}
-	const size_t	tab_size = batch->opt->color ? 2 : 8;
+	const size_t	tab_size = batch->opt->color ? 1 : 8;
 	const size_t	term_tabs = CEIL_BY(max_len + 1, tab_size) / tab_size;
 
 	// 列表示をプリント
