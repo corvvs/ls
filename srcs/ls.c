@@ -98,7 +98,7 @@ bool	is_dot_dir(const t_file_item* item) {
 }
 
 // シンボリックリンク item のリンク先に関する情報を取得する
-static bool	investigate_simlink(t_file_item* item) {
+static bool	trace_simlink(t_file_item* item) {
 	YOYO_ASSERT(item->actual_file_type == YO_FT_LINK);
 	const char* path = item->path;
 
@@ -233,7 +233,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 			item->actual_file_type = YO_FT_REGULAR;
 		}
 		if (ft == YO_FT_LINK) {
-			investigate_simlink(item);
+			trace_simlink(item);
 		}
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
