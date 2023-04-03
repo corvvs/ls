@@ -84,3 +84,11 @@ run_case "-G includes"
 run_case "-G minimini"
 run_case "-G /usr"
 run_case "-G /usr/bin"
+
+run_case "-l /usr/bin"
+run_case "-lG pocket"
+run_case "-lG /usr/bin"
+
+run_case " /dev/"
+run_case "-G /dev/"
+run_case "-RG /usr"

@@ -25,7 +25,7 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 	// そのまま表示
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item = items[i];
-		print_filename(m->opt, batch, item, true);
+		print_filename(batch, item);
 		const char*	suffix = i + 1 == len ? "\n" : "  ";
 		yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
 	}

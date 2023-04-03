@@ -8,6 +8,7 @@
 # include <stdlib.h>
 # include <dirent.h>
 # include <sys/stat.h>
+# include <limits.h>
 # include <string.h>
 # include <errno.h>
 # include <assert.h>
@@ -27,8 +28,10 @@ typedef struct timespec	t_stat_time;
 # endif
 
 // ls.c
-void	list_files(t_master* m, t_file_batch* batch);
-bool	is_dot_dir(const t_file_item* item);
+void			list_files(t_master* m, t_file_batch* batch);
+bool			is_dot_dir(const t_file_item* item);
+t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name);
+size_t			determine_name_len(const char* name, t_quote_type qt);
 
 // option.c
 bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
@@ -47,7 +50,8 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_width, size_t len, t_file_item** items);
 
 // print_utils.c
-int		print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end);
+int		print_filename_body(const char*	name, t_quote_type qt);
+int		print_filename(const t_file_batch* batch, const t_file_item* item);
 void	print_spaces(uint64_t n);
 void	print_error(const t_master* m, const char* operation, const char* path);
 
@@ -66,6 +70,7 @@ void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
 // utils.c
 const char*	yo_basename(const char* path);
+char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
 

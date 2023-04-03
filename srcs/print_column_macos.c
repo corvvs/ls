@@ -74,7 +74,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 				break;
 			}
 			bool row_end = j + 1 == column_number || len <= k + row_number;
-			print_filename(m->opt, batch, items[k], row_end);
+			print_filename(batch, items[k]);
 			if (!row_end) {
 				if (batch->opt->color != YO_COLOR_NONE) {
 					// 色がついている時はスペース

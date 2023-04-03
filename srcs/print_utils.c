@@ -1,22 +1,23 @@
 #include "ls.h"
 #include "color.h"
 
-static int	print_filename_body(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
-	(void)end;
-	(void)option;
-	(void)batch;
+int	print_filename_body(const char*	name, t_quote_type qt) {
 #ifdef __MACH__
-	return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
+	(void)qt;
+	return yoyo_dprintf(STDOUT_FILENO, "%s", name);
 #else
-	if (item->quote_type == YO_QT_NONE) {
-		return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
-	} else if (item->quote_type == YO_QT_DQ) {
-		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", item->name);
+	if (qt == YO_QT_NONE) {
+		// クオートなし
+		return yoyo_dprintf(STDOUT_FILENO, "%s", name);
+	} else if (qt == YO_QT_DQ) {
+		// ダブルクオート
+		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", name);
 	} else {
+		// シングルクオート
 		int rv = 0;
 		rv += yoyo_dprintf(STDOUT_FILENO, "'");
-		for (size_t i = 0; item->name[i]; ++i) {
-			char c = item->name[i];
+		for (size_t i = 0; name[i]; ++i) {
+			char c = name[i];
 			if (c == '\'') {
 				rv += yoyo_dprintf(STDOUT_FILENO, "'\\%c'", c);
 			} else {
@@ -29,7 +30,8 @@ static int	print_filename_body(const t_global_option* option, const t_file_batch
 #endif
 }
 
-int	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
+int	print_filename(const t_file_batch* batch, const t_file_item* item) {
+	const t_global_option* option = batch->opt;
 	static bool	colored = false;
 	const char*	color;
 	const char*	suffix = TX_RST;
@@ -38,8 +40,23 @@ int	print_filename(const t_global_option* option, const t_file_batch* batch, con
 		// 色がない時
 		color = YO_COLOR_REGULAR;
 		suffix = "";
+	} else if (item->nominal_file_type == YO_FT_CHAR_DEVICE) {
+		color = YO_COLOR_CHAR_DEVICE;
+		colored = true;
+	} else if (item->nominal_file_type == YO_FT_BLOCK_DEVICE) {
+		color = YO_COLOR_BLOCK_DEVICE;
+		colored = true;
 	} else if (item->nominal_file_type == YO_FT_DIR) {
-		color = YO_COLOR_DIR;
+		if (item->st.st_mode & S_IWOTH) {
+			// IS DIR and OTHER WRITABLE and STICKY
+			if (item->st.st_mode & S_ISVTX) {
+				color = YO_COLOR_DIR_WRITABLE_STICKY;
+			} else {
+				color = YO_COLOR_DIR_WRITABLE_NON_STICKY;
+			}
+		} else {
+			color = YO_COLOR_DIR;
+		}
 		colored = true;
 	} else if (item->actual_file_type == YO_FT_LINK) {
 		color = YO_COLOR_GOODLINK;
@@ -69,7 +86,7 @@ int	print_filename(const t_global_option* option, const t_file_batch* batch, con
 	}
 #endif
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
-	int size = print_filename_body(option, batch, item, end);
+	int size = print_filename_body(item->name, item->quote_type);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
 	return size;
 }

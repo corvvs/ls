@@ -75,6 +75,12 @@ static void	print_filemode_part(const t_file_item* item) {
 			case YO_FT_DIR:
 				c = 'd';
 				break;
+			case YO_FT_CHAR_DEVICE:
+				c = 'c';
+				break;
+			case YO_FT_BLOCK_DEVICE:
+				c = 'b';
+				break;
 			case YO_FT_LINK:
 			case YO_FT_BAD_LINK:
 				c = 'l';
@@ -107,7 +113,13 @@ static void	print_filemode_part(const t_file_item* item) {
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IROTH) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWOTH) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_IXOTH) ? 'x' : '-';
+		// 実行権限 と スティッキービット の状態に応じて変わる
+		const bool is_x = !!(item->st.st_mode & S_IXOTH);
+		const bool is_t = !!(item->st.st_mode & S_ISVTX);
+		perm[2] = (is_x && is_t)
+			? 't' : (is_x && !is_t)
+			? 'x' : (!is_x && is_t)
+			? 'T' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
 }
@@ -167,6 +179,7 @@ static void	print_group_name(const t_long_format_measure* measure, t_cache* cach
 	print_spaces(measure->group_width - w);
 }
 
+// ファイルサイズ
 static uint64_t	get_file_size(const t_file_item* item) {
 	return item->st.st_size;
 }
@@ -250,6 +263,53 @@ static void	print_datetime(const t_long_format_measure* measure, t_cache* cache,
 	}
 }
 
+#ifdef __MACH__
+static uint64_t	hex_number_width(uint64_t i) {
+	if (i == 0) {
+		return 1;
+	}
+	uint64_t	n = 0;
+	while (i) {
+		i /= 16;
+		n += 1;
+	}
+	return n;
+}
+
+static uint64_t get_device_id_width(const t_file_item* item) {
+	return item->st.st_rdev == 0 ? 0 : hex_number_width(item->st.st_rdev) + 2;
+}
+
+static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t w = item->st.st_rdev == 0 ? 1 : hex_number_width(item->st.st_rdev) + 2;
+	print_spaces(measure->size_width - w + COL_PADDING);
+	if (item->st.st_rdev) {
+		yoyo_dprintf(STDOUT_FILENO, "0x%lx", item->st.st_rdev);
+	} else {
+		yoyo_dprintf(STDOUT_FILENO, "%lx", item->st.st_rdev);
+	}
+}
+
+#else
+
+#include <sys/sysmacros.h>
+static uint64_t get_device_id_width(const t_file_item* item) {
+	unsigned int	mj = major(item->st.st_rdev);
+	unsigned int	mn = minor(item->st.st_rdev);
+	return number_width(mj) + 2 + number_width(mn);
+}
+
+// デバイスID
+static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
+	unsigned int	mj = major(item->st.st_rdev);
+	unsigned int	mn = minor(item->st.st_rdev);
+	unsigned int	w = number_width(mj) + 2 + number_width(mn);
+	print_spaces(measure->size_width - w + COL_PADDING);
+	yoyo_dprintf(STDOUT_FILENO, "%u, %u", mj, mn);
+}
+
+#endif
+
 // long-format の出力
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	// ["Total:" の出力]
@@ -274,28 +334,55 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 				measure.group_width = MAX(measure.group_width, ft_strlen(name));
 			}
 		}
-		{
+		// デバイスID or ファイルサイズ
+		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
+			measure.size_width = MAX(measure.size_width, get_device_id_width(item));
+		} else {
 			uint64_t	size = get_file_size(item);
 			measure.size_width = MAX(measure.size_width, number_width(size));
 		}
 	}
 	measure_datetime(&measure);
+	batch->bopt.some_quoted = false;
+	for (size_t i = 0; i < len; ++i) {
+		t_file_item*	item  = items[i];
+		if (item->quote_type != YO_QT_NONE) {
+			batch->bopt.some_quoted = true;
+			break;
+		}
+	}
 	// [ファイルごとの出力]
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
 		print_filemode_part(item);
 		print_link_number_part(&measure, item);
+		// 所有者名
 		print_owner_name(&measure, &m->cache, item);
+		// グループ名
 		print_group_name(&measure, &m->cache, item);
-		// ファイルサイズ
-		print_file_size(&measure, item);
+		// ファイルサイズ or デバイス番号
+		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
+			print_device_id(&measure, item);
+		} else {
+			print_file_size(&measure, item);
+		}
 		// 日時
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(m->opt, batch, item, true);
+		if (batch->bopt.some_quoted && item->quote_type == YO_QT_NONE) {
+			yoyo_dprintf(STDOUT_FILENO, " ");
+		}
+		print_filename(batch, item);
 		// (optional)リンク先
-
+		if (item->link_to) {
+			yoyo_dprintf(STDOUT_FILENO, " -> ");
+#ifdef __MACH__
+			yoyo_dprintf(STDOUT_FILENO, "%s", item->link_to->name);
+#else
+			print_filename(batch, item->link_to);
+#endif
+		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
 	}
 }

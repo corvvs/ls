@@ -8,10 +8,15 @@ static void	swap_item(t_file_item** a, t_file_item** b) {
 }
 
 static t_filetype	determine_file_type(struct stat* st) {
+
 	if (S_ISREG(st->st_mode)) {
 		return YO_FT_REGULAR;
 	} else if (S_ISDIR(st->st_mode)) {
 		return YO_FT_DIR;
+	} else if (S_ISBLK(st->st_mode)) {
+		return YO_FT_BLOCK_DEVICE;
+	} else if (S_ISCHR(st->st_mode)) {
+		return YO_FT_CHAR_DEVICE;
 	} else if (S_ISLNK(st->st_mode)) {
 		return YO_FT_LINK;
 	} else {
@@ -97,41 +102,48 @@ bool	is_dot_dir(const t_file_item* item) {
 	return ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0;
 }
 
-// シンボリックリンク item のリンク先に関する情報を取得する
-static bool	investigate_simlink(t_file_item* item) {
-	YOYO_ASSERT(item->actual_file_type == YO_FT_LINK);
-	const char* path = item->path;
+static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
 
+// シンボリックリンク item のリンク先に関する情報を取得する
+static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const char* path) {
 	// [リンク先の名前を取得する]
-	size_t link_len = item->st.st_size + 1;
-	char* link_to = malloc(link_len);
+	char	name_buf[PATH_MAX + 1];
+	errno = 0;
+	// DEBUGOUT("link_to: %p", link_to);
+	ssize_t actual_len = readlink(path, name_buf, PATH_MAX);
+	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
+	if (actual_len < 0) {
+		return false;
+	}
+	char* link_to = malloc(actual_len + 1);
 	YOYO_ASSERT(link_to != NULL);
 	if (link_to == NULL) {
 		return false;
 	}
-	errno = 0;
-	ssize_t actual_len = readlink(path, link_to, link_len);
-	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
-	if (actual_len < 0) {
-		item->actual_file_type = YO_FT_BAD_LINK;
-		return true;
-	}
+	ft_memcpy(link_to, name_buf, actual_len + 1);
+	// DEBUGOUT("link_len: %zu, actual_len: %zd", link_len, actual_len);
 	link_to[actual_len] = '\0';
-	item->link_to = link_to;
+	// DEBUGOUT("link_to: %p", link_to);
+	// DEBUGOUT("link_to: %s", link_to);
+	// [リンク先のパスを取得する]
+	errno = 0;
+	char*	full_link_to = yo_replace_basename(path, link_to);
+	YOYO_ASSERT(full_link_to != NULL);
+	// DEBUGINFO("%s + %s -> %s", path, link_to, full_link_to);
 
 	// [リンク先の情報を取得する]
-	struct stat	st;
-	errno = 0;
-	int rv = lstat(link_to, &st);
-	if (rv < 0) {
-		// DEBUGERR("link_to = %s, errno = %d, %s", link_to, errno, strerror(errno));
-		item->actual_file_type = YO_FT_BAD_LINK;
+	if (set_item(batch, full_link_to, link_item, false)) {
+		// リンク先がちゃんと追える
+	} else {
+		// リンク先が追えない
+		link_item->actual_file_type = YO_FT_BAD_LINK;
 	}
+	link_item->name = link_to;
+	free(full_link_to);
+	// DEBUGINFO("%s -> %s", path, link_to);
 	return true;
 }
 
-#ifdef __MACH__
-#else
 static size_t	strquotedlen(const char* s) {
 	size_t	len = 0;
 	for (size_t i = 0; s[i]; ++i) {
@@ -143,7 +155,10 @@ static size_t	strquotedlen(const char* s) {
 	return len + 2;
 }
 
-static t_quote_type	should_quote_char(char c) {
+#ifdef __MACH__
+#else
+
+static bool	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
 	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
@@ -151,17 +166,13 @@ static t_quote_type	should_quote_char(char c) {
 }
 #endif
 
-static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
-	const char* name = batch->is_root ? path : yo_basename(path);
-	item->name = name;
-	item->path = path;
-	item->quote_type = YO_QT_NONE;
-	item->path_len = ft_strlen(path);
+t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name) {
 	if (!batch->opt->tty) {
-		return;
+		return YO_QT_NONE;
 	}
 #ifdef __MACH__
-	item->display_len = ft_strlen(name);
+	(void)name;
+	return YO_QT_NONE;
 #else
 	bool	has_sq = false;
 	bool	has_dq = false;
@@ -180,21 +191,75 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 			}
 		}
 	}
-	(void)has_dq;
 	if (!has_sq && !has_dq && !has_sp && !has_ex_sp) {
-		item->quote_type = YO_QT_NONE;
-		item->display_len = ft_strlen(name);
+		return YO_QT_NONE;
 	} else if (has_sq && has_sp && !has_ex_sp) {
-		item->quote_type =YO_QT_DQ;
-		item->display_len = ft_strlen(name) + 2;
+		return YO_QT_DQ;
 	} else if (has_sq && !has_dq && !has_sp && !has_ex_sp) {
-		item->quote_type =YO_QT_DQ;
-		item->display_len = ft_strlen(name) + 2;
+		return YO_QT_DQ;
 	} else {
-		item->quote_type =YO_QT_SQ;
-		item->display_len = strquotedlen(name);
+		return YO_QT_SQ;
 	}
 #endif
+}
+
+size_t	determine_name_len(const char* name, t_quote_type qt) {
+	switch (qt) {
+		case YO_QT_NONE:
+			return ft_strlen(name);
+		case YO_QT_DQ:
+			return ft_strlen(name) + 2;
+		case YO_QT_SQ:
+		default:
+			return strquotedlen(name);
+	}
+}
+
+
+static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
+	const char* name = batch->is_root ? path : yo_basename(path);
+	item->quote_type = determine_quote_type(batch, name);
+	item->name = name;
+	item->path = path;
+	item->path_len = ft_strlen(path);
+	item->display_len = determine_name_len(name, item->quote_type);
+}
+
+static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
+	determine_file_name(batch, item, path);
+	errno = 0;
+	int rv = trace_link ? lstat(path, &item->st) : stat(path, &item->st);
+	if (rv) {
+		// DEBUGERR("errno = %d, %s", errno, strerror(errno));
+		return false;
+	}
+	t_filetype	ft = determine_file_type(&item->st);
+	item->link_to = NULL;
+	// DEBUGOUT("path = %s, type = %d, st_dev = %lx, st_rdev = %lx", path, ft, item->st.st_dev, item->st.st_rdev);
+	item->actual_file_type = ft;
+	item->nominal_file_type = ft;
+	item->errn = errno;
+	if (item->quote_type != YO_QT_NONE) {
+		batch->bopt.some_quoted = true;
+	}
+	if (is_dot_dir(item) && !batch->is_root) {
+		item->actual_file_type = YO_FT_REGULAR;
+	}
+	if (ft == YO_FT_LINK && trace_link) {
+		t_file_item*	link_item = malloc(sizeof(t_file_item));
+		YOYO_ASSERT(link_item != NULL);
+		// DEBUGINFO("item: %p", item);
+		// DEBUGINFO("item->path: %s", item->path);
+		if (!trace_simlink(batch, link_item, item->path)) {
+			item->actual_file_type = YO_FT_BAD_LINK;
+		}
+		if (link_item->actual_file_type == YO_FT_BAD_LINK) {
+			item->actual_file_type = YO_FT_BAD_LINK;
+		}
+		item->link_to = link_item;
+		// DEBUGOUT("link_item = %s", link_item->name);
+	}
+	return true;
 }
 
 void	list_files(t_master* m, t_file_batch* batch) {
@@ -211,30 +276,14 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	batch->bopt.some_quoted = false;
 	for (size_t i = 0; i < batch->len; ++i) {
 		const char* path = batch->path[i];
+
 		t_file_item*	item = &items[i];
 
-		errno = 0;
-		int rv = lstat(path, &item->st);
-		if (rv) {
+		if (!set_item(batch, path, item, true)) {
 			print_error(m, "cannot access", path);
 			continue;
 		}
-		t_filetype	ft = determine_file_type(&item->st);
-		item->link_to = NULL;
 		pointers[n_ok] = item;
-		item->actual_file_type = ft;
-		item->nominal_file_type = ft;
-		item->errn = errno;
-		determine_file_name(batch, item, path);
-		if (item->quote_type != YO_QT_NONE) {
-			batch->bopt.some_quoted = true;
-		}
-		if (is_dot_dir(item) && !batch->is_root) {
-			item->actual_file_type = YO_FT_REGULAR;
-		}
-		if (ft == YO_FT_LINK) {
-			investigate_simlink(item);
-		}
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
 		if (!batch->bopt.distinguish_dir) {
@@ -267,7 +316,10 @@ void	list_files(t_master* m, t_file_batch* batch) {
 
 	// [後始末]
 	for (size_t i = 0; i < n_ok; ++i) {
-		free(items[i].link_to);
+		if (items[i].link_to) {
+			free((char*)items[i].link_to->name);
+			free(items[i].link_to);
+		}
 	}
 	free(items);
 	free(pointers);

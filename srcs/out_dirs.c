@@ -96,7 +96,9 @@ void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_
 		// DEBUGOUT("HEADER: %d for %s", show_header, item->path);
 		if (show_header) {
 			// ヘッダ出力
-			yoyo_dprintf(STDOUT_FILENO, "%s:\n", item->path);
+			t_quote_type	quote_type = determine_quote_type(batch, item->path);
+			print_filename_body(item->path, quote_type);
+			yoyo_dprintf(STDOUT_FILENO, ":\n");
 		}
 		output_dir(m, item);
 	}
