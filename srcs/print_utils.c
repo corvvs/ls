@@ -1,16 +1,14 @@
 #include "ls.h"
 #include "color.h"
 
-static int	print_filename_body(const t_global_option* option, const t_file_item* item) {
-	(void)option;
-	const char*	name = item->name;
+int	print_filename_body(const char*	name, t_quote_type qt) {
 #ifdef __MACH__
 	return yoyo_dprintf(STDOUT_FILENO, "%s", name);
 #else
-	if (item->quote_type == YO_QT_NONE) {
+	if (qt == YO_QT_NONE) {
 		// クオートなし
 		return yoyo_dprintf(STDOUT_FILENO, "%s", name);
-	} else if (item->quote_type == YO_QT_DQ) {
+	} else if (qt == YO_QT_DQ) {
 		// ダブルクオート
 		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", name);
 	} else {
@@ -72,7 +70,7 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 	}
 #endif
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
-	int size = print_filename_body(option, item);
+	int size = print_filename_body(item->name, item->quote_type);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
 	return size;
 }

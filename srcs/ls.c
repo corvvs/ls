@@ -146,7 +146,7 @@ static size_t	strquotedlen(const char* s) {
 	return len + 2;
 }
 
-static t_quote_type	should_quote_char(char c) {
+static bool	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
 	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
@@ -154,17 +154,12 @@ static t_quote_type	should_quote_char(char c) {
 }
 #endif
 
-static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
-	const char* name = batch->is_root ? path : yo_basename(path);
-	item->name = name;
-	item->path = path;
-	item->quote_type = YO_QT_NONE;
-	item->path_len = ft_strlen(path);
+t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name) {
 	if (!batch->opt->tty) {
-		return;
+		return YO_QT_NONE;
 	}
 #ifdef __MACH__
-	item->display_len = ft_strlen(name);
+	return YO_QT_NONE;
 #else
 	bool	has_sq = false;
 	bool	has_dq = false;
@@ -183,21 +178,38 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 			}
 		}
 	}
-	(void)has_dq;
 	if (!has_sq && !has_dq && !has_sp && !has_ex_sp) {
-		item->quote_type = YO_QT_NONE;
-		item->display_len = ft_strlen(name);
+		return YO_QT_NONE;
 	} else if (has_sq && has_sp && !has_ex_sp) {
-		item->quote_type =YO_QT_DQ;
-		item->display_len = ft_strlen(name) + 2;
+		return YO_QT_DQ;
 	} else if (has_sq && !has_dq && !has_sp && !has_ex_sp) {
-		item->quote_type =YO_QT_DQ;
-		item->display_len = ft_strlen(name) + 2;
+		return YO_QT_DQ;
 	} else {
-		item->quote_type =YO_QT_SQ;
-		item->display_len = strquotedlen(name);
+		return YO_QT_SQ;
 	}
 #endif
+}
+
+size_t	determine_name_len(const char* name, t_quote_type qt) {
+	switch (qt) {
+		case YO_QT_NONE:
+			return ft_strlen(name);
+		case YO_QT_DQ:
+			return ft_strlen(name) + 2;
+		case YO_QT_SQ:
+		default:
+			return strquotedlen(name);
+	}
+}
+
+
+static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
+	const char* name = batch->is_root ? path : yo_basename(path);
+	item->quote_type = determine_quote_type(batch, name);
+	item->name = name;
+	item->path = path;
+	item->path_len = ft_strlen(path);
+	item->display_len = determine_name_len(name, item->quote_type);
 }
 
 static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
