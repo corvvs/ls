@@ -130,11 +130,10 @@ static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const cha
 	}
 	link_item->name = link_to;
 	free(full_link_to);
+	// DEBUGINFO("%s -> %s", path, link_to);
 	return true;
 }
 
-#ifdef __MACH__
-#else
 static size_t	strquotedlen(const char* s) {
 	size_t	len = 0;
 	for (size_t i = 0; s[i]; ++i) {
@@ -145,6 +144,9 @@ static size_t	strquotedlen(const char* s) {
 	}
 	return len + 2;
 }
+
+#ifdef __MACH__
+#else
 
 static bool	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
@@ -159,6 +161,7 @@ t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name) {
 		return YO_QT_NONE;
 	}
 #ifdef __MACH__
+	(void)name;
 	return YO_QT_NONE;
 #else
 	bool	has_sq = false;
@@ -240,8 +243,8 @@ static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, b
 		if (link_item->actual_file_type == YO_FT_BAD_LINK) {
 			item->actual_file_type = YO_FT_BAD_LINK;
 		}
-		// DEBUGOUT("item = %s,%d, link_item = %s,%d", item->name, item->actual_file_type, link_item->name, link_item->actual_file_type);
 		item->link_to = link_item;
+		// DEBUGOUT("link_item = %s", link_item->name);
 	}
 	return true;
 }

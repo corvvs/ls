@@ -38,4 +38,5 @@
 [32m[ OK ][m -G /usr
 [32m[ OK ][m -G /usr/bin
 [32m[ OK ][m -l /usr/bin
+[32m[ OK ][m -lG pocket
 [32m[ OK ][m -lG /usr/bin

@@ -309,7 +309,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		if (item->link_to) {
 			yoyo_dprintf(STDOUT_FILENO, " -> ");
 #ifdef __MACH__
-			yoyo_dprintf(STDOUT_FILENO, "%s", item->link_to);
+			yoyo_dprintf(STDOUT_FILENO, "%s", item->link_to->name);
 #else
 			print_filename(batch, item->link_to);
 #endif

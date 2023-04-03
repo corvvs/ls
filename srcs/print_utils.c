@@ -3,6 +3,7 @@
 
 int	print_filename_body(const char*	name, t_quote_type qt) {
 #ifdef __MACH__
+	(void)qt;
 	return yoyo_dprintf(STDOUT_FILENO, "%s", name);
 #else
 	if (qt == YO_QT_NONE) {

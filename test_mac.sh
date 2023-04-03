@@ -86,4 +86,5 @@ run_case "-G /usr"
 run_case "-G /usr/bin"
 
 run_case "-l /usr/bin"
+run_case "-lG pocket"
 run_case "-lG /usr/bin"
