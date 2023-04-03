@@ -5,7 +5,6 @@
 [32m[ OK ][m . ./srcs ./includes
 [32m[ OK ][m . .
 [32m[ OK ][m .. .. .
-[32m[ OK ][m /Users/corvvs
 [32m[ OK ][m /usr
 [32m[ OK ][m /usr/local
 [32m[ OK ][m /usr/bin
@@ -32,3 +31,9 @@
 [32m[ OK ][m -R
 [32m[ OK ][m .
 [32m[ OK ][m -R .
+[32m[ OK ][m -G
+[32m[ OK ][m -G srcs
+[32m[ OK ][m -G includes
+[32m[ OK ][m -G minimini
+[32m[ OK ][m -G /usr
+[32m[ OK ][m -G /usr/bin

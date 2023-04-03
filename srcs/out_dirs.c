@@ -46,7 +46,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 			continue;
 		}
 		char* path = malloc(sizeof(char) * (dir_item->path_len + 1 + ft_strlen(entry->d_name) + 1));
-		assert(path != NULL);
+		YOYO_ASSERT(path != NULL);
 		char* tpath = path;
 		tpath += ft_strlcpy(tpath, dir_item->path, -1);
 		tpath += ft_strlcpy(tpath, "/", -1);

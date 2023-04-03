@@ -66,6 +66,8 @@ void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
 // utils.c
 const char*	yo_basename(const char* path);
+const char*	yo_starts_with(const char* str, const char* prefix);
+size_t		yo_strlen_to(const char* str, int c);
 
 // debug.c
 void	print_ls(const t_file_batch* batch);

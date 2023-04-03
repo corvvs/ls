@@ -31,8 +31,11 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	t_master	m = (t_master){
-		// .exec_name = yo_basename(argv[0]),
-		.exec_name = "ls",
+#ifdef __MACH__
+		.exec_name = yo_basename(argv[0]),
+#else
+		.exec_name = argv[0],
+#endif
 		.root = &root,
 		.opt = &option,
 		.cache = {},

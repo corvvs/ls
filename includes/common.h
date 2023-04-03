@@ -7,7 +7,7 @@
 # include <stdio.h>
 # include "printf.h"
 
-# define TX_BLD "\e[1m"
+# define TX_BLD "\e[01m"
 # define TX_GRY "\e[30m"
 # define TX_RED "\e[31m"
 # define TX_GRN "\e[32m"
@@ -17,7 +17,12 @@
 # define TX_CYN "\e[36m"
 # define BG_BLK "\e[40m"
 # define BG_RED "\e[41m"
-# define TX_RST "\e[0m"
+# define BG_CYN "\e[46m"
+# ifdef __MACH__
+#  define TX_RST "\e[39;49m\e[0m"
+# else
+#  define TX_RST "\e[0m"
+# endif
 
 # define YOYO_DPRINTF(...) {\
 	yoyo_dprintf(STDERR_FILENO, __VA_ARGS__);\

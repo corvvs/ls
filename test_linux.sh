@@ -3,6 +3,7 @@ TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
 REAL_FILE="real.txt"
 MINE_FILE="mine.txt"
+EXEC="./lsls"
 
 function compare_evidence() {
 	diff -u <(head -n-1 ${TEST_DIR}${REAL_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_FILE} | tail -n+2)
@@ -23,11 +24,17 @@ function print_result() {
 
 function run_case() {
 	P=$1
-	script -q -c "ls --color=none $P" ${TEST_DIR}${REAL_FILE} > /dev/null
-	script -q -c "./ft_ls $P" ${TEST_DIR}${MINE_FILE} > /dev/null
+	rm -rf ${EXEC}
+	ln -s /bin/ls ${EXEC}
+	script -q -c "${EXEC} $P" ${TEST_DIR}${REAL_FILE} > /dev/null
+	rm -rf ${EXEC}
+	ln -s ./ft_ls ${EXEC}
+	script -q -c "${EXEC} $P" ${TEST_DIR}${MINE_FILE} > /dev/null
 	compare_evidence
 	print_result "$P"
 }
+
+rm -rf	$RESULTFILE
 
 run_case "./"
 run_case "./srcs"
@@ -71,3 +78,10 @@ run_case "-R"
 run_case "."
 run_case "-R ."
 run_case "-R test1"
+
+run_case "--col"
+run_case "--col srcs"
+run_case "--col includes"
+run_case "--col minimini"
+run_case "--col /usr"
+run_case "--col /usr/bin"

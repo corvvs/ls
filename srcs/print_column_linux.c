@@ -62,10 +62,11 @@ static unsigned int	determine_column_number(t_master* m, t_file_batch* batch, un
 	return n;
 }
 
-static size_t	indent(size_t cursor_from, size_t cursor_to) {
+static size_t	indent(const t_file_batch* batch, size_t cursor_from, size_t cursor_to) {
 	// DEBUGOUT("cursor_from = %zu, cursor_to = %zu", cursor_from, cursor_to);
 	while (cursor_from < cursor_to) {
-		if (cursor_to / 8 > (cursor_from + 1) / 8) {
+		if (batch->opt->color == YO_COLOR_NONE && cursor_to / 8 > (cursor_from + 1) / 8) {
+			// 色がない時
 			yoyo_dprintf(STDOUT_FILENO, "\t");
 			cursor_from += 8 - cursor_from % 8;
 
@@ -117,7 +118,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			}
 			const t_file_item*	item = items[k];
 			next_start = offset;
-			cursor = indent(cursor, next_start);
+			cursor = indent(batch, cursor, next_start);
 			if ((batch->bopt.some_quoted && item->quote_type == YO_QT_NONE ? 1 : 0)) {
 				yoyo_dprintf(STDOUT_FILENO, " ");
 				cursor += 1;
