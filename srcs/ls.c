@@ -97,13 +97,11 @@ bool	is_dot_dir(const t_file_item* item) {
 	return ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0;
 }
 
-// シンボリックリンク item のリンク先に関する情報を取得する
-static bool	trace_simlink(t_file_item* item) {
-	YOYO_ASSERT(item->actual_file_type == YO_FT_LINK);
-	const char* path = item->path;
+static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
 
+// シンボリックリンク item のリンク先に関する情報を取得する
+static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const char* path, size_t link_len) {
 	// [リンク先の名前を取得する]
-	size_t link_len = item->st.st_size + 1;
 	char* link_to = malloc(link_len);
 	YOYO_ASSERT(link_to != NULL);
 	if (link_to == NULL) {
@@ -113,20 +111,26 @@ static bool	trace_simlink(t_file_item* item) {
 	ssize_t actual_len = readlink(path, link_to, link_len);
 	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
 	if (actual_len < 0) {
-		item->actual_file_type = YO_FT_BAD_LINK;
-		return true;
+		return false;
 	}
 	link_to[actual_len] = '\0';
-	item->link_to = link_to;
+
+	// [リンク先のパスを取得する]
+	errno = 0;
+	char*	full_link_to = yo_replace_basename(path, link_to);
+	YOYO_ASSERT(full_link_to != NULL);
+	// DEBUGINFO("%s -> %s", link_to, full_link_to);
+
 
 	// [リンク先の情報を取得する]
-	struct stat	st;
-	errno = 0;
-	int rv = lstat(link_to, &st);
-	if (rv < 0) {
-		// DEBUGERR("link_to = %s, errno = %d, %s", link_to, errno, strerror(errno));
-		item->actual_file_type = YO_FT_BAD_LINK;
+	if (set_item(batch, full_link_to, link_item, false)) {
+		// リンク先がちゃんと追える
+	} else {
+		// リンク先が追えない
+		link_item->actual_file_type = YO_FT_BAD_LINK;
 	}
+	link_item->name = link_to;
+	free(full_link_to);
 	return true;
 }
 
@@ -197,6 +201,39 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 #endif
 }
 
+static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
+	determine_file_name(batch, item, path);
+	errno = 0;
+	int rv = lstat(path, &item->st);
+	if (rv) {
+		// DEBUGERR("errno = %d, %s", errno, strerror(errno));
+		return false;
+	}
+	t_filetype	ft = determine_file_type(&item->st);
+	item->link_to = NULL;
+	item->actual_file_type = ft;
+	item->nominal_file_type = ft;
+	item->errn = errno;
+	if (item->quote_type != YO_QT_NONE) {
+		batch->bopt.some_quoted = true;
+	}
+	if (is_dot_dir(item) && !batch->is_root) {
+		item->actual_file_type = YO_FT_REGULAR;
+	}
+	if (ft == YO_FT_LINK && trace_link) {
+		t_file_item*	link_item = malloc(sizeof(t_file_item));
+		if (!trace_simlink(batch, link_item, item->path, item->st.st_size + 1)) {
+			item->actual_file_type = YO_FT_BAD_LINK;
+		}
+		if (link_item->actual_file_type == YO_FT_BAD_LINK) {
+			item->actual_file_type = YO_FT_BAD_LINK;
+		}
+		// DEBUGOUT("item = %s,%d, link_item = %s,%d", item->name, item->actual_file_type, link_item->name, link_item->actual_file_type);
+		item->link_to = link_item;
+	}
+	return true;
+}
+
 void	list_files(t_master* m, t_file_batch* batch) {
 	t_file_item*	items = malloc(sizeof(t_file_item) * batch->len);
 	YOYO_ASSERT(items != NULL);
@@ -211,30 +248,14 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	batch->bopt.some_quoted = false;
 	for (size_t i = 0; i < batch->len; ++i) {
 		const char* path = batch->path[i];
+
 		t_file_item*	item = &items[i];
 
-		errno = 0;
-		int rv = lstat(path, &item->st);
-		if (rv) {
+		if (!set_item(batch, path, item, true)) {
 			print_error(m, "cannot access", path);
 			continue;
 		}
-		t_filetype	ft = determine_file_type(&item->st);
-		item->link_to = NULL;
 		pointers[n_ok] = item;
-		item->actual_file_type = ft;
-		item->nominal_file_type = ft;
-		item->errn = errno;
-		determine_file_name(batch, item, path);
-		if (item->quote_type != YO_QT_NONE) {
-			batch->bopt.some_quoted = true;
-		}
-		if (is_dot_dir(item) && !batch->is_root) {
-			item->actual_file_type = YO_FT_REGULAR;
-		}
-		if (ft == YO_FT_LINK) {
-			trace_simlink(item);
-		}
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
 		if (!batch->bopt.distinguish_dir) {
@@ -267,7 +288,10 @@ void	list_files(t_master* m, t_file_batch* batch) {
 
 	// [後始末]
 	for (size_t i = 0; i < n_ok; ++i) {
-		free(items[i].link_to);
+		if (items[i].link_to) {
+			free((char*)items[i].link_to->name);
+			free(items[i].link_to);
+		}
 	}
 	free(items);
 	free(pointers);

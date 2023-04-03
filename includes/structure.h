@@ -88,7 +88,7 @@ typedef struct s_file_item {
 	// ファイルのパス(相対または絶対)
 	const char*	path;
 	// シンボリックリンクのリンク先
-	char*	link_to;
+	struct s_file_item*	link_to;
 	// path の長さ
 	size_t		path_len;
 	// 実質的なファイルの種別

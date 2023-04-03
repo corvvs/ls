@@ -280,6 +280,14 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		}
 	}
 	measure_datetime(&measure);
+	batch->bopt.some_quoted = false;
+	for (size_t i = 0; i < len; ++i) {
+		t_file_item*	item  = items[i];
+		if (item->quote_type != YO_QT_NONE) {
+			batch->bopt.some_quoted = true;
+			break;
+		}
+	}
 	// [ファイルごとの出力]
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
@@ -293,13 +301,16 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(m->opt, batch, item, true);
+		print_filename(batch, item, false);
 		// (optional)リンク先
 		if (item->link_to) {
 			yoyo_dprintf(STDOUT_FILENO, " -> ");
+#ifdef __MACH__
 			yoyo_dprintf(STDOUT_FILENO, "%s", item->link_to);
+#else
+			print_filename(batch, item->link_to, true);
+#endif
 		}
-
 		yoyo_dprintf(STDOUT_FILENO, "\n");
 	}
 }

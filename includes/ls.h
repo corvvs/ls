@@ -47,7 +47,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_width, size_t len, t_file_item** items);
 
 // print_utils.c
-int		print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end);
+int		print_filename(const t_file_batch* batch, const t_file_item* item, bool link_to);
 void	print_spaces(uint64_t n);
 void	print_error(const t_master* m, const char* operation, const char* path);
 
@@ -66,6 +66,7 @@ void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
 // utils.c
 const char*	yo_basename(const char* path);
+char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
 

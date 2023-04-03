@@ -1,22 +1,24 @@
 #include "ls.h"
 #include "color.h"
 
-static int	print_filename_body(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
-	(void)end;
+static int	print_filename_body(const t_global_option* option, const t_file_item* item) {
 	(void)option;
-	(void)batch;
+	const char*	name = item->name;
 #ifdef __MACH__
-	return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
+	return yoyo_dprintf(STDOUT_FILENO, "%s", name);
 #else
 	if (item->quote_type == YO_QT_NONE) {
-		return yoyo_dprintf(STDOUT_FILENO, "%s", item->name);
+		// クオートなし
+		return yoyo_dprintf(STDOUT_FILENO, "%s", name);
 	} else if (item->quote_type == YO_QT_DQ) {
-		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", item->name);
+		// ダブルクオート
+		return yoyo_dprintf(STDOUT_FILENO, "\"%s\"", name);
 	} else {
+		// シングルクオート
 		int rv = 0;
 		rv += yoyo_dprintf(STDOUT_FILENO, "'");
-		for (size_t i = 0; item->name[i]; ++i) {
-			char c = item->name[i];
+		for (size_t i = 0; name[i]; ++i) {
+			char c = name[i];
 			if (c == '\'') {
 				rv += yoyo_dprintf(STDOUT_FILENO, "'\\%c'", c);
 			} else {
@@ -29,7 +31,8 @@ static int	print_filename_body(const t_global_option* option, const t_file_batch
 #endif
 }
 
-int	print_filename(const t_global_option* option, const t_file_batch* batch, const t_file_item* item, bool end) {
+int	print_filename(const t_file_batch* batch, const t_file_item* item, bool link_to) {
+	const t_global_option* option = batch->opt;
 	static bool	colored = false;
 	const char*	color;
 	const char*	suffix = TX_RST;
@@ -64,12 +67,15 @@ int	print_filename(const t_global_option* option, const t_file_batch* batch, con
 	(void)was_colored;
 #ifdef __MACH__
 #else
+	if (!link_to && batch->bopt.some_quoted && item->quote_type == YO_QT_NONE) {
+		yoyo_dprintf(STDOUT_FILENO, " ");
+	}
 	if (!was_colored && colored) {
 		yoyo_dprintf(STDOUT_FILENO, "%s", TX_RST);
 	}
 #endif
 	yoyo_dprintf(STDOUT_FILENO, "%s", color);
-	int size = print_filename_body(option, batch, item, end);
+	int size = print_filename_body(option, item);
 	yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
 	return size;
 }
