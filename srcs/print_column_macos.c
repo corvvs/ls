@@ -18,7 +18,8 @@ static bool	check_placement(t_master* m, t_file_batch* batch, unsigned int term_
 		}
 		i += 1;
 	}
-	const size_t	tab_size = batch->opt->color ? 2 : 8;
+	// 色があれば8, なければ2
+	const size_t	tab_size = batch->opt->color != YO_COLOR_NONE ? 2 : 8;
 	size_t			total_len = CEIL_BY(max_len + 1, tab_size) * column_number;
 	(void)m;
 	// DEBUGOUT("term_width = %u, column_number = %u, max_len = %u, total_len = %zu", term_width, column_number, max_len, total_len);
@@ -61,7 +62,8 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			max_len = items[i]->display_len;
 		}
 	}
-	const size_t	tab_size = batch->opt->color ? 1 : 8;
+	// 色があれば1, なければ8
+	const size_t	tab_size = batch->opt->color != YO_COLOR_NONE ? 1 : 8;
 	const size_t	term_tabs = CEIL_BY(max_len + 1, tab_size) / tab_size;
 
 	// 列表示をプリント
@@ -74,7 +76,8 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			bool row_end = j + 1 == column_number || len <= k + row_number;
 			print_filename(m->opt, batch, items[k], row_end);
 			if (!row_end) {
-				if (batch->opt->color) {
+				if (batch->opt->color != YO_COLOR_NONE) {
+					// 色がついている時はスペース
 					unsigned int spaces = term_tabs * tab_size - items[k]->display_len;
 					while (spaces--) {
 						yoyo_dprintf(STDOUT_FILENO, " ");

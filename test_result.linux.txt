@@ -32,3 +32,4 @@
 [32m[ OK ][m .
 [32m[ OK ][m -R .
 [32m[ OK ][m -R test1
+[32m[ OK ][m --col=auto

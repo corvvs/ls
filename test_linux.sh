@@ -3,6 +3,7 @@ TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
 REAL_FILE="real.txt"
 MINE_FILE="mine.txt"
+EXEC="./lsls"
 
 function compare_evidence() {
 	diff -u <(head -n-1 ${TEST_DIR}${REAL_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_FILE} | tail -n+2)
@@ -23,12 +24,12 @@ function print_result() {
 
 function run_case() {
 	P=$1
-	rm -rf ./ls
-	ln -s /bin/ls ./ls
-	script -q -c "./ls $P" ${TEST_DIR}${REAL_FILE} > /dev/null
-	rm -rf ./ls
-	ln -s ./ft_ls ./ls
-	script -q -c "./ls $P" ${TEST_DIR}${MINE_FILE} > /dev/null
+	rm -rf ${EXEC}
+	ln -s /bin/ls ${EXEC}
+	script -q -c "${EXEC} $P" ${TEST_DIR}${REAL_FILE} > /dev/null
+	rm -rf ${EXEC}
+	ln -s ./ft_ls ${EXEC}
+	script -q -c "${EXEC} $P" ${TEST_DIR}${MINE_FILE} > /dev/null
 	compare_evidence
 	print_result "$P"
 }
@@ -78,4 +79,4 @@ run_case "."
 run_case "-R ."
 run_case "-R test1"
 
-# run_case "-G"
+run_case "--col=auto"

@@ -13,7 +13,7 @@
 #  include <uuid/uuid.h>
 # endif
 
-typedef enum e_filetype {
+typedef enum	e_filetype {
 	YO_FT_REGULAR,
 	YO_FT_DIR,
 	YO_FT_LINK,
@@ -22,7 +22,7 @@ typedef enum e_filetype {
 	YO_FT_ERROR,
 }	t_filetype;
 
-typedef enum e_quote_type {
+typedef enum	e_quote_type {
 	// クオートなし
 	YO_QT_NONE,
 	// ダブルクオーテーションで囲む
@@ -30,6 +30,12 @@ typedef enum e_quote_type {
 	// シングルクオーテーションで囲む
 	YO_QT_SQ,
 }	t_quote_type;
+
+typedef enum	e_color_option {
+	YO_COLOR_NONE,
+	YO_COLOR_AUTO,
+	YO_COLOR_ALWAYS,
+}	t_color_option;
 
 typedef struct	s_batch_option {
 	bool	distinguish_dir;
@@ -69,7 +75,7 @@ typedef struct	s_global_option {
 	bool	show_dir_as_file;
 	// --col
 	// カラーリングする
-	bool	color;
+	t_color_option	color;
 }	t_global_option;
 
 typedef struct s_file_item {

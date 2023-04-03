@@ -34,7 +34,8 @@ int	print_filename(const t_global_option* option, const t_file_batch* batch, con
 	const char*	color;
 	const char*	suffix = TX_RST;
 	const bool	was_colored = colored;
-	if (!option->color) {
+	if (option->color == YO_COLOR_NONE) {
+		// 色がない時
 		color = YO_COLOR_REGULAR;
 		suffix = "";
 	} else if (item->nominal_file_type == YO_FT_DIR) {

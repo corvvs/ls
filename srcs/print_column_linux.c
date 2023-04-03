@@ -65,7 +65,8 @@ static unsigned int	determine_column_number(t_master* m, t_file_batch* batch, un
 static size_t	indent(const t_file_batch* batch, size_t cursor_from, size_t cursor_to) {
 	// DEBUGOUT("cursor_from = %zu, cursor_to = %zu", cursor_from, cursor_to);
 	while (cursor_from < cursor_to) {
-		if (!batch->opt->color && cursor_to / 8 > (cursor_from + 1) / 8) {
+		if (batch->opt->color == YO_COLOR_NONE && cursor_to / 8 > (cursor_from + 1) / 8) {
+			// 色がない時
 			yoyo_dprintf(STDOUT_FILENO, "\t");
 			cursor_from += 8 - cursor_from % 8;
 
