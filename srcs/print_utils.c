@@ -47,7 +47,16 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		color = YO_COLOR_BLOCK_DEVICE;
 		colored = true;
 	} else if (item->nominal_file_type == YO_FT_DIR) {
-		color = YO_COLOR_DIR;
+		if (item->st.st_mode & S_IWOTH) {
+			// IS DIR and OTHER WRITABLE and STICKY
+			if (item->st.st_mode & S_ISVTX) {
+				color = YO_COLOR_DIR_WRITABLE_STICKY;
+			} else {
+				color = YO_COLOR_DIR_WRITABLE_NON_STICKY;
+			}
+		} else {
+			color = YO_COLOR_DIR;
+		}
 		colored = true;
 	} else if (item->actual_file_type == YO_FT_LINK) {
 		color = YO_COLOR_GOODLINK;

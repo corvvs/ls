@@ -19,18 +19,6 @@ static uint64_t	number_width(uint64_t i) {
 	return n;
 }
 
-static uint64_t	hex_number_width(uint64_t i) {
-	if (i == 0) {
-		return 1;
-	}
-	uint64_t	n = 0;
-	while (i) {
-		i /= 16;
-		n += 1;
-	}
-	return n;
-}
-
 // "Total:" 用のブロックサイズの計算
 static size_t	subtotal_blocks(const t_file_item* item) {
 #ifdef __MACH__
@@ -125,7 +113,13 @@ static void	print_filemode_part(const t_file_item* item) {
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IROTH) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWOTH) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_IXOTH) ? 'x' : '-';
+		// 実行権限 と スティッキービット の状態に応じて変わる
+		const bool is_x = !!(item->st.st_mode & S_IXOTH);
+		const bool is_t = !!(item->st.st_mode & S_ISVTX);
+		perm[2] = (is_x && is_t)
+			? 't' : (is_x && !is_t)
+			? 'x' : (!is_x && is_t)
+			? 'T' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
 }
@@ -185,6 +179,7 @@ static void	print_group_name(const t_long_format_measure* measure, t_cache* cach
 	print_spaces(measure->group_width - w);
 }
 
+// ファイルサイズ
 static uint64_t	get_file_size(const t_file_item* item) {
 	return item->st.st_size;
 }
@@ -194,16 +189,6 @@ static void	print_file_size(t_long_format_measure* measure, const t_file_item* i
 	const uint64_t w = number_width(n);
 	print_spaces(measure->size_width - w + COL_PADDING);
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
-}
-
-static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
-	const uint64_t w = item->st.st_rdev == 0 ? 1 : hex_number_width(item->st.st_rdev) + 2;
-	print_spaces(measure->size_width - w + COL_PADDING);
-	if (item->st.st_rdev) {
-		yoyo_dprintf(STDOUT_FILENO, "0x%lx", item->st.st_rdev);
-	} else {
-		yoyo_dprintf(STDOUT_FILENO, "%lx", item->st.st_rdev);
-	}
 }
 
 static void	measure_datetime(t_long_format_measure* measure) {
@@ -278,6 +263,53 @@ static void	print_datetime(const t_long_format_measure* measure, t_cache* cache,
 	}
 }
 
+#ifdef __MACH__
+static uint64_t	hex_number_width(uint64_t i) {
+	if (i == 0) {
+		return 1;
+	}
+	uint64_t	n = 0;
+	while (i) {
+		i /= 16;
+		n += 1;
+	}
+	return n;
+}
+
+static uint64_t get_device_id_width(const t_file_item* item) {
+	return item->st.st_rdev == 0 ? 0 : hex_number_width(item->st.st_rdev) + 2;
+}
+
+static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t w = item->st.st_rdev == 0 ? 1 : hex_number_width(item->st.st_rdev) + 2;
+	print_spaces(measure->size_width - w + COL_PADDING);
+	if (item->st.st_rdev) {
+		yoyo_dprintf(STDOUT_FILENO, "0x%lx", item->st.st_rdev);
+	} else {
+		yoyo_dprintf(STDOUT_FILENO, "%lx", item->st.st_rdev);
+	}
+}
+
+#else
+
+#include <sys/sysmacros.h>
+static uint64_t get_device_id_width(const t_file_item* item) {
+	unsigned int	mj = major(item->st.st_rdev);
+	unsigned int	mn = minor(item->st.st_rdev);
+	return number_width(mj) + 2 + number_width(mn);
+}
+
+// デバイスID
+static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
+	unsigned int	mj = major(item->st.st_rdev);
+	unsigned int	mn = minor(item->st.st_rdev);
+	unsigned int	w = number_width(mj) + 2 + number_width(mn);
+	print_spaces(measure->size_width - w + COL_PADDING);
+	yoyo_dprintf(STDOUT_FILENO, "%u, %u", mj, mn);
+}
+
+#endif
+
 // long-format の出力
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	// ["Total:" の出力]
@@ -302,8 +334,9 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 				measure.group_width = MAX(measure.group_width, ft_strlen(name));
 			}
 		}
+		// デバイスID or ファイルサイズ
 		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
-			measure.size_width = MAX(measure.size_width, (item->st.st_rdev == 0 ? 0 : hex_number_width(item->st.st_rdev) + 2));
+			measure.size_width = MAX(measure.size_width, get_device_id_width(item));
 		} else {
 			uint64_t	size = get_file_size(item);
 			measure.size_width = MAX(measure.size_width, number_width(size));

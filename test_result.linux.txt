@@ -41,3 +41,9 @@
 [32m[ OK ][m -l /usr/bin
 [32m[ OK ][m -l --col pocket
 [32m[ OK ][m -l --col /usr/bin
+[32m[ OK ][m /dev
+[32m[ OK ][m --col /dev
+[32m[ OK ][m -l --col /dev
+[32m[ OK ][m /var
+[32m[ OK ][m --col /var
+[32m[ OK ][m -l --col /var
