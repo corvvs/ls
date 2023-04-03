@@ -19,6 +19,18 @@ static uint64_t	number_width(uint64_t i) {
 	return n;
 }
 
+static uint64_t	hex_number_width(uint64_t i) {
+	if (i == 0) {
+		return 1;
+	}
+	uint64_t	n = 0;
+	while (i) {
+		i /= 16;
+		n += 1;
+	}
+	return n;
+}
+
 // "Total:" 用のブロックサイズの計算
 static size_t	subtotal_blocks(const t_file_item* item) {
 #ifdef __MACH__
@@ -74,6 +86,12 @@ static void	print_filemode_part(const t_file_item* item) {
 				break;
 			case YO_FT_DIR:
 				c = 'd';
+				break;
+			case YO_FT_CHAR_DEVICE:
+				c = 'c';
+				break;
+			case YO_FT_BLOCK_DEVICE:
+				c = 'b';
 				break;
 			case YO_FT_LINK:
 			case YO_FT_BAD_LINK:
@@ -178,6 +196,16 @@ static void	print_file_size(t_long_format_measure* measure, const t_file_item* i
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_size);
 }
 
+static void	print_device_id(t_long_format_measure* measure, const t_file_item* item) {
+	const uint64_t w = item->st.st_rdev == 0 ? 1 : hex_number_width(item->st.st_rdev) + 2;
+	print_spaces(measure->size_width - w + COL_PADDING);
+	if (item->st.st_rdev) {
+		yoyo_dprintf(STDOUT_FILENO, "0x%lx", item->st.st_rdev);
+	} else {
+		yoyo_dprintf(STDOUT_FILENO, "%lx", item->st.st_rdev);
+	}
+}
+
 static void	measure_datetime(t_long_format_measure* measure) {
 #ifdef __MACH__
 	measure->mon_width = 2;
@@ -274,7 +302,9 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 				measure.group_width = MAX(measure.group_width, ft_strlen(name));
 			}
 		}
-		{
+		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
+			measure.size_width = MAX(measure.size_width, (item->st.st_rdev == 0 ? 0 : hex_number_width(item->st.st_rdev) + 2));
+		} else {
 			uint64_t	size = get_file_size(item);
 			measure.size_width = MAX(measure.size_width, number_width(size));
 		}
@@ -293,10 +323,16 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		t_file_item*	item  = items[i];
 		print_filemode_part(item);
 		print_link_number_part(&measure, item);
+		// 所有者名
 		print_owner_name(&measure, &m->cache, item);
+		// グループ名
 		print_group_name(&measure, &m->cache, item);
-		// ファイルサイズ
-		print_file_size(&measure, item);
+		// ファイルサイズ or デバイス番号
+		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
+			print_device_id(&measure, item);
+		} else {
+			print_file_size(&measure, item);
+		}
 		// 日時
 		print_datetime(&measure, &m->cache, item);
 		// 名前

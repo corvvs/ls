@@ -8,6 +8,7 @@
 # include <stdlib.h>
 # include <dirent.h>
 # include <sys/stat.h>
+# include <limits.h>
 # include <string.h>
 # include <errno.h>
 # include <assert.h>

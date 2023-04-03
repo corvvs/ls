@@ -8,10 +8,15 @@ static void	swap_item(t_file_item** a, t_file_item** b) {
 }
 
 static t_filetype	determine_file_type(struct stat* st) {
+
 	if (S_ISREG(st->st_mode)) {
 		return YO_FT_REGULAR;
 	} else if (S_ISDIR(st->st_mode)) {
 		return YO_FT_DIR;
+	} else if (S_ISBLK(st->st_mode)) {
+		return YO_FT_BLOCK_DEVICE;
+	} else if (S_ISCHR(st->st_mode)) {
+		return YO_FT_CHAR_DEVICE;
 	} else if (S_ISLNK(st->st_mode)) {
 		return YO_FT_LINK;
 	} else {
@@ -100,21 +105,26 @@ bool	is_dot_dir(const t_file_item* item) {
 static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
 
 // シンボリックリンク item のリンク先に関する情報を取得する
-static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const char* path, size_t link_len) {
+static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const char* path) {
 	// [リンク先の名前を取得する]
-	char* link_to = malloc(link_len);
-	YOYO_ASSERT(link_to != NULL);
-	if (link_to == NULL) {
-		return false;
-	}
+	char	name_buf[PATH_MAX + 1];
 	errno = 0;
-	ssize_t actual_len = readlink(path, link_to, link_len);
+	// DEBUGOUT("link_to: %p", link_to);
+	ssize_t actual_len = readlink(path, name_buf, PATH_MAX);
 	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
 	if (actual_len < 0) {
 		return false;
 	}
+	char* link_to = malloc(actual_len + 1);
+	YOYO_ASSERT(link_to != NULL);
+	if (link_to == NULL) {
+		return false;
+	}
+	ft_memcpy(link_to, name_buf, actual_len + 1);
+	// DEBUGOUT("link_len: %zu, actual_len: %zd", link_len, actual_len);
 	link_to[actual_len] = '\0';
-
+	// DEBUGOUT("link_to: %p", link_to);
+	// DEBUGOUT("link_to: %s", link_to);
 	// [リンク先のパスを取得する]
 	errno = 0;
 	char*	full_link_to = yo_replace_basename(path, link_to);
@@ -225,7 +235,7 @@ static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, b
 	}
 	t_filetype	ft = determine_file_type(&item->st);
 	item->link_to = NULL;
-	// DEBUGOUT("path = %s, type = %d", path, ft);
+	// DEBUGOUT("path = %s, type = %d, st_dev = %lx, st_rdev = %lx", path, ft, item->st.st_dev, item->st.st_rdev);
 	item->actual_file_type = ft;
 	item->nominal_file_type = ft;
 	item->errn = errno;
@@ -237,7 +247,10 @@ static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, b
 	}
 	if (ft == YO_FT_LINK && trace_link) {
 		t_file_item*	link_item = malloc(sizeof(t_file_item));
-		if (!trace_simlink(batch, link_item, item->path, item->st.st_size + 1)) {
+		YOYO_ASSERT(link_item != NULL);
+		// DEBUGINFO("item: %p", item);
+		// DEBUGINFO("item->path: %s", item->path);
+		if (!trace_simlink(batch, link_item, item->path)) {
 			item->actual_file_type = YO_FT_BAD_LINK;
 		}
 		if (link_item->actual_file_type == YO_FT_BAD_LINK) {

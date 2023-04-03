@@ -18,6 +18,8 @@ typedef enum	e_filetype {
 	YO_FT_DIR,
 	YO_FT_LINK,
 	YO_FT_BAD_LINK,
+	YO_FT_CHAR_DEVICE,
+	YO_FT_BLOCK_DEVICE,
 	YO_FT_OTHER,
 	YO_FT_ERROR,
 }	t_filetype;

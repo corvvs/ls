@@ -40,6 +40,12 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		// 色がない時
 		color = YO_COLOR_REGULAR;
 		suffix = "";
+	} else if (item->nominal_file_type == YO_FT_CHAR_DEVICE) {
+		color = YO_COLOR_CHAR_DEVICE;
+		colored = true;
+	} else if (item->nominal_file_type == YO_FT_BLOCK_DEVICE) {
+		color = YO_COLOR_BLOCK_DEVICE;
+		colored = true;
 	} else if (item->nominal_file_type == YO_FT_DIR) {
 		color = YO_COLOR_DIR;
 		colored = true;

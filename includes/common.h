@@ -17,6 +17,7 @@
 # define TX_CYN "\e[36m"
 # define BG_BLK "\e[40m"
 # define BG_RED "\e[41m"
+# define BG_YLW "\e[43m"
 # define BG_CYN "\e[46m"
 # ifdef __MACH__
 #  define TX_RST "\e[39;49m\e[0m"
