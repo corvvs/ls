@@ -31,7 +31,7 @@ static int	print_filename_body(const t_global_option* option, const t_file_item*
 #endif
 }
 
-int	print_filename(const t_file_batch* batch, const t_file_item* item, bool link_to) {
+int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 	const t_global_option* option = batch->opt;
 	static bool	colored = false;
 	const char*	color;
@@ -67,9 +67,6 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item, bool link
 	(void)was_colored;
 #ifdef __MACH__
 #else
-	if (!link_to && batch->bopt.some_quoted && item->quote_type == YO_QT_NONE) {
-		yoyo_dprintf(STDOUT_FILENO, " ");
-	}
 	if (!was_colored && colored) {
 		yoyo_dprintf(STDOUT_FILENO, "%s", TX_RST);
 	}

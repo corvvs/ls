@@ -85,3 +85,7 @@ run_case "--col includes"
 run_case "--col minimini"
 run_case "--col /usr"
 run_case "--col /usr/bin"
+
+run_case "-l /usr/bin"
+run_case "-l --col pocket"
+run_case "-l --col /usr/bin"

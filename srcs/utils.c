@@ -12,11 +12,16 @@ const char*	yo_basename(const char* path) {
 
 // path の dirname 部分と basename を結合したものを返す
 char*	yo_replace_basename(const char* path, const char* basename) {
+	// [絶対パスの場合]
+	// -> そのまま複製する
+	if (basename[0] == '/') {
+		return ft_strdup(basename);
+	}
 	char*	last_slash = ft_strrchr(path, '/');
 	if (last_slash == NULL) {
 		return ft_strdup(basename);
 	}
-	size_t	dir_len = last_slash - path;
+	size_t	dir_len = last_slash - path + 1;
 	size_t	base_len = ft_strlen(basename);
 	char*	str = malloc(sizeof(char) * (dir_len + base_len + 1));
 	YOYO_ASSERT(str != NULL);

@@ -301,14 +301,17 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		print_datetime(&measure, &m->cache, item);
 		// 名前
 		print_spaces(1);
-		print_filename(batch, item, false);
+		if (batch->bopt.some_quoted && item->quote_type == YO_QT_NONE) {
+			yoyo_dprintf(STDOUT_FILENO, " ");
+		}
+		print_filename(batch, item);
 		// (optional)リンク先
 		if (item->link_to) {
 			yoyo_dprintf(STDOUT_FILENO, " -> ");
 #ifdef __MACH__
 			yoyo_dprintf(STDOUT_FILENO, "%s", item->link_to);
 #else
-			print_filename(batch, item->link_to, true);
+			print_filename(batch, item->link_to);
 #endif
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");

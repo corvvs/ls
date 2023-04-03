@@ -47,7 +47,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_width, size_t len, t_file_item** items);
 
 // print_utils.c
-int		print_filename(const t_file_batch* batch, const t_file_item* item, bool link_to);
+int		print_filename(const t_file_batch* batch, const t_file_item* item);
 void	print_spaces(uint64_t n);
 void	print_error(const t_master* m, const char* operation, const char* path);
 

@@ -119,8 +119,7 @@ static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const cha
 	errno = 0;
 	char*	full_link_to = yo_replace_basename(path, link_to);
 	YOYO_ASSERT(full_link_to != NULL);
-	// DEBUGINFO("%s -> %s", link_to, full_link_to);
-
+	// DEBUGINFO("%s + %s -> %s", path, link_to, full_link_to);
 
 	// [リンク先の情報を取得する]
 	if (set_item(batch, full_link_to, link_item, false)) {
@@ -204,13 +203,14 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
 	determine_file_name(batch, item, path);
 	errno = 0;
-	int rv = lstat(path, &item->st);
+	int rv = trace_link ? lstat(path, &item->st) : stat(path, &item->st);
 	if (rv) {
 		// DEBUGERR("errno = %d, %s", errno, strerror(errno));
 		return false;
 	}
 	t_filetype	ft = determine_file_type(&item->st);
 	item->link_to = NULL;
+	// DEBUGOUT("path = %s, type = %d", path, ft);
 	item->actual_file_type = ft;
 	item->nominal_file_type = ft;
 	item->errn = errno;

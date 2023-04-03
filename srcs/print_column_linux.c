@@ -126,7 +126,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 
 			const size_t		next_k = k + row_number;
 			const bool			end = len <= next_k;
-			cursor += print_filename(batch, item, false);
+			cursor += print_filename(batch, item);
 			// DEBUGOUT("cursor = %zu, offset = %zu, len = %zu, next_k = %zu, end = %d", cursor, offset, len, next_k, end);
 			if (end) {
 				continue;
