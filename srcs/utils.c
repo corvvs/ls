@@ -1,7 +1,7 @@
 #include "ls.h"
 
 // path の basename 部分先頭のポインタを返す
-const char*	yo_basename(const char* path) {
+char*	yo_basename(char* path) {
 	char*	last_slash = ft_strrchr(path, '/');
 	if (last_slash == NULL) {
 		return path;

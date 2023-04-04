@@ -94,3 +94,5 @@ run_case "-G /dev/"
 
 run_case "-l@"
 run_case "-l@e"
+
+run_case "xxx x"

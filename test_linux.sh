@@ -98,3 +98,5 @@ run_case "--col /var"
 run_case "-l --col /var"
 # run_case "-G /dev/"
 # run_case "-lG /dev/"
+
+run_case "xxx x"

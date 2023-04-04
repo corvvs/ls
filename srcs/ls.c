@@ -101,7 +101,7 @@ bool	is_dot_dir(const t_file_item* item) {
 	return ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0;
 }
 
-static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
+static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* item, bool trace_link);
 
 // シンボリックリンク item のリンク先に関する情報を取得する
 static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_item, const char* path) {
@@ -114,7 +114,7 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	if (actual_len < 0) {
 		return false;
 	}
-	char* link_to = malloc(actual_len + 1);
+	char* link_to = malloc(sizeof(char) * (actual_len + 1));
 	YOYO_ASSERT(link_to != NULL);
 	if (link_to == NULL) {
 		return false;
@@ -215,8 +215,8 @@ size_t	determine_name_len(const char* name, t_quote_type qt) {
 }
 
 
-static void	determine_file_name(const t_file_batch* batch, t_file_item* item, const char* path) {
-	const char* name = batch->is_root ? path : yo_basename(path);
+static void	determine_file_name(const t_file_batch* batch, t_file_item* item, char* path) {
+	char* name = batch->is_root ? path : yo_basename(path);
 	item->quote_type = determine_quote_type(batch, name);
 	item->name = name;
 	item->path = path;
@@ -224,7 +224,8 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 	item->display_len = determine_name_len(name, item->quote_type);
 }
 
-static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
+static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* item, bool trace_link) {
+	ft_bzero(item, sizeof(t_file_item));
 	determine_file_name(batch, item, path);
 	errno = 0;
 	int rv = trace_link ? lstat(path, &item->st) : stat(path, &item->st);
@@ -242,13 +243,10 @@ static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_
 	// ACLの取得
 	if (trace_link && batch->opt->long_format) {
 		item->acl = acl_get_link_np(path, ACL_TYPE_EXTENDED);
-	} else {
-		item->acl = NULL;
 	}
 #endif
 
 	t_filetype	ft = determine_file_type(&item->st);
-	item->link_to = NULL;
 	// DEBUGOUT("path = %s, type = %d, st_dev = %lx, st_rdev = %lx", path, ft, item->st.st_dev, item->st.st_rdev);
 	item->actual_file_type = ft;
 	item->nominal_file_type = ft;
@@ -260,7 +258,7 @@ static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_
 		item->actual_file_type = YO_FT_REGULAR;
 	}
 	if (ft == YO_FT_LINK && trace_link) {
-		t_file_item*	link_item = malloc(sizeof(t_file_item));
+		t_file_item*	link_item = ft_calloc(sizeof(t_file_item), 1);
 		YOYO_ASSERT(link_item != NULL);
 		// DEBUGINFO("item: %p", item);
 		// DEBUGINFO("item->path: %s", item->path);
@@ -289,7 +287,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	// [ファイル情報を読み取る]
 	batch->bopt.some_quoted = false;
 	for (size_t i = 0; i < batch->len; ++i) {
-		const char* path = batch->path[i];
+		char* path = batch->path[i];
 
 		t_file_item*	item = &items[i];
 
@@ -331,7 +329,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	// [後始末]
 	for (size_t i = 0; i < n_ok; ++i) {
 		if (items[i].link_to) {
-			free((char*)items[i].link_to->name);
+			free(items[i].link_to->name);
 			free(items[i].link_to);
 		}
 #ifdef __MACH__
