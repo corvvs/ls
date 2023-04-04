@@ -42,6 +42,7 @@ typedef enum	e_color_option {
 typedef struct	s_batch_option {
 	bool	distinguish_dir;
 	bool	some_quoted;
+	bool	some_has_acl;
 }	t_batch_option;
 
 typedef struct	s_global_option {
@@ -72,6 +73,8 @@ typedef struct	s_global_option {
 	// -g
 	// where it was used to display the group name in the long (-l) format output.
 	bool	show_group;
+	// -e
+	bool	show_acl;
 	// -d
 	// Directories are listed as plain files (not searched recursively).
 	bool	show_dir_as_file;
@@ -79,6 +82,12 @@ typedef struct	s_global_option {
 	// カラーリングする
 	t_color_option	color;
 }	t_global_option;
+
+
+#ifdef __MACH__
+# include <sys/types.h>
+# include <sys/acl.h>
+#endif
 
 typedef struct s_file_item {
 	// ファイルのbasename
@@ -103,6 +112,10 @@ typedef struct s_file_item {
 	struct tm	time_st;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
 	int			errn;
+
+#ifdef __MACH__
+	acl_t		acl;
+#endif
 }	t_file_item;
 
 // この名前はないわ

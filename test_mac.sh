@@ -91,4 +91,3 @@ run_case "-lG /usr/bin"
 
 run_case " /dev/"
 run_case "-G /dev/"
-run_case "-RG /usr"

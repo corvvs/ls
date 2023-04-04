@@ -1,6 +1,5 @@
 #include "ls.h"
 
-
 static void	swap_item(t_file_item** a, t_file_item** b) {
 	t_file_item*	c = *a;
 	*a = *b;
@@ -102,10 +101,10 @@ bool	is_dot_dir(const t_file_item* item) {
 	return ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0;
 }
 
-static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
+static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_item* item, bool trace_link);
 
 // シンボリックリンク item のリンク先に関する情報を取得する
-static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const char* path) {
+static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_item, const char* path) {
 	// [リンク先の名前を取得する]
 	char	name_buf[PATH_MAX + 1];
 	errno = 0;
@@ -132,7 +131,7 @@ static bool	trace_simlink(t_file_batch* batch, t_file_item* link_item, const cha
 	// DEBUGINFO("%s + %s -> %s", path, link_to, full_link_to);
 
 	// [リンク先の情報を取得する]
-	if (set_item(batch, full_link_to, link_item, false)) {
+	if (set_item(m, batch, full_link_to, link_item, false)) {
 		// リンク先がちゃんと追える
 	} else {
 		// リンク先が追えない
@@ -225,7 +224,7 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 	item->display_len = determine_name_len(name, item->quote_type);
 }
 
-static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
+static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
 	determine_file_name(batch, item, path);
 	errno = 0;
 	int rv = trace_link ? lstat(path, &item->st) : stat(path, &item->st);
@@ -233,6 +232,15 @@ static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, b
 		// DEBUGERR("errno = %d, %s", errno, strerror(errno));
 		return false;
 	}
+
+#ifdef __MACH__
+	if (trace_link && batch->opt->long_format) {
+		item->acl = acl_get_link_np(path, ACL_TYPE_EXTENDED);
+	} else {
+		item->acl = NULL;
+	}
+#endif
+
 	t_filetype	ft = determine_file_type(&item->st);
 	item->link_to = NULL;
 	// DEBUGOUT("path = %s, type = %d, st_dev = %lx, st_rdev = %lx", path, ft, item->st.st_dev, item->st.st_rdev);
@@ -250,7 +258,7 @@ static bool	set_item(t_file_batch* batch, const char* path, t_file_item* item, b
 		YOYO_ASSERT(link_item != NULL);
 		// DEBUGINFO("item: %p", item);
 		// DEBUGINFO("item->path: %s", item->path);
-		if (!trace_simlink(batch, link_item, item->path)) {
+		if (!trace_simlink(m, batch, link_item, item->path)) {
 			item->actual_file_type = YO_FT_BAD_LINK;
 		}
 		if (link_item->actual_file_type == YO_FT_BAD_LINK) {
@@ -279,7 +287,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 
 		t_file_item*	item = &items[i];
 
-		if (!set_item(batch, path, item, true)) {
+		if (!set_item(m, batch, path, item, true)) {
 			print_error(m, "cannot access", path);
 			continue;
 		}
@@ -320,6 +328,11 @@ void	list_files(t_master* m, t_file_batch* batch) {
 			free((char*)items[i].link_to->name);
 			free(items[i].link_to);
 		}
+#ifdef __MACH__
+		if (items[i].acl != NULL) {
+			acl_free(items[i].acl);
+		}
+#endif
 	}
 	free(items);
 	free(pointers);

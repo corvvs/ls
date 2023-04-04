@@ -74,6 +74,9 @@ char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
 
+// acl.c
+void		print_acl_lines(t_master* m, const t_file_item* item);
+
 // debug.c
 void	print_ls(const t_file_batch* batch);
 

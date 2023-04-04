@@ -27,6 +27,9 @@ static bool	set_short_option(t_global_option* option, char c) {
 		case 'g':
 			option->show_group = true;
 			break;
+		case 'e':
+			option->show_acl = true;
+			break;
 		case 'G':
 			option->color = YO_COLOR_AUTO;
 			break;
