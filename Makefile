@@ -15,6 +15,7 @@ FILES	:=	\
 			cache.c\
 			time.c\
 			utils.c\
+			xattr.c\
 			acl.c\
 			debug.c\
 			assert.c\

@@ -7,7 +7,7 @@
 # define COL_PADDING 1
 #endif
 
-static uint64_t	number_width(uint64_t i) {
+uint64_t	number_width(uint64_t i) {
 	if (i == 0) {
 		return 1;
 	}
@@ -321,35 +321,6 @@ static void	print_device_id(t_long_format_measure* measure, const t_file_item* i
 }
 
 #endif
-
-#include <sys/types.h>
-#include <sys/xattr.h>
-
-void	print_xattr_lines(t_master* m, const t_file_item* item) {
-	(void)m;
-	char*	buf = malloc(sizeof(char) * (item->xattr_len + 1));
-	YOYO_ASSERT(buf != NULL);
-	ssize_t list_len = listxattr(item->path, buf, item->xattr_len + 1, XATTR_NOFOLLOW);
-	if (list_len < 0) {
-		return;
-	}
-	char*	key = buf;
-	while (*key) {
-		errno = 0;
-		ssize_t value_len = getxattr(item->path, key, NULL, 0, 0, 0);
-		if (value_len < 0) {
-			break;
-		}
-		const uint64_t w = number_width(value_len);
-		yoyo_dprintf(STDOUT_FILENO, "\t%s\t ", key);
-		if (5 >= w) {
-			print_spaces(5 - w);
-		}
-		yoyo_dprintf(STDOUT_FILENO, "%zu \n", value_len);
-		key += ft_strlen(key) + 1;
-	}
-	free(buf);
-}
 
 // long-format の出力
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
