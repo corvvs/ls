@@ -27,6 +27,9 @@ static bool	set_short_option(t_global_option* option, char c) {
 		case 'g':
 			option->show_group = true;
 			break;
+		case '@':
+			option->show_xattr = true;
+			break;
 		case 'e':
 			option->show_acl = true;
 			break;

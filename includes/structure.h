@@ -42,7 +42,7 @@ typedef enum	e_color_option {
 typedef struct	s_batch_option {
 	bool	distinguish_dir;
 	bool	some_quoted;
-	bool	some_has_acl;
+	bool	some_has_acl_xattr;
 }	t_batch_option;
 
 typedef struct	s_global_option {
@@ -73,6 +73,8 @@ typedef struct	s_global_option {
 	// -g
 	// where it was used to display the group name in the long (-l) format output.
 	bool	show_group;
+	// -@
+	bool	show_xattr;
 	// -e
 	bool	show_acl;
 	// -d
@@ -112,6 +114,9 @@ typedef struct s_file_item {
 	struct tm	time_st;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
 	int			errn;
+
+	// 拡張属性のバッファサイズ; これが0の場合は拡張属性を持たないということ
+	ssize_t		xattr_len;
 
 #ifdef __MACH__
 	acl_t		acl;

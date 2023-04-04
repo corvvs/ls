@@ -123,11 +123,17 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 			? 'T' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
+	if (batch->bopt.some_has_acl_xattr) {
+		if (item->xattr_len > 0) {
+			yoyo_dprintf(STDOUT_FILENO, "%c", '@');
 #ifdef __MACH__
-	if (batch->bopt.some_has_acl) {
-		yoyo_dprintf(STDOUT_FILENO, "%c", item->acl != NULL ? '+' : ' ');
-	}
+		} else if (item->acl != NULL) {
+			yoyo_dprintf(STDOUT_FILENO, "%c", '+');
 #endif
+		} else {
+			yoyo_dprintf(STDOUT_FILENO, "%c", ' ');
+		}
+	}
 }
 
 // リンク数
@@ -316,6 +322,35 @@ static void	print_device_id(t_long_format_measure* measure, const t_file_item* i
 
 #endif
 
+#include <sys/types.h>
+#include <sys/xattr.h>
+
+void	print_xattr_lines(t_master* m, const t_file_item* item) {
+	(void)m;
+	char*	buf = malloc(sizeof(char) * (item->xattr_len + 1));
+	YOYO_ASSERT(buf != NULL);
+	ssize_t list_len = listxattr(item->path, buf, item->xattr_len + 1, XATTR_NOFOLLOW);
+	if (list_len < 0) {
+		return;
+	}
+	char*	key = buf;
+	while (*key) {
+		errno = 0;
+		ssize_t value_len = getxattr(item->path, key, NULL, 0, 0, 0);
+		if (value_len < 0) {
+			break;
+		}
+		const uint64_t w = number_width(value_len);
+		yoyo_dprintf(STDOUT_FILENO, "\t%s\t ", key);
+		if (5 >= w) {
+			print_spaces(5 - w);
+		}
+		yoyo_dprintf(STDOUT_FILENO, "%zu \n", value_len);
+		key += ft_strlen(key) + 1;
+	}
+	free(buf);
+}
+
 // long-format の出力
 void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	// ["Total:" の出力]
@@ -350,7 +385,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 	}
 	measure_datetime(&measure);
 	batch->bopt.some_quoted = false;
-	batch->bopt.some_has_acl = false;
+	batch->bopt.some_has_acl_xattr = false;
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
 		if (item->quote_type != YO_QT_NONE) {
@@ -358,7 +393,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		}
 #ifdef __MACH__
 		if (item->acl != NULL) {
-			batch->bopt.some_has_acl = true;
+			batch->bopt.some_has_acl_xattr = true;
 		}
 #endif
 	}
@@ -366,7 +401,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
 		print_filemode_part(batch, item);
-		print_spaces(COL_PADDING - (batch->bopt.some_has_acl ? 1 : 0));
+		print_spaces(COL_PADDING - (batch->bopt.some_has_acl_xattr ? 1 : 0));
 		print_link_number_part(&measure, item);
 		// 所有者名
 		print_owner_name(&measure, &m->cache, item);
@@ -397,6 +432,12 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
 
+		// (あれば)拡張属性の方法を詳細に表示
+		if (batch->opt->show_xattr && item->xattr_len > 0) {
+			print_xattr_lines(m, item);
+		}
+
+		// (あれば)ACLの情報を詳細に表示
 #ifdef __MACH__
 		if (batch->opt->show_acl && item->acl != NULL) {
 			print_acl_lines(m, item);

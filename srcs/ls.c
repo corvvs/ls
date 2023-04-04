@@ -224,6 +224,9 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, co
 	item->display_len = determine_name_len(name, item->quote_type);
 }
 
+#include <sys/types.h>
+#include <sys/xattr.h>
+
 static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_item* item, bool trace_link) {
 	determine_file_name(batch, item, path);
 	errno = 0;
@@ -233,7 +236,18 @@ static bool	set_item(t_master* m, t_file_batch* batch, const char* path, t_file_
 		return false;
 	}
 
+	// 拡張属性の取得
+	if (trace_link && batch->opt->long_format) {
+		ssize_t xattr_len = listxattr(path, NULL, 0, XATTR_NOFOLLOW);
+		if (xattr_len > 0) {
+			item->xattr_len = xattr_len;
+		} else {
+			item->xattr_len = 0;
+		}
+	}
+
 #ifdef __MACH__
+	// ACLの取得
 	if (trace_link && batch->opt->long_format) {
 		item->acl = acl_get_link_np(path, ACL_TYPE_EXTENDED);
 	} else {
