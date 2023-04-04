@@ -93,7 +93,7 @@ typedef struct	s_global_option {
 
 typedef struct s_file_item {
 	// ファイルのbasename
-	const char*	name;
+	char*	name;
 	// ファイル名が表示されるときの長さ
 	size_t		display_len;
 	// ファイル名をクオートして表示すべきか

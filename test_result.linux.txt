@@ -47,3 +47,4 @@
 [32m[ OK ][m /var
 [32m[ OK ][m --col /var
 [32m[ OK ][m -l --col /var
+[32m[ OK ][m xxx x

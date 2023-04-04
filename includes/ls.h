@@ -70,7 +70,7 @@ void		unixtime_to_date_utc(time_t unixtime, struct tm* time_s);
 void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
 // utils.c
-const char*	yo_basename(const char* path);
+char*		yo_basename(char* path);
 char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
