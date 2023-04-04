@@ -7,4 +7,4 @@ RUN apt-get update && apt-get install -y\
     gdb \
     vim
 RUN apt-get install -y git
-
+RUN apt-get install -y attr

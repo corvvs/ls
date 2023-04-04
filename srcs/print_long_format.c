@@ -7,7 +7,7 @@
 # define COL_PADDING 1
 #endif
 
-static uint64_t	number_width(uint64_t i) {
+uint64_t	number_width(uint64_t i) {
 	if (i == 0) {
 		return 1;
 	}
@@ -65,7 +65,8 @@ static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** it
 	yoyo_dprintf(STDOUT_FILENO, "total %zu\n", total_blocks);
 }
 
-static void	print_filemode_part(const t_file_item* item) {
+static void	print_filemode_part(const t_file_batch* batch, const t_file_item* item) {
+	(void)batch;
 	char c;
 	{ // 種別
 		switch (item->actual_file_type) {
@@ -122,6 +123,17 @@ static void	print_filemode_part(const t_file_item* item) {
 			? 'T' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
+	if (batch->bopt.some_has_acl_xattr) {
+		if (item->xattr_len > 0) {
+			yoyo_dprintf(STDOUT_FILENO, "%c", '@');
+#ifdef __MACH__
+		} else if (item->acl != NULL) {
+			yoyo_dprintf(STDOUT_FILENO, "%c", '+');
+#endif
+		} else {
+			yoyo_dprintf(STDOUT_FILENO, "%c", ' ');
+		}
+	}
 }
 
 // リンク数
@@ -133,7 +145,7 @@ static uint64_t	get_link_number(const t_file_item* item) {
 static void	print_link_number_part(const t_long_format_measure* measure, const t_file_item* item) {
 	const uint64_t n = get_link_number(item);
 	const uint64_t w = number_width(n);
-	print_spaces(measure->link_number_width - w + COL_PADDING);
+	print_spaces(measure->link_number_width - w);
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_nlink);
 }
 
@@ -344,17 +356,23 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 	}
 	measure_datetime(&measure);
 	batch->bopt.some_quoted = false;
+	batch->bopt.some_has_acl_xattr = false;
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
 		if (item->quote_type != YO_QT_NONE) {
 			batch->bopt.some_quoted = true;
-			break;
 		}
+#ifdef __MACH__
+		if (item->acl != NULL) {
+			batch->bopt.some_has_acl_xattr = true;
+		}
+#endif
 	}
 	// [ファイルごとの出力]
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item  = items[i];
-		print_filemode_part(item);
+		print_filemode_part(batch, item);
+		print_spaces(COL_PADDING - (batch->bopt.some_has_acl_xattr ? 1 : 0));
 		print_link_number_part(&measure, item);
 		// 所有者名
 		print_owner_name(&measure, &m->cache, item);
@@ -384,5 +402,17 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 #endif
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
+
+		// (あれば)拡張属性の方法を詳細に表示
+		if (batch->opt->show_xattr && item->xattr_len > 0) {
+			print_xattr_lines(m, item);
+		}
+
+		// (あれば)ACLの情報を詳細に表示
+#ifdef __MACH__
+		if (batch->opt->show_acl && item->acl != NULL) {
+			print_acl_lines(m, item);
+		}
+#endif
 	}
 }

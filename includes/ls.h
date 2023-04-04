@@ -43,7 +43,8 @@ void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** it
 void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_len, t_file_item** items);
 
 // print_long_format.c
-void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
+uint64_t	number_width(uint64_t i);
+void		print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
 
 // print_column_linux.c
 // print_column_macos.c
@@ -73,6 +74,13 @@ const char*	yo_basename(const char* path);
 char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
+
+// xattr.c
+void	print_xattr_lines(t_master* m, const t_file_item* item);
+ssize_t	get_xattr_len(const char* path);
+
+// acl.c
+void		print_acl_lines(t_master* m, const t_file_item* item);
 
 // debug.c
 void	print_ls(const t_file_batch* batch);
