@@ -91,3 +91,6 @@ run_case "-lG /usr/bin"
 
 run_case " /dev/"
 run_case "-G /dev/"
+
+run_case "-l@"
+run_case "-l@e"
