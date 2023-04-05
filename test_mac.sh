@@ -1,12 +1,17 @@
-MINISHELL="./minishell"
 TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
-REAL_FILE="real.txt"
-MINE_FILE="mine.txt"
+REAL_OUT_FILE="test_real.out.txt"
+MINE_OUT_FILE="test_mine.out.txt"
+REAL_ERR_FILE="test_real.err.txt"
+MINE_ERR_FILE="test_mine.err.txt"
 EXEC="./lsls"
 
-function compare_evidence() {
-	diff -u ${TEST_DIR}${REAL_FILE} ${TEST_DIR}${MINE_FILE}
+function compare_tty() {
+	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE}
+}
+
+function compare_file() {
+	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE} && diff -u ${TEST_DIR}${REAL_ERR_FILE} ${TEST_DIR}${MINE_ERR_FILE}
 }
 
 function print_result() {
@@ -22,77 +27,89 @@ function print_result() {
 	# set -x
 }
 
-function run_case() {
+function run_tty() {
 	P=$1
 	rm -rf ${EXEC}
 	ln -s /bin/ls ${EXEC}
-	script -q ${TEST_DIR}${REAL_FILE} ${EXEC} $P > /dev/null
+	script -q ${TEST_DIR}${REAL_OUT_FILE} ${EXEC} $P > /dev/null
 	rm -rf ${EXEC}
 	ln -s ./ft_ls ${EXEC}
-	script -q ${TEST_DIR}${MINE_FILE} ${EXEC} $P > /dev/null
-	compare_evidence
+	script -q ${TEST_DIR}${MINE_OUT_FILE} ${EXEC} $P > /dev/null
+	compare_tty
+	print_result "$P"
+}
+
+function run_file() {
+	P=$1
+	rm -rf ${EXEC}
+	ln -s /bin/ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${TEST_DIR}${REAL_OUT_FILE} 2> ${TEST_DIR}${REAL_ERR_FILE}
+	rm -rf ${EXEC}
+	ln -s ./ft_ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${TEST_DIR}${MINE_OUT_FILE} 2> ${TEST_DIR}${MINE_ERR_FILE}
+	compare_file
 	print_result "$P"
 }
 
 rm -rf	$RESULTFILE
 
-run_case "./"
-run_case "./srcs"
-run_case "./includes"
-run_case "./srcs ./includes"
-run_case ". ./srcs ./includes"
-run_case ". ."
-run_case ".. .. ."
+run_tty "./"
+run_tty "./srcs"
+run_tty "./includes"
+run_tty "./srcs ./includes"
+run_tty ". ./srcs ./includes"
+run_tty ". ."
+run_tty ".. .. ."
 
-run_case "/usr"
-run_case "/usr/local"
-run_case "/usr/bin"
-run_case "/usr/bin /usr"
-run_case "/usr/bin /usr/bin"
+run_tty "/usr"
+run_tty "/usr/local"
+run_tty "/usr/bin"
+run_tty "/usr/bin /usr"
+run_tty "/usr/bin /usr/bin"
 
-run_case "-l ./srcs"
-run_case "-l ./includes"
-run_case "-l ./srcs ./includes"
+run_tty "-l ./srcs"
+run_tty "-l ./includes"
+run_tty "-l ./srcs ./includes"
 
-run_case "srcs/"
-run_case "srcs/*"
-run_case "./includes/../srcs/"
-run_case "./includes/../srcs/*"
+run_tty "srcs/"
+run_tty "srcs/*"
+run_tty "./includes/../srcs/"
+run_tty "./includes/../srcs/*"
 
-run_case "-l srcs/"
-run_case "-l srcs/*"
-run_case "-l ./includes/../srcs/"
-run_case "-l ./includes/../srcs/*"
+run_tty "-l srcs/"
+run_tty "-l srcs/*"
+run_tty "-l ./includes/../srcs/"
+run_tty "-l ./includes/../srcs/*"
 
-run_case "-l ./includes/../srcs/*"
+run_tty "-l ./includes/../srcs/*"
 
-run_case "Makefile"
-run_case "Makefile src/"
+run_tty "Makefile"
+run_tty "Makefile src/"
 
-run_case "libft libft"
-run_case "-l libft libft"
-run_case "-R libft libft"
-run_case "-lR libft libft"
+run_tty "libft libft"
+run_tty "-l libft libft"
+run_tty "-R libft libft"
+run_tty "-lR libft libft"
 
-run_case "-R"
-run_case "."
-run_case "-R ."
+run_tty "-R"
+run_tty "."
+run_tty "-R ."
 
-run_case "-G"
-run_case "-G srcs"
-run_case "-G includes"
-run_case "-G minimini"
-run_case "-G /usr"
-run_case "-G /usr/bin"
+run_tty "-G"
+run_tty "-G srcs"
+run_tty "-G includes"
+run_tty "-G minimini"
+run_tty "-G /usr"
+run_tty "-G /usr/bin"
 
-run_case "-l /usr/bin"
-run_case "-lG pocket"
-run_case "-lG /usr/bin"
+run_tty "-l /usr/bin"
+run_tty "-lG pocket"
+run_tty "-lG /usr/bin"
 
-run_case " /dev/"
-run_case "-G /dev/"
+run_tty " /dev/"
+run_tty "-G /dev/"
 
-run_case "-l@"
-run_case "-l@e"
+run_tty "-l@"
+run_tty "-l@e"
 
-run_case "xxx x"
+run_tty "xxx x"
