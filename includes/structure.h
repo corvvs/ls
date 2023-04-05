@@ -154,7 +154,8 @@ typedef struct	s_master {
 	const char*	exec_name;
 	t_file_batch*		root;
 	t_global_option*	opt;
-	t_cache		cache;
+	int					exit_status;
+	t_cache				cache;
 }	t_master;
 
 // long-format における各種寸法

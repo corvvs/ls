@@ -45,4 +45,5 @@ int main(int argc, char **argv) {
 	list_files(&m, &root);
 	// [後始末]
 	destroy(&m);
+	return (m.exit_status);
 }

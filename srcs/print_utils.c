@@ -102,11 +102,12 @@ void	print_spaces(uint64_t n) {
 	}
 }
 
-void	print_error(const t_master* m, const char* operation, const char* path) {
+void	print_error(t_master* m, const char* operation, const char* path) {
 	(void)operation;
 #ifdef __MACH__
 	yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, path, strerror(errno));
 #else
 	yoyo_dprintf(STDERR_FILENO, "%s: %s '%s': %s\n", m->exec_name, operation, path, strerror(errno));
 #endif
+	m->exit_status = 1;
 }
