@@ -91,6 +91,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			}
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
+		m->lines_out += 1;
 	}
 }
 

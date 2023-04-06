@@ -39,6 +39,7 @@ void	print_xattr_lines(t_master* m, const t_file_item* item) {
 			print_spaces(5 - w);
 		}
 		yoyo_dprintf(STDOUT_FILENO, "%zu \n", value_len);
+		m->lines_out += 1;
 		key += ft_strlen(key) + 1;
 	}
 	free(buf);

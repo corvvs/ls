@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 	t_global_option	option = {};
 	t_file_batch		root = (t_file_batch){
 		.is_root = true,
+		.depth = 0,
 		.opt = &option,
 	};
 	if (!parse_arguments(&root, argc, argv)) {

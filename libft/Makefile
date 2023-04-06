@@ -54,7 +54,7 @@ endif
 
 CC		:= cc
 # CFLAGS	:= -Wall -Wextra -Werror -O2# -g -fsanitize=address
-CFLAGS	:= -Wall -Wextra -Werror -O2 -D GO_FAST #-g -fsanitize=address
+CFLAGS	:= -Wall -Wextra -Werror -O2 #-D GO_FAST #-g -fsanitize=address
 
 all		: $(NAME)
 

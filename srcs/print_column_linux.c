@@ -135,6 +135,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 			offset += max_lens[j] + margin;
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
+		m->lines_out += 1;
 	}
 	free(max_lens);
 }

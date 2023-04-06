@@ -160,6 +160,7 @@ static void	process_acl_entry(t_master* m, const t_file_item* item, acl_entry_t 
 		has_leading = print_acl_flags(has_leading, entry);
 	}
 	yoyo_dprintf(STDOUT_FILENO, "\n");
+	m->lines_out += 1;
 }
 
 void	print_acl_lines(t_master* m, const t_file_item* item) {
