@@ -108,7 +108,6 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	// [リンク先の名前を取得する]
 	char	name_buf[PATH_MAX + 1];
 	errno = 0;
-	// DEBUGOUT("link_to: %p", link_to);
 	ssize_t actual_len = readlink(path, name_buf, PATH_MAX);
 	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
 	if (actual_len < 0) {
@@ -139,7 +138,7 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	}
 	link_item->name = link_to;
 	free(full_link_to);
-	// DEBUGINFO("%s -> %s", path, link_to);
+	// DEBUGINFO("%s -> %s, a %d, n %d", path, link_to, link_item->actual_file_type, link_item->nominal_file_type);
 	return true;
 }
 
@@ -202,7 +201,7 @@ t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name) {
 #endif
 }
 
-size_t	determine_name_len(const char* name, t_quote_type qt) {
+static size_t	determine_name_len(const char* name, t_quote_type qt) {
 	switch (qt) {
 		case YO_QT_NONE:
 			return ft_strlen(name);
@@ -247,7 +246,6 @@ static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* 
 #endif
 
 	t_filetype	ft = determine_file_type(&item->st);
-	// DEBUGOUT("path = %s, type = %d, st_dev = %lx, st_rdev = %lx", path, ft, item->st.st_dev, item->st.st_rdev);
 	item->actual_file_type = ft;
 	item->nominal_file_type = ft;
 	item->errn = errno;
@@ -268,9 +266,11 @@ static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* 
 		if (link_item->actual_file_type == YO_FT_BAD_LINK) {
 			item->actual_file_type = YO_FT_BAD_LINK;
 		}
+		item->nominal_file_type = link_item->actual_file_type;
 		item->link_to = link_item;
 		// DEBUGOUT("link_item = %s", link_item->name);
 	}
+	// DEBUGOUT("path = %s, actual = %d, nominal = %d", path, item->actual_file_type, item->nominal_file_type);
 	return true;
 }
 
@@ -281,14 +281,14 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	YOYO_ASSERT(pointers != NULL);
 
 	// ディレクトリを区別して処理すべきか？
-	batch->bopt.distinguish_dir = !m->opt->show_dir_as_file && (batch->is_root);
+	batch->bopt.distinguish_dir = !m->opt->show_dir_as_file && batch->is_root;
+
+	// [ファイル情報を読み取る]
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
-	// [ファイル情報を読み取る]
 	batch->bopt.some_quoted = false;
 	for (size_t i = 0; i < batch->len; ++i) {
-		char* path = batch->path[i];
-
+		char*			path = batch->path[i];
 		t_file_item*	item = &items[i];
 
 		if (!set_item(m, batch, path, item, true)) {
@@ -298,10 +298,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		pointers[n_ok] = item;
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
-		if (!batch->bopt.distinguish_dir) {
-			continue;
-		}
-		if (item->actual_file_type == YO_FT_DIR) {
+		if (batch->bopt.distinguish_dir && show_as_files(batch, item)) {
 			n_dirs += 1;
 		}
 	}
@@ -317,11 +314,9 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	sort_entries(m->opt, batch->bopt.distinguish_dir, n_ok, pointers);
 
 	// [非ディレクトリ情報を出力]
-	// DEBUGINFO("%s", "OF");
 	output_files(m, batch, n_ok, pointers);
 
 	// [ディレクトリ情報を出力]
-	// DEBUGINFO("%s %zu, %zu", "OD", n_ok, n_dirs);
 	if (batch->is_root || batch->opt->recursive) {
 		output_dirs(m, batch, n_ok, n_dirs, pointers);
 	}

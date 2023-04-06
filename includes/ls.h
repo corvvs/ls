@@ -31,7 +31,6 @@ typedef struct timespec	t_stat_time;
 void			list_files(t_master* m, t_file_batch* batch);
 bool			is_dot_dir(const t_file_item* item);
 t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name);
-size_t			determine_name_len(const char* name, t_quote_type qt);
 
 // option.c
 bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
@@ -44,7 +43,10 @@ void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_
 
 // print_long_format.c
 uint64_t	number_width(uint64_t i);
-void		print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
+void		print_long_format(
+	t_master* m, t_file_batch* batch,
+	size_t len, t_file_item** items,
+	size_t len_mesure, t_file_item** items_measure);
 
 // print_column_linux.c
 // print_column_macos.c
@@ -69,11 +71,15 @@ uint64_t	unixtime_s(const t_stat_time* ts);
 void		unixtime_to_date_utc(time_t unixtime, struct tm* time_s);
 void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);
 
-// utils.c
+// basic_utils.c
 char*		yo_basename(char* path);
 char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
+
+// ls_utils.c
+bool	show_as_files(const t_file_batch* batch, const t_file_item* item);
+bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item);
 
 // xattr.c
 void	print_xattr_lines(t_master* m, const t_file_item* item);

@@ -40,7 +40,7 @@ void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** it
 	YOYO_ASSERT(col_items != NULL);
 	size_t col_len = 0;
 	for (size_t i = 0; i < len; ++i) {
-		if (batch->bopt.distinguish_dir && items[i]->actual_file_type == YO_FT_DIR) {
+		if (batch->bopt.distinguish_dir && show_as_files(batch, items[i])) {
 			continue;
 		}
 		if (is_dot_dir(items[i])) {
@@ -51,7 +51,11 @@ void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** it
 	}
 
 	if (m->opt->long_format) {
-		print_long_format(m, batch, col_len, col_items);
+#ifdef __MACH__
+		print_long_format(m, batch, col_len, col_items, col_len, col_items);
+#else
+		print_long_format(m, batch, col_len, col_items, len, items);
+#endif
 	} else {
 		print_regular_format(m, batch, col_len, col_items);
 	}

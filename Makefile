@@ -9,12 +9,13 @@ FILES	:=	\
 			print_long_format.c\
 			print_column_linux.c\
 			print_column_macos.c\
-			print_utils.c\
 			arguments.c\
 			printf.c\
 			cache.c\
 			time.c\
-			utils.c\
+			basic_utils.c\
+			ls_utils.c\
+			print_utils.c\
 			xattr.c\
 			acl.c\
 			debug.c\

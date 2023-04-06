@@ -129,6 +129,18 @@ run_tty "-l ./includes"
 run_tty "-lf ccc aaa bbb"
 run_tty "-l ccc aaa bbb"
 
+run_tty "test_field/link_dir_1"
+run_tty "-l test_field/link_dir_1"
+
+run_tty "test_field3"
+run_tty "-l test_field3"
+run_tty "-R test_field3"
+run_tty "-lR test_field3"
+run_tty "test_field3/*"
+run_tty "-l test_field3/*"
+run_tty "-R test_field3/*"
+run_tty "-lR test_field3/*"
+
 run_file ""
 run_file "-R"
 run_file "-l ./srcs"
