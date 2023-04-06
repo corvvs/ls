@@ -38,7 +38,7 @@ static bool	set_short_option(t_global_option* option, char c) {
 			option->color = YO_COLOR_AUTO;
 			break;
 		case 'd':
-			option->show_dir_as_file = true;
+			option->show_everything_as_file = true;
 			break;
 		default:
 			return false;

@@ -11,15 +11,16 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 }
 
 
-static void	output_dir(t_master* m, const t_file_item* dir_item) {
-	// DEBUGINFO("[%s]", dir_item->name);
+static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item* dir_item) {
 	const char*	dir_path = dir_item->path;
 	t_file_batch		info = (t_file_batch){
 		.is_root = false,
+		.depth = batch->depth + 1,
 		.opt = m->opt,
 		.len = 0,
 		.path = NULL,
 	};
+	// DEBUGINFO("[%u, %s]", info.depth, dir_item->path);
 	errno = 0;
 	DIR*	dir = opendir(dir_path);
 	if (dir == NULL) {
@@ -59,6 +60,7 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 			// DEBUGOUT("len -> %zu, %p", len, names);
 		}
 		names[i] = path;
+		// DEBUGOUT("%u: names[%zu] = %s", batch->depth, i, path);
 		++i;
 	}
 	closedir(dir);
@@ -72,25 +74,28 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 }
 
 void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_len, t_file_item** items) {
-	// DEBUGINFO("total_len = %zu, dir_len = %zu", total_len, dir_len);
+	// DEBUGINFO("depth = %u, total_len = %zu, dir_len = %zu", batch->depth, total_len, dir_len);
 	if (total_len == 0) {
 		return;
 	}
-	(void)m;
+	(void)dir_len;
 #ifdef __MACH__
-	const bool show_header = total_len > 1;
+	const bool show_header = (batch->is_root && total_len > 1) || (!batch->is_root && total_len > 0);
 #else
-	const bool show_header = total_len > 1 ||
-		(batch->is_root && batch->opt->recursive && total_len == 1 && dir_len == 1);
+	const bool show_header = ((batch->is_root && total_len > 1) || (!batch->is_root && total_len > 0)) 
+		|| (batch->is_root && batch->opt->recursive && total_len == 1 && dir_len == 1);
 #endif
-	const bool has_leading = total_len - dir_len > 0;
 	for (size_t i = 0; i < total_len; ++i) {
 		t_file_item*	item = items[i];
 		if (!expand_as_dir(batch, item)) {
+			// DEBUGOUT("!! %s", item->path);
 			continue;
 		}
-		if (has_leading || 0 < i) {
+		const bool show_gap = m->lines_out > 0;
+		// DEBUGOUT("?? %zu %s %d %d", i, item->path, show_gap, show_header);
+		if (show_gap) {
 			yoyo_dprintf(STDOUT_FILENO, "\n");
+			m->lines_out += 1;
 		}
 		// DEBUGOUT("HEADER: %d for %s", show_header, item->path);
 		if (show_header) {
@@ -98,7 +103,8 @@ void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_
 			t_quote_type	quote_type = determine_quote_type(batch, item->path);
 			print_filename_body(item->path, quote_type);
 			yoyo_dprintf(STDOUT_FILENO, ":\n");
+			m->lines_out += 1;
 		}
-		output_dir(m, item);
+		output_dir(m,  batch, item);
 	}
 }

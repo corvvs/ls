@@ -35,8 +35,7 @@ static bool	swap_by_time(t_global_option* option, t_file_item** pa, t_stat_time*
 }
 
 // ファイルをオプションに応じてソートする
-void	sort_entries(t_global_option* option, bool distinguish_dir, size_t len, t_file_item** pointers) {
-	(void)distinguish_dir;
+static void	sort_entries(t_global_option* option, size_t len, t_file_item** pointers) {
 	const bool sort_reverse = option->sort_reverse;
 	for (size_t i = 0; i < len; ++i) {
 		// DEBUGWARN("n = %zu", len - i);
@@ -44,21 +43,6 @@ void	sort_entries(t_global_option* option, bool distinguish_dir, size_t len, t_f
 		for (size_t j = 1; j < len - i; ++j) {
 			t_file_item** pa = &pointers[j - 1];
 			t_file_item** pb = &pointers[j];
-			// ディレクトリを後, それ以外を前に
-			// (-r が効かない)
-			// if (distinguish_dir) {
-			// 	const bool a_is_dir = (*pa)->actual_file_type == YO_FT_DIR;
-			// 	const bool b_is_dir = (*pb)->actual_file_type == YO_FT_DIR;
-			// 	if (a_is_dir && !b_is_dir) {
-			// 		// DEBUGOUT("%s", "SWAP BY DIR");
-			// 		swap_item(pa, pb);
-			// 		swapped = true;
-			// 		continue;
-			// 	}
-			// 	if (a_is_dir != b_is_dir) {
-			// 		continue;
-			// 	}
-			// }
 			if (option->sort_in_fs) {
 				continue;
 			}
@@ -98,7 +82,7 @@ void	sort_entries(t_global_option* option, bool distinguish_dir, size_t len, t_f
 
 // item が `.` または `..` かどうか
 bool	is_dot_dir(const t_file_item* item) {
-	return item->nominal_file_type != YO_FT_DIR &&
+	return item->nominal_file_type == YO_FT_DIR &&
 		(ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0);
 }
 
@@ -281,9 +265,6 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	t_file_item**	pointers = malloc(sizeof(t_file_item*) * batch->len);
 	YOYO_ASSERT(pointers != NULL);
 
-	// ディレクトリを区別して処理すべきか？
-	batch->bopt.distinguish_dir = !m->opt->show_dir_as_file && batch->is_root;
-
 	// [ファイル情報を読み取る]
 	size_t			n_ok = 0;
 	size_t			n_dirs = 0;
@@ -299,9 +280,10 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		pointers[n_ok] = item;
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
-		if (batch->bopt.distinguish_dir && show_as_files(batch, item)) {
+		if (expand_as_dir(batch, item)) {
 			n_dirs += 1;
 		}
+		// DEBUGOUT("%u, %s, %zu, %zu", batch->depth, item->name, n_ok, n_dirs);
 	}
 	if (batch->bopt.some_quoted) {
 		for (size_t i = 0; i < batch->len; ++i) {
@@ -312,7 +294,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	}
 
 	// [ファイル情報を(オプションに従って)ソートする]
-	sort_entries(m->opt, batch->bopt.distinguish_dir, n_ok, pointers);
+	sort_entries(m->opt, n_ok, pointers);
 
 	// [非ディレクトリ情報を出力]
 	output_files(m, batch, n_ok, pointers);

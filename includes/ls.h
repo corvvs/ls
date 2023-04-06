@@ -78,7 +78,7 @@ const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
 
 // ls_utils.c
-bool	show_as_files(const t_file_batch* batch, const t_file_item* item);
+bool	show_in_file_section(const t_file_batch* batch, const t_file_item* item);
 bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item);
 
 // xattr.c

@@ -27,6 +27,7 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 		t_file_item*	item = items[i];
 		print_filename(batch, item);
 		yoyo_dprintf(STDOUT_FILENO, "\n");
+		m->lines_out += 1;
 	}
 }
 
@@ -40,12 +41,10 @@ void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** it
 	YOYO_ASSERT(col_items != NULL);
 	size_t col_len = 0;
 	for (size_t i = 0; i < len; ++i) {
-		if (batch->bopt.distinguish_dir && show_as_files(batch, items[i])) {
+		if (!show_in_file_section(batch, items[i])) {
 			continue;
 		}
-		if (is_dot_dir(items[i])) {
-			continue;
-		}
+		// DEBUGOUT("%u: show as file: %s", batch->depth, items[i]->path);
 		col_items[col_len] = items[i];
 		col_len += 1;
 	}

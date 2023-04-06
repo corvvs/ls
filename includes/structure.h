@@ -40,7 +40,6 @@ typedef enum	e_color_option {
 }	t_color_option;
 
 typedef struct	s_batch_option {
-	bool	distinguish_dir;
 	bool	some_quoted;
 	bool	some_has_acl_xattr;
 }	t_batch_option;
@@ -79,7 +78,7 @@ typedef struct	s_global_option {
 	bool	show_acl;
 	// -d
 	// Directories are listed as plain files (not searched recursively).
-	bool	show_dir_as_file;
+	bool	show_everything_as_file;
 	// --col
 	// カラーリングする
 	t_color_option	color;
@@ -128,6 +127,7 @@ typedef struct s_file_item {
 // この名前はないわ
 typedef struct	s_file_batch {
 	bool				is_root;
+	unsigned int		depth;
 	char**				path;
 	size_t				len;
 	t_global_option*	opt;
@@ -157,6 +157,7 @@ typedef struct	s_master {
 	t_file_batch*		root;
 	t_global_option*	opt;
 	int					exit_status;
+	size_t				lines_out;
 	t_cache				cache;
 }	t_master;
 

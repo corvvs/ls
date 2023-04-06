@@ -67,8 +67,12 @@ static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** it
 
 static void	print_filemode_part(const t_file_batch* batch, const t_file_item* item) {
 	(void)batch;
+	// DEBUGOUT("[%s] %d %d", item->path, item->actual_file_type, item->nominal_file_type);
 	char c;
-	{ // 種別
+	// 種別
+	if (is_dot_dir(item)) {
+		c = 'd';
+	} else {
 		switch (item->actual_file_type) {
 			case YO_FT_REGULAR:
 				c = '-';
@@ -89,8 +93,8 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 			default:
 				c = '?';
 		}
-		yoyo_dprintf(STDOUT_FILENO, "%c", c);
 	}
+	yoyo_dprintf(STDOUT_FILENO, "%c", c);
 	{ // 所有者
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IRUSR) ? 'r' : '-';
@@ -407,6 +411,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 #endif
 		}
 		yoyo_dprintf(STDOUT_FILENO, "\n");
+		m->lines_out += 1;
 
 		// (あれば)拡張属性の方法を詳細に表示
 		if (batch->opt->show_xattr && item->xattr_len > 0) {
