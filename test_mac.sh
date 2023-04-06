@@ -53,6 +53,12 @@ function run_file() {
 
 rm -rf	$RESULTFILE
 
+# argv が存在する場合は, それだけでテストする
+if [ $# -eq 1 ]; then
+	run_tty "$1"
+	exit 0
+fi
+
 run_tty "./"
 run_tty "./srcs"
 run_tty "./includes"
@@ -113,3 +119,19 @@ run_tty "-l@"
 run_tty "-l@e"
 
 run_tty "xxx x"
+
+run_tty ""
+run_tty "-R"
+run_tty "-l ./srcs"
+run_tty "-l ./includes"
+run_tty "-lf ccc aaa bbb"
+run_tty "-l ccc aaa bbb"
+
+
+run_file ""
+run_file "-R"
+run_file "-l ./srcs"
+run_file "-l ./includes"
+run_file "-lf ccc aaa bbb"
+run_file "-l ccc aaa bbb"
+

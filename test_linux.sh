@@ -31,10 +31,10 @@ function run_tty() {
 	P=$1
 	rm -rf ${EXEC}
 	ln -s /bin/ls ${EXEC}
-	script -q -c "${EXEC} $P" ${TEST_DIR}${REAL_OUT_FILE} > /dev/null
+	script -q -c "${EXEC} $P; echo \$?" ${TEST_DIR}${REAL_OUT_FILE} > /dev/null
 	rm -rf ${EXEC}
 	ln -s ./ft_ls ${EXEC}
-	script -q -c "${EXEC} $P" ${TEST_DIR}${MINE_OUT_FILE} > /dev/null
+	script -q -c "${EXEC} $P; echo \$?" ${TEST_DIR}${MINE_OUT_FILE} > /dev/null
 	compare_tty
 	print_result "$P"
 }
@@ -52,6 +52,12 @@ function run_file() {
 }
 
 rm -rf	$RESULTFILE
+
+# argv が存在する場合は, それだけでテストする
+if [ $# -eq 1 ]; then
+	run_tty "$1"
+	exit 0
+fi
 
 run_tty "./"
 run_tty "./srcs"
@@ -113,7 +119,19 @@ run_tty "-l --col /dev"
 run_tty "/var"
 run_tty "--col /var"
 run_tty "-l --col /var"
-# run_tty "-G /dev/"
-# run_tty "-lG /dev/"
 
 run_tty "xxx x"
+
+run_tty ""
+run_tty "-R"
+run_tty "-l ./srcs"
+run_tty "-l ./includes"
+run_tty "-lf ccc aaa bbb"
+run_tty "-l ccc aaa bbb"
+
+run_file ""
+run_file "-R"
+run_file "-l ./srcs"
+run_file "-l ./includes"
+run_file "-lf ccc aaa bbb"
+run_file "-l ccc aaa bbb"

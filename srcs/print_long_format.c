@@ -251,12 +251,12 @@ static void	print_month(const t_long_format_measure* measure, const t_file_item*
 # define NEAR_TIME_DAYS (86400 * 365 / 2)
 #endif
 
-static void	print_datetime(const t_long_format_measure* measure, t_cache* cache, t_file_item* item) {
-	uint64_t	ut_s = unixtime_s(&item->st.MTIME);
+static void	print_datetime(const t_long_format_measure* measure, t_master* m, t_file_item* item) {
+	uint64_t	ut_s = unixtime_s(m->opt->time_access ? &item->st.ATIME : &item->st.MTIME);
 	// unixtime_to_date_utc(ut_s, &item->time_st);
 	unixtime_to_date_local(ut_s, &item->time_st);
 
-	const bool show_years = cache->current_unixtime_s < ut_s || (cache->current_unixtime_s - ut_s) > NEAR_TIME_DAYS;
+	const bool show_years = m->cache.current_unixtime_s < ut_s || (m->cache.current_unixtime_s - ut_s) > NEAR_TIME_DAYS;
 	print_month(measure, item);
 	{
 		const uint64_t w = number_width(item->time_st.tm_mday);
@@ -385,7 +385,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 			print_file_size(&measure, item);
 		}
 		// 日時
-		print_datetime(&measure, &m->cache, item);
+		print_datetime(&measure, m, item);
 		// 名前
 		print_spaces(1);
 		if (batch->bopt.some_quoted && item->quote_type == YO_QT_NONE) {
