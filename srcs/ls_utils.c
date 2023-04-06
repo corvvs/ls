@@ -2,6 +2,10 @@
 
 // この item をファイルセクションに表示するべきかどうか
 bool	show_as_files(const t_file_batch* batch, const t_file_item* item) {
+	if (batch->opt->show_dir_as_file) {
+		return false;
+	}
+
 	// DEBUGOUT("path: %s, actual: %d, nominal: %d", item->path, item->actual_file_type, item->nominal_file_type);
 	if (item->nominal_file_type != YO_FT_DIR) {
 		return false;
@@ -24,6 +28,9 @@ bool	show_as_files(const t_file_batch* batch, const t_file_item* item) {
 
 // この item をディレクトリとして展開すべきかどうか
 bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item) {
+	if (batch->opt->show_dir_as_file) {
+		return false;
+	}
 
 	if (batch->opt->recursive && !batch->is_root && item->actual_file_type == YO_FT_LINK) {
 		return false;
