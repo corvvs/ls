@@ -105,8 +105,10 @@ typedef struct s_file_item {
 	// path の長さ
 	size_t		path_len;
 	// 実質的なファイルの種別
+	// 元のファイルがシンボリックリンクだった場合, これはリンク自身のファイルタイプとなる
 	t_filetype	actual_file_type;
 	// 名目上のファイルの種別
+	// 元のファイルがシンボリックリンクだった場合, これはリンク先のファイルタイプとなる
 	t_filetype	nominal_file_type;
 	// stat構造体
 	struct stat	st;

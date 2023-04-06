@@ -73,7 +73,6 @@ static void	output_dir(t_master* m, const t_file_item* dir_item) {
 
 void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_len, t_file_item** items) {
 	// DEBUGINFO("total_len = %zu, dir_len = %zu", total_len, dir_len);
-	(void)batch;
 	if (total_len == 0) {
 		return;
 	}
@@ -87,7 +86,7 @@ void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_
 	const bool has_leading = total_len - dir_len > 0;
 	for (size_t i = 0; i < total_len; ++i) {
 		t_file_item*	item = items[i];
-		if (item->actual_file_type != YO_FT_DIR) {
+		if (!expand_as_dir(batch, item)) {
 			continue;
 		}
 		if (has_leading || 0 < i) {

@@ -323,13 +323,13 @@ static void	print_device_id(t_long_format_measure* measure, const t_file_item* i
 #endif
 
 // long-format の出力
-void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
+void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item** items, size_t len_mesure, t_file_item** items_measure) {
 	// ["Total:" の出力]
 	print_total_blocks(batch, len, items);
 	// [幅の測定]
 	t_long_format_measure	measure = {};
-	for (size_t i = 0; i < len; ++i) {
-		const t_file_item*	item  = items[i];
+	for (size_t i = 0; i < len_mesure; ++i) {
+		const t_file_item*	item  = items_measure[i];
 		{
 			uint64_t	link_number = get_link_number(item);
 			measure.link_number_width = MAX(measure.link_number_width, number_width(link_number));

@@ -40,6 +40,12 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		// 色がない時
 		color = YO_COLOR_REGULAR;
 		suffix = "";
+	} else if (item->actual_file_type == YO_FT_LINK) {
+		color = YO_COLOR_GOODLINK;
+		colored = true;
+	} else if (item->actual_file_type == YO_FT_BAD_LINK) {
+		color = YO_COLOR_BADLINK;
+		colored = true;
 	} else if (item->nominal_file_type == YO_FT_CHAR_DEVICE) {
 		color = YO_COLOR_CHAR_DEVICE;
 		colored = true;
@@ -57,12 +63,6 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		} else {
 			color = YO_COLOR_DIR;
 		}
-		colored = true;
-	} else if (item->actual_file_type == YO_FT_LINK) {
-		color = YO_COLOR_GOODLINK;
-		colored = true;
-	} else if (item->actual_file_type == YO_FT_BAD_LINK) {
-		color = YO_COLOR_BADLINK;
 		colored = true;
 	} else if (item->st.st_mode & S_ISUID) {
 		color = YO_COLOR_UID;
