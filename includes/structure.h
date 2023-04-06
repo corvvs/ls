@@ -72,7 +72,7 @@ typedef struct	s_global_option {
 	bool	sort_in_fs;
 	// -g
 	// where it was used to display the group name in the long (-l) format output.
-	bool	show_group;
+	bool	show_group_only;
 	// -@
 	bool	show_xattr;
 	// -e

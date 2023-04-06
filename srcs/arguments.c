@@ -25,7 +25,8 @@ static bool	set_short_option(t_global_option* option, char c) {
 			option->show_dot_files = true;
 			break;
 		case 'g':
-			option->show_group = true;
+			option->show_group_only = true;
+			option->long_format = true;
 			break;
 		case '@':
 			option->show_xattr = true;

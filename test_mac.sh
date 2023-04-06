@@ -36,7 +36,7 @@ function run_tty() {
 	ln -s ./ft_ls ${EXEC}
 	script -q ${TEST_DIR}${MINE_OUT_FILE} ${EXEC} $P > /dev/null
 	compare_tty
-	print_result "$P"
+	print_result "tty: $P"
 }
 
 function run_file() {
@@ -48,7 +48,7 @@ function run_file() {
 	ln -s ./ft_ls ${EXEC}
 	(${EXEC} $P; echo $?) > ${TEST_DIR}${MINE_OUT_FILE} 2> ${TEST_DIR}${MINE_ERR_FILE}
 	compare_file
-	print_result "$P"
+	print_result "file: $P"
 }
 
 rm -rf	$RESULTFILE
@@ -139,6 +139,9 @@ run_tty "-l test_field3/*"
 run_tty "-R test_field3/*"
 run_tty "-lR test_field3/*"
 
+run_tty "-g srcs includes"
+run_tty "-gl srcs includes"
+
 run_file ""
 run_file "-R"
 run_file "-l ./srcs"
@@ -146,3 +149,17 @@ run_file "-l ./includes"
 run_file "-lf ccc aaa bbb"
 run_file "-l ccc aaa bbb"
 
+run_file "test_field/link_dir_1"
+run_file "-l test_field/link_dir_1"
+
+run_file "test_field3"
+run_file "-l test_field3"
+run_file "-R test_field3"
+run_file "-lR test_field3"
+run_file "test_field3/*"
+run_file "-l test_field3/*"
+run_file "-R test_field3/*"
+run_file "-lR test_field3/*"
+
+run_file "-g srcs includes"
+run_file "-gl srcs includes"

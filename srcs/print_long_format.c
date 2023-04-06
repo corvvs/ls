@@ -186,7 +186,6 @@ static void	print_group_name(const t_long_format_measure* measure, t_cache* cach
 		return;
 	}
 	const uint64_t w = ft_strlen(name);
-	print_spaces(COL_PADDING);
 	yoyo_dprintf(STDOUT_FILENO, "%s", name);
 	print_spaces(measure->group_width - w);
 }
@@ -334,7 +333,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 			uint64_t	link_number = get_link_number(item);
 			measure.link_number_width = MAX(measure.link_number_width, number_width(link_number));
 		}
-		{
+		if (!batch->opt->show_group_only) {
 			char*		name = get_owner_name(&m->cache, item);
 			if (name != NULL) {
 				measure.owner_width = MAX(measure.owner_width, ft_strlen(name));
@@ -374,10 +373,16 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		print_filemode_part(batch, item);
 		print_spaces(COL_PADDING - (batch->bopt.some_has_acl_xattr ? 1 : 0));
 		print_link_number_part(&measure, item);
-		// 所有者名
-		print_owner_name(&measure, &m->cache, item);
-		// グループ名
-		print_group_name(&measure, &m->cache, item);
+		if (batch->opt->show_group_only) {
+			// グループ名
+			print_spaces(1);
+			print_group_name(&measure, &m->cache, item);
+		} else {
+			// 所有者名
+			print_owner_name(&measure, &m->cache, item);
+			print_spaces(COL_PADDING);
+			print_group_name(&measure, &m->cache, item);
+		}
 		// ファイルサイズ or デバイス番号
 		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
 			print_device_id(&measure, item);
