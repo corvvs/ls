@@ -14,6 +14,14 @@ static void	destroy(t_master* m) {
 	}
 }
 
+static const char*	get_exec_name(char** argv) {
+#ifdef __MACH__
+		return yo_basename(argv[0]);
+#else
+		return argv[0];
+#endif
+}
+
 int main(int argc, char **argv) {
 	// argc がまともな値ではない場合は即座に終了する
 	if (argc < 1) {
@@ -31,11 +39,7 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	t_master	m = (t_master){
-#ifdef __MACH__
-		.exec_name = yo_basename(argv[0]),
-#else
-		.exec_name = argv[0],
-#endif
+		.exec_name = get_exec_name(argv),
 		.root = &root,
 		.opt = &option,
 		.cache = {},

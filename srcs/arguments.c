@@ -64,13 +64,32 @@ static bool	set_long_option(t_global_option* option, char* str) {
 	return true;
 }
 
-bool	is_short_option(const char* str) {
+static bool	is_short_option(const char* str) {
 	return (str[0] == '-' && str[1] != '-' && str[1]);
 }
 
-bool	is_long_option(const char* str) {
+static bool	is_long_option(const char* str) {
 	return (str[0] == '-' && str[1] == '-' && str[2] != '-' && str[2]);
 }
+
+#ifdef __MACH__
+
+// paths を文字列でバブルソートする
+static void	sort_paths(char** paths, size_t len) {
+	if (len < 1) { return; }
+	for (size_t i = 0; i < len - 1; ++i) {
+		for (size_t j = i + 1; j < len; ++j) {
+			if (ft_strcmp(paths[i], paths[j]) > 0) {
+				char*	tmp = paths[i];
+				paths[i] = paths[j];
+				paths[j] = tmp;
+			}
+		}
+	}
+}
+
+#else
+#endif
 
 // argc, argv を読み取り, 初期設定を行う
 bool	parse_arguments(t_file_batch* batch, int argc, char **argv) {
@@ -109,6 +128,13 @@ bool	parse_arguments(t_file_batch* batch, int argc, char **argv) {
 			paths[j] = argv[i];
 		}
 	}
+	// TODO: macOSにおいてのみ, ここで paths を辞書順ソートする
+#ifdef __MACH__
+	if (!batch->opt->sort_in_fs) {
+		sort_paths(paths, len);
+	}
+#else
+#endif
 	batch->len = len;
 	batch->path = paths;
 	return true;
