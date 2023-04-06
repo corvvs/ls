@@ -15,7 +15,7 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 	if (len == 0) {
 		return;
 	}
-	int term_width = get_terminal_width();
+	int term_width = batch->opt->tty ? get_terminal_width() : 0;
 	if (term_width > 0) {
 		// カラム表示
 		print_column_format(m, batch, term_width, len, items);
@@ -26,8 +26,7 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 	for (size_t i = 0; i < len; ++i) {
 		t_file_item*	item = items[i];
 		print_filename(batch, item);
-		const char*	suffix = i + 1 == len ? "\n" : "  ";
-		yoyo_dprintf(STDOUT_FILENO, "%s", suffix);
+		yoyo_dprintf(STDOUT_FILENO, "\n");
 	}
 }
 

@@ -1,12 +1,17 @@
-MINISHELL="./minishell"
 TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
-REAL_FILE="real.txt"
-MINE_FILE="mine.txt"
+REAL_OUT_FILE="test_real.out.txt"
+MINE_OUT_FILE="test_mine.out.txt"
+REAL_ERR_FILE="test_real.err.txt"
+MINE_ERR_FILE="test_mine.err.txt"
 EXEC="./lsls"
 
-function compare_evidence() {
-	diff -u <(head -n-1 ${TEST_DIR}${REAL_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_FILE} | tail -n+2)
+function compare_tty() {
+	diff -u <(head -n-1 ${TEST_DIR}${REAL_OUT_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_OUT_FILE} | tail -n+2)
+}
+
+function compare_file() {
+	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE} && diff -u ${TEST_DIR}${REAL_ERR_FILE} ${TEST_DIR}${MINE_ERR_FILE}
 }
 
 function print_result() {
@@ -22,81 +27,93 @@ function print_result() {
 	# set -x
 }
 
-function run_case() {
+function run_tty() {
 	P=$1
 	rm -rf ${EXEC}
 	ln -s /bin/ls ${EXEC}
-	script -q -c "${EXEC} $P" ${TEST_DIR}${REAL_FILE} > /dev/null
+	script -q -c "${EXEC} $P" ${TEST_DIR}${REAL_OUT_FILE} > /dev/null
 	rm -rf ${EXEC}
 	ln -s ./ft_ls ${EXEC}
-	script -q -c "${EXEC} $P" ${TEST_DIR}${MINE_FILE} > /dev/null
-	compare_evidence
+	script -q -c "${EXEC} $P" ${TEST_DIR}${MINE_OUT_FILE} > /dev/null
+	compare_tty
+	print_result "$P"
+}
+
+function run_file() {
+	P=$1
+	rm -rf ${EXEC}
+	ln -s /bin/ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${TEST_DIR}${REAL_OUT_FILE} 2> ${TEST_DIR}${REAL_ERR_FILE}
+	rm -rf ${EXEC}
+	ln -s ./ft_ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${TEST_DIR}${MINE_OUT_FILE} 2> ${TEST_DIR}${MINE_ERR_FILE}
+	compare_file
 	print_result "$P"
 }
 
 rm -rf	$RESULTFILE
 
-run_case "./"
-run_case "./srcs"
-run_case "./includes"
-run_case "./srcs ./includes"
-run_case ". ./srcs ./includes"
-run_case ". ."
-run_case ".. .. ."
+run_tty "./"
+run_tty "./srcs"
+run_tty "./includes"
+run_tty "./srcs ./includes"
+run_tty ". ./srcs ./includes"
+run_tty ". ."
+run_tty ".. .. ."
 
-run_case "/usr"
-run_case "/usr/local"
-run_case "/usr/bin"
-run_case "/usr/bin /usr"
-run_case "/usr/bin /usr/bin"
+run_tty "/usr"
+run_tty "/usr/local"
+run_tty "/usr/bin"
+run_tty "/usr/bin /usr"
+run_tty "/usr/bin /usr/bin"
 
-run_case "-l ./srcs"
-run_case "-l ./includes"
-run_case "-l ./srcs ./includes"
+run_tty "-l ./srcs"
+run_tty "-l ./includes"
+run_tty "-l ./srcs ./includes"
 
-run_case "srcs/"
-run_case "srcs/*"
-run_case "./includes/../srcs/"
-run_case "./includes/../srcs/*"
+run_tty "srcs/"
+run_tty "srcs/*"
+run_tty "./includes/../srcs/"
+run_tty "./includes/../srcs/*"
 
-run_case "-l srcs/"
-run_case "-l srcs/*"
-run_case "-l ./includes/../srcs/"
-run_case "-l ./includes/../srcs/*"
+run_tty "-l srcs/"
+run_tty "-l srcs/*"
+run_tty "-l ./includes/../srcs/"
+run_tty "-l ./includes/../srcs/*"
 
-run_case "-l ./includes/../srcs/*"
+run_tty "-l ./includes/../srcs/*"
 
-run_case "Makefile"
-run_case "Makefile src/"
+run_tty "Makefile"
+run_tty "Makefile src/"
 
-run_case "libft libft"
-run_case "-l libft libft"
-run_case "-R libft libft"
-run_case "-lR libft libft"
+run_tty "libft libft"
+run_tty "-l libft libft"
+run_tty "-R libft libft"
+run_tty "-lR libft libft"
 
-run_case "-R"
-run_case "."
-run_case "-R ."
-run_case "-R test1"
+run_tty "-R"
+run_tty "."
+run_tty "-R ."
+run_tty "-R test1"
 
-run_case "--col"
-run_case "--col srcs"
-run_case "--col includes"
-run_case "--col minimini"
-run_case "--col /usr"
-run_case "--col /usr/bin"
+run_tty "--col"
+run_tty "--col srcs"
+run_tty "--col includes"
+run_tty "--col minimini"
+run_tty "--col /usr"
+run_tty "--col /usr/bin"
 
-run_case "-l /usr/bin"
-run_case "-l --col pocket"
-run_case "-l --col /usr/bin"
+run_tty "-l /usr/bin"
+run_tty "-l --col pocket"
+run_tty "-l --col /usr/bin"
 
-run_case "/dev"
-run_case "--col /dev"
-run_case "-l --col /dev"
-run_case "/var"
-run_case "--col /var"
-run_case "-l --col /var"
-# run_case "-G /dev/"
-# run_case "-lG /dev/"
+run_tty "/dev"
+run_tty "--col /dev"
+run_tty "-l --col /dev"
+run_tty "/var"
+run_tty "--col /var"
+run_tty "-l --col /var"
+# run_tty "-G /dev/"
+# run_tty "-lG /dev/"
 
-run_case "xxx x"
+run_tty "xxx x"
