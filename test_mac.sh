@@ -142,6 +142,14 @@ run_tty "-lR test_field3/*"
 run_tty "-g srcs includes"
 run_tty "-gl srcs includes"
 
+run_tty "-d"
+run_tty "-dR"
+run_tty "-d .."
+run_tty "-dR .."
+run_tty "-d test_field*"
+run_tty "-Rd test_field*"
+run_tty "-lRd test_field*"
+
 run_file ""
 run_file "-R"
 run_file "-l ./srcs"
@@ -163,3 +171,5 @@ run_file "-lR test_field3/*"
 
 run_file "-g srcs includes"
 run_file "-gl srcs includes"
+
+

@@ -1,21 +1,21 @@
-[32m[ OK ][m ./
-[32m[ OK ][m ./srcs
-[32m[ OK ][m ./includes
-[32m[ OK ][m ./srcs ./includes
-[32m[ OK ][m . ./srcs ./includes
-[32m[ OK ][m . .
-[32m[ OK ][m .. .. .
-[32m[ OK ][m /usr
-[32m[ OK ][m /usr/local
-[32m[ OK ][m /usr/bin
-[32m[ OK ][m /usr/bin /usr
-[32m[ OK ][m /usr/bin /usr/bin
-[32m[ OK ][m -l ./srcs
-[32m[ OK ][m -l ./includes
-[32m[ OK ][m -l ./srcs ./includes
-[32m[ OK ][m srcs/
---- /dev/fd/63	2023-04-06 09:47:24.519460001 +0000
-+++ /dev/fd/62	2023-04-06 09:47:24.519460001 +0000
+[32m[ OK ][m tty: ./
+[32m[ OK ][m tty: ./srcs
+[32m[ OK ][m tty: ./includes
+[32m[ OK ][m tty: ./srcs ./includes
+[32m[ OK ][m tty: . ./srcs ./includes
+[32m[ OK ][m tty: . .
+[32m[ OK ][m tty: .. .. .
+[32m[ OK ][m tty: /usr
+[32m[ OK ][m tty: /usr/local
+[32m[ OK ][m tty: /usr/bin
+[32m[ OK ][m tty: /usr/bin /usr
+[32m[ OK ][m tty: /usr/bin /usr/bin
+[32m[ OK ][m tty: -l ./srcs
+[32m[ OK ][m tty: -l ./includes
+[32m[ OK ][m tty: -l ./srcs ./includes
+[32m[ OK ][m tty: srcs/
+--- /dev/fd/63	2023-04-06 10:05:24.873079001 +0000
++++ /dev/fd/62	2023-04-06 10:05:24.873079001 +0000
 @@ -3,5 +3,5 @@
  
  srcs/b:
@@ -23,10 +23,10 @@
 -2
 +1
  
-[31m[FAIL] srcs/*[m
-[32m[ OK ][m ./includes/../srcs/
---- /dev/fd/63	2023-04-06 09:47:26.500460002 +0000
-+++ /dev/fd/62	2023-04-06 09:47:26.501460002 +0000
+[31m[FAIL] tty: srcs/*[m
+[32m[ OK ][m tty: ./includes/../srcs/
+--- /dev/fd/63	2023-04-06 10:05:26.788079002 +0000
++++ /dev/fd/62	2023-04-06 10:05:26.788079002 +0000
 @@ -5,5 +5,5 @@
  
  ./includes/../srcs/b:
@@ -34,10 +34,10 @@
 -2
 +1
  
-[31m[FAIL] ./includes/../srcs/*[m
-[32m[ OK ][m -l srcs/
---- /dev/fd/63	2023-04-06 09:47:28.488460003 +0000
-+++ /dev/fd/62	2023-04-06 09:47:28.489460003 +0000
+[31m[FAIL] tty: ./includes/../srcs/*[m
+[32m[ OK ][m tty: -l srcs/
+--- /dev/fd/63	2023-04-06 10:05:28.709079003 +0000
++++ /dev/fd/62	2023-04-06 10:05:28.709079003 +0000
 @@ -21,6 +21,5 @@
  
  srcs/b:
@@ -46,10 +46,10 @@
 -2
 +1
  
-[31m[FAIL] -l srcs/*[m
-[32m[ OK ][m -l ./includes/../srcs/
---- /dev/fd/63	2023-04-06 09:47:30.500460004 +0000
-+++ /dev/fd/62	2023-04-06 09:47:30.500460004 +0000
+[31m[FAIL] tty: -l srcs/*[m
+[32m[ OK ][m tty: -l ./includes/../srcs/
+--- /dev/fd/63	2023-04-06 10:05:30.635079004 +0000
++++ /dev/fd/62	2023-04-06 10:05:30.636079004 +0000
 @@ -21,6 +21,5 @@
  
  ./includes/../srcs/b:
@@ -58,9 +58,9 @@
 -2
 +1
  
-[31m[FAIL] -l ./includes/../srcs/*[m
---- /dev/fd/63	2023-04-06 09:47:31.475460005 +0000
-+++ /dev/fd/62	2023-04-06 09:47:31.476460005 +0000
+[31m[FAIL] tty: -l ./includes/../srcs/*[m
+--- /dev/fd/63	2023-04-06 10:05:31.600079005 +0000
++++ /dev/fd/62	2023-04-06 10:05:31.600079005 +0000
 @@ -21,6 +21,5 @@
  
  ./includes/../srcs/b:
@@ -69,55 +69,55 @@
 -2
 +1
  
-[31m[FAIL] -l ./includes/../srcs/*[m
-[32m[ OK ][m Makefile
---- /dev/fd/63	2023-04-06 09:47:33.401460006 +0000
-+++ /dev/fd/62	2023-04-06 09:47:33.401460006 +0000
+[31m[FAIL] tty: -l ./includes/../srcs/*[m
+[32m[ OK ][m tty: Makefile
+--- /dev/fd/63	2023-04-06 10:05:33.507079006 +0000
++++ /dev/fd/62	2023-04-06 10:05:33.507079006 +0000
 @@ -1,4 +1,4 @@
  ./lsls: cannot access 'src/': No such file or directory
  Makefile
 -2
 +1
  
-[31m[FAIL] Makefile src/[m
-[32m[ OK ][m libft libft
-[32m[ OK ][m -l libft libft
-[32m[ OK ][m -R libft libft
-[32m[ OK ][m -lR libft libft
-[32m[ OK ][m -R
-[32m[ OK ][m .
-[32m[ OK ][m -R .
-[32m[ OK ][m -R test1
-[32m[ OK ][m --col
-[32m[ OK ][m --col srcs
-[32m[ OK ][m --col includes
-[32m[ OK ][m --col minimini
-[32m[ OK ][m --col /usr
-[32m[ OK ][m --col /usr/bin
-[32m[ OK ][m -l /usr/bin
-[32m[ OK ][m -l --col pocket
-[32m[ OK ][m -l --col /usr/bin
-[32m[ OK ][m /dev
-[32m[ OK ][m --col /dev
-[32m[ OK ][m -l --col /dev
-[32m[ OK ][m /var
-[32m[ OK ][m --col /var
-[32m[ OK ][m -l --col /var
---- /dev/fd/63	2023-04-06 09:47:57.121535003 +0000
-+++ /dev/fd/62	2023-04-06 09:47:57.121535003 +0000
+[31m[FAIL] tty: Makefile src/[m
+[32m[ OK ][m tty: libft libft
+[32m[ OK ][m tty: -l libft libft
+[32m[ OK ][m tty: -R libft libft
+[32m[ OK ][m tty: -lR libft libft
+[32m[ OK ][m tty: -R
+[32m[ OK ][m tty: .
+[32m[ OK ][m tty: -R .
+[32m[ OK ][m tty: -R test1
+[32m[ OK ][m tty: --col
+[32m[ OK ][m tty: --col srcs
+[32m[ OK ][m tty: --col includes
+[32m[ OK ][m tty: --col minimini
+[32m[ OK ][m tty: --col /usr
+[32m[ OK ][m tty: --col /usr/bin
+[32m[ OK ][m tty: -l /usr/bin
+[32m[ OK ][m tty: -l --col pocket
+[32m[ OK ][m tty: -l --col /usr/bin
+[32m[ OK ][m tty: /dev
+[32m[ OK ][m tty: --col /dev
+[32m[ OK ][m tty: -l --col /dev
+[32m[ OK ][m tty: /var
+[32m[ OK ][m tty: --col /var
+[32m[ OK ][m tty: -l --col /var
+--- /dev/fd/63	2023-04-06 10:05:56.677866002 +0000
++++ /dev/fd/62	2023-04-06 10:05:56.677866002 +0000
 @@ -1,4 +1,4 @@
  ./lsls: cannot access 'xxx': No such file or directory
  x
 -2
 +1
  
-[31m[FAIL] xxx x[m
-[32m[ OK ][m 
-[32m[ OK ][m -R
-[32m[ OK ][m -l ./srcs
-[32m[ OK ][m -l ./includes
---- /dev/fd/63	2023-04-06 09:48:01.999535005 +0000
-+++ /dev/fd/62	2023-04-06 09:48:01.999535005 +0000
+[31m[FAIL] tty: xxx x[m
+[32m[ OK ][m tty: 
+[32m[ OK ][m tty: -R
+[32m[ OK ][m tty: -l ./srcs
+[32m[ OK ][m tty: -l ./includes
+--- /dev/fd/63	2023-04-06 10:06:01.538866005 +0000
++++ /dev/fd/62	2023-04-06 10:06:01.538866005 +0000
 @@ -1,5 +1,5 @@
  ./lsls: cannot access 'ccc': No such file or directory
  ./lsls: cannot access 'aaa': No such file or directory
@@ -125,9 +125,9 @@
 -2
 +1
  
-[31m[FAIL] -lf ccc aaa bbb[m
---- /dev/fd/63	2023-04-06 09:48:02.952535005 +0000
-+++ /dev/fd/62	2023-04-06 09:48:02.952535005 +0000
+[31m[FAIL] tty: -lf ccc aaa bbb[m
+--- /dev/fd/63	2023-04-06 10:06:02.476866005 +0000
++++ /dev/fd/62	2023-04-06 10:06:02.476866005 +0000
 @@ -1,5 +1,5 @@
  ./lsls: cannot access 'ccc': No such file or directory
  ./lsls: cannot access 'aaa': No such file or directory
@@ -135,30 +135,51 @@
 -2
 +1
  
-[31m[FAIL] -l ccc aaa bbb[m
-[32m[ OK ][m test_field/link_dir_1
-[32m[ OK ][m -l test_field/link_dir_1
-[32m[ OK ][m test_field3
-[32m[ OK ][m -l test_field3
-[32m[ OK ][m -R test_field3
-[32m[ OK ][m -lR test_field3
-[32m[ OK ][m test_field3/*
-[32m[ OK ][m -l test_field3/*
-[32m[ OK ][m -R test_field3/*
-[32m[ OK ][m -lR test_field3/*
-[32m[ OK ][m 
-[32m[ OK ][m -R
-[32m[ OK ][m -l ./srcs
-[32m[ OK ][m -l ./includes
---- ./test_real.out.txt	2023-04-06 09:48:17.723209755 +0000
-+++ ./test_mine.out.txt	2023-04-06 09:48:18.639496922 +0000
+[31m[FAIL] tty: -l ccc aaa bbb[m
+[32m[ OK ][m tty: test_field/link_dir_1
+[32m[ OK ][m tty: -l test_field/link_dir_1
+[32m[ OK ][m tty: test_field3
+[32m[ OK ][m tty: -l test_field3
+[32m[ OK ][m tty: -R test_field3
+[32m[ OK ][m tty: -lR test_field3
+[32m[ OK ][m tty: test_field3/*
+[32m[ OK ][m tty: -l test_field3/*
+[32m[ OK ][m tty: -R test_field3/*
+[32m[ OK ][m tty: -lR test_field3/*
+[32m[ OK ][m tty: -g srcs includes
+[32m[ OK ][m tty: -gl srcs includes
+[32m[ OK ][m tty: -d
+[32m[ OK ][m tty: -dR
+[32m[ OK ][m tty: -d ..
+[32m[ OK ][m tty: -dR ..
+[32m[ OK ][m tty: -d test_field*
+[32m[ OK ][m tty: -Rd test_field*
+[32m[ OK ][m tty: -lRd test_field*
+[32m[ OK ][m file: 
+[32m[ OK ][m file: -R
+[32m[ OK ][m file: -l ./srcs
+[32m[ OK ][m file: -l ./includes
+--- ./test_real.out.txt	2023-04-06 10:06:25.364412945 +0000
++++ ./test_mine.out.txt	2023-04-06 10:06:26.272844710 +0000
 @@ -1 +1 @@
 -2
 +1
-[31m[FAIL] -lf ccc aaa bbb[m
---- ./test_real.out.txt	2023-04-06 09:48:18.688273337 +0000
-+++ ./test_mine.out.txt	2023-04-06 09:48:19.601079013 +0000
+[31m[FAIL] file: -lf ccc aaa bbb[m
+--- ./test_real.out.txt	2023-04-06 10:06:26.315104324 +0000
++++ ./test_mine.out.txt	2023-04-06 10:06:27.222310409 +0000
 @@ -1 +1 @@
 -2
 +1
-[31m[FAIL] -l ccc aaa bbb[m
+[31m[FAIL] file: -l ccc aaa bbb[m
+[32m[ OK ][m file: test_field/link_dir_1
+[32m[ OK ][m file: -l test_field/link_dir_1
+[32m[ OK ][m file: test_field3
+[32m[ OK ][m file: -l test_field3
+[32m[ OK ][m file: -R test_field3
+[32m[ OK ][m file: -lR test_field3
+[32m[ OK ][m file: test_field3/*
+[32m[ OK ][m file: -l test_field3/*
+[32m[ OK ][m file: -R test_field3/*
+[32m[ OK ][m file: -lR test_field3/*
+[32m[ OK ][m file: -g srcs includes
+[32m[ OK ][m file: -gl srcs includes
