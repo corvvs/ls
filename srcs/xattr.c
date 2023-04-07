@@ -18,7 +18,7 @@ ssize_t my_getxattr(const char *path, const char *name, void *value, size_t size
 #endif
 }
 
-void	print_xattr_lines(t_master* m, const t_file_item* item) {
+void	print_xattr_lines(t_master* m, const t_long_format_measure* measure, const t_file_item* item) {
 	(void)m;
 	char*	buf = malloc(sizeof(char) * (item->xattr_len + 1));
 	YOYO_ASSERT(buf != NULL);
@@ -28,15 +28,19 @@ void	print_xattr_lines(t_master* m, const t_file_item* item) {
 	}
 	char*	key = buf;
 	while (*key) {
+		// [拡張属性を取得]
 		errno = 0;
 		ssize_t value_len = my_getxattr(item->path, key, NULL, 0);
 		if (value_len < 0) {
 			break;
 		}
+		// [拡張属性を出力]
+		// 幅はファイルサイズのものを使う(なんで？)
 		const uint64_t w = number_width(value_len);
-		yoyo_dprintf(STDOUT_FILENO, "\t%s\t ", key);
-		if (5 >= w) {
-			print_spaces(5 - w);
+		const uint64_t mw = measure->size_width;
+		yoyo_dprintf(STDOUT_FILENO, "\t%s\t", key);
+		if (mw >= w) {
+			print_spaces(mw - w);
 		}
 		yoyo_dprintf(STDOUT_FILENO, "%zu \n", value_len);
 		m->lines_out += 1;

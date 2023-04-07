@@ -82,7 +82,7 @@ bool	show_in_file_section(const t_file_batch* batch, const t_file_item* item);
 bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item);
 
 // xattr.c
-void	print_xattr_lines(t_master* m, const t_file_item* item);
+void	print_xattr_lines(t_master* m, const t_long_format_measure* measure, const t_file_item* item);
 ssize_t	get_xattr_len(const char* path);
 
 // acl.c

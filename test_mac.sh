@@ -158,6 +158,8 @@ run_tty "-aR pocket/dir"
 run_tty "-aR pocket/dir/."
 run_tty "-aR pocket/dir/.."
 
+run_tty "-l@ test_field3"
+
 run_file ""
 run_file "-R"
 run_file "-l ./srcs"
