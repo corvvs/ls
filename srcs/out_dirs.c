@@ -12,6 +12,7 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 
 
 static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item* dir_item) {
+	// DEBUGINFO("%u %s", batch->depth, dir_item->name);
 	const char*	dir_path = dir_item->path;
 	t_file_batch		info = (t_file_batch){
 		.is_root = false,
@@ -32,7 +33,6 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 		print_error(m, "reading directory", dir_path);
 		return;
 	}
-	// DEBUGOUT("opened dir: %s, %p", dir_path, dir);
 	struct dirent	*entry;
 	size_t			len = 2;
 	char**			names = malloc(sizeof(char*) * len);
@@ -50,9 +50,9 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 				print_error(m, "reading directory", dir_path);
 #else
 				print_error(m, "reading directory", dir_path);
-				if (batch->opt->long_format) {
-					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
-				}
+				// if (batch->opt->long_format) {
+				// 	yoyo_dprintf(STDOUT_FILENO, "total 0b\n");
+				// }
 #endif
 			}
 			break;
@@ -81,6 +81,7 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 	closedir(dir);
 	info.len = i;
 	info.path = names;
+	// DEBUGOUT("opened dir: %s, %zu", dir_path, i);
 	list_files(m, &info);
 	for (size_t i = 0; i < info.len; ++i) {
 		free(names[i]);

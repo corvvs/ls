@@ -45,18 +45,18 @@ function run_file() {
 
 rm -rf	$RESULTFILE
 
-# argv が存在する場合は, それだけでテストする
-if [ $# -eq 1 ]; then
-	run_tty "$1"
-	exit 0
-fi
-
 EXEC=`mktemp`
 chmod a+x ${EXEC}
 REAL_OUT_FILE=`mktemp`
 MINE_OUT_FILE=`mktemp`
 REAL_ERR_FILE=`mktemp`
 MINE_ERR_FILE=`mktemp`
+
+# argv が存在する場合は, それだけでテストする
+if [ $# -eq 1 ]; then
+	run_tty "$1"
+	exit 0
+fi
 
 
 run_tty "./"

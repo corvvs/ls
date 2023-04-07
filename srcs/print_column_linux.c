@@ -25,7 +25,6 @@ static bool	check_placement(t_master* m, t_file_batch* batch, unsigned int term_
 		}
 		i += 1;
 		if (i % col_cap == 0 || i == len) {
-			// DEBUGOUT("total_len += %zu", max_len);
 			total_len += max_len;
 			if (i < len) {
 				total_len += margin;
@@ -34,7 +33,6 @@ static bool	check_placement(t_master* m, t_file_batch* batch, unsigned int term_
 		}
 	}
 	(void)m;
-	// DEBUGOUT("term_width = %u, column_number = %u, total_len = %zu", term_width, column_number, total_len);
 	return total_len <= term_width;
 }
 

@@ -33,9 +33,9 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 
 void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	(void)m;
-	if (len == 0) {
-		return;
-	}
+	// if (len == 0) {
+	// 	return;
+	// }
 	t_file_item**	col_items = malloc(sizeof(t_file_item*) * len);
 	YOYO_ASSERT(col_items != NULL);
 	size_t col_len = 0;

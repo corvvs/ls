@@ -16,6 +16,17 @@ uint64_t	unixtime_us(const t_stat_time* ts) {
 }
 #endif
 
+#ifdef __MACH__
+uint64_t	unixtime_sort(const t_stat_time* ts) {
+	return ts->tv_sec * 1000000000 + ts->tv_nsec;
+	// return ts->tv_sec;
+}
+#else
+uint64_t	unixtime_sort(const t_stat_time* ts) {
+	return ts->tv_sec * 1000000000 + ts->tv_nsec;
+}
+#endif
+
 uint64_t	unixtime_s(const t_stat_time* ts) {
 	return unixtime_us(ts) / 1000000;
 }

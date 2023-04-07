@@ -21,7 +21,18 @@
 [32m[ OK ][m tty: -l srcs/*
 [32m[ OK ][m tty: -l ./includes/../srcs/
 [32m[ OK ][m tty: -l ./includes/../srcs/*
-[32m[ OK ][m tty: -l ./includes/../srcs/*
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.7dxx2WDN	2023-04-07 14:55:29.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.Ez1vBGk7	2023-04-07 14:55:29.000000000 +0900
+@@ -14,7 +14,7 @@
+ -rw-r--r--  1 corvvs  staff   3970  4  7 14:40 ./includes/../srcs/print_column_linux.c
+ -rw-r--r--  1 corvvs  staff   2974  4  7 02:58 ./includes/../srcs/print_column_macos.c
+ -rw-r--r--  1 corvvs  staff  12253  4  7 14:48 ./includes/../srcs/print_long_format.c
+--rw-r--r--  1 corvvs  staff   3057  4  6 13:12 ./includes/../srcs/print_utils.c
++-rw-r--r--  1 corvvs  staff   3057  4  6 13:12 ./includes/../srcs/print_utils.c
+ -rw-r--r--  1 corvvs  staff   6873  3 26 19:55 ./includes/../srcs/printf.c
+ -rw-r--r--  1 corvvs  staff   2076  4  7 14:38 ./includes/../srcs/time.c
+ -rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
+[31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft

@@ -26,7 +26,7 @@ static t_filetype	determine_file_type(struct stat* st) {
 // 時間 ta, tb の値に基づき pa, pb を入れ替える.
 // その後, 比較がこれで十分かどうかを返す.
 static bool	swap_by_time(t_global_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
-	int64_t diff = unixtime_us(ta) - unixtime_us(tb);
+	int64_t diff = unixtime_sort(ta) - unixtime_sort(tb);
 	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
 		// DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, unixtime_us(ta), (*pb)->name, unixtime_us(tb));
 		swap_item(pa, pb);
@@ -296,6 +296,8 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	// [ファイル情報を(オプションに従って)ソートする]
 	sort_entries(m->opt, n_ok, pointers);
 
+
+	// DEBUGOUT("%u, %zu, %zu", batch->depth, n_ok, n_dirs);
 	// [非ディレクトリ情報を出力]
 	output_files(m, batch, n_ok, pointers);
 
