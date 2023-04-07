@@ -1,17 +1,14 @@
 TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
-REAL_OUT_FILE="test_real.out.txt"
-MINE_OUT_FILE="test_mine.out.txt"
-REAL_ERR_FILE="test_real.err.txt"
-MINE_ERR_FILE="test_mine.err.txt"
 EXEC="./lsls"
 
+
 function compare_tty() {
-	diff -u <(head -n-1 ${TEST_DIR}${REAL_OUT_FILE} | tail -n+2) <(head -n-1 ${TEST_DIR}${MINE_OUT_FILE} | tail -n+2)
+	diff -u <(head -n-1 ${REAL_OUT_FILE} | tail -n+2) <(head -n-1 ${MINE_OUT_FILE} | tail -n+2)
 }
 
 function compare_file() {
-	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE} && diff -u ${TEST_DIR}${REAL_ERR_FILE} ${TEST_DIR}${MINE_ERR_FILE}
+	diff -u ${REAL_OUT_FILE} ${MINE_OUT_FILE} && diff -u ${REAL_ERR_FILE} ${MINE_ERR_FILE}
 }
 
 function print_result() {
@@ -29,24 +26,20 @@ function print_result() {
 
 function run_tty() {
 	P=$1
-	rm -rf ${EXEC}
-	ln -s /bin/ls ${EXEC}
-	script -q -c "${EXEC} $P; echo \$?" ${TEST_DIR}${REAL_OUT_FILE} > /dev/null
-	rm -rf ${EXEC}
-	ln -s ./ft_ls ${EXEC}
-	script -q -c "${EXEC} $P; echo \$?" ${TEST_DIR}${MINE_OUT_FILE} > /dev/null
+	cp /bin/ls ${EXEC}
+	script -q -c "${EXEC} $P; echo \$?" ${REAL_OUT_FILE} > /dev/null
+	cp ./ft_ls ${EXEC}
+	script -q -c "${EXEC} $P; echo \$?" ${MINE_OUT_FILE} > /dev/null
 	compare_tty
 	print_result "tty: $P"
 }
 
 function run_file() {
 	P=$1
-	rm -rf ${EXEC}
-	ln -s /bin/ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${TEST_DIR}${REAL_OUT_FILE} 2> ${TEST_DIR}${REAL_ERR_FILE}
-	rm -rf ${EXEC}
-	ln -s ./ft_ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${TEST_DIR}${MINE_OUT_FILE} 2> ${TEST_DIR}${MINE_ERR_FILE}
+	cp /bin/ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${REAL_OUT_FILE} 2> ${REAL_ERR_FILE}
+	cp ./ft_ls ${EXEC}
+	(${EXEC} $P; echo $?) > ${MINE_OUT_FILE} 2> ${MINE_ERR_FILE}
 	compare_file
 	print_result "file: $P"
 }
@@ -58,6 +51,13 @@ if [ $# -eq 1 ]; then
 	run_tty "$1"
 	exit 0
 fi
+
+EXEC=`mktemp`
+chmod a+x ${EXEC}
+REAL_OUT_FILE=`mktemp`
+MINE_OUT_FILE=`mktemp`
+REAL_ERR_FILE=`mktemp`
+MINE_ERR_FILE=`mktemp`
 
 run_tty "./"
 run_tty "./srcs"

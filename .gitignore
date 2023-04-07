@@ -9,3 +9,8 @@ pocket
 
 real.txt
 mine.txt
+test_field?
+test_field/*/*
+
+!test_field/Makefile
+!test_field/*.*

@@ -92,6 +92,7 @@ endif
 .PHONY:	rt
 rt:	fclean t
 
+.PHONY:	$(TEST_FIELD)
 $(TEST_FIELD):
 	make -C $(TEST_FIELD)
 
