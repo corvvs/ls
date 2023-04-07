@@ -42,11 +42,11 @@
 [32m[ OK ][m tty: -lG /usr/bin
 [32m[ OK ][m tty:  /dev/
 [32m[ OK ][m tty: -G /dev/
---- ./test_real.out.txt	2023-04-07 11:22:54.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:22:54.000000000 +0900
+--- ./test_real.out.txt	2023-04-07 13:01:37.000000000 +0900
++++ ./test_mine.out.txt	2023-04-07 13:01:37.000000000 +0900
 @@ -1,4 +1,4 @@
--total 1456
-+total 1432
+-total 1416
++total 1392
  -rw-r--r--   1 corvvs  staff       6  3 28 21:30  
  -rw-r--r--   1 corvvs  staff       3  3 28 21:09 !
  -rw-r--r--   1 corvvs  staff       8  3 28 21:02 "'
@@ -54,46 +54,46 @@
  lrwxr-xr-x   1 corvvs  staff       5  3 27 02:21 link3 -> link2
  -rw-r--r--   1 corvvs  staff   13416  4  2 17:56 linux.txt
  lrwxr-xr-x   1 corvvs  staff       7  4  3 11:35 ls -> ./ft_ls
--lrwxr-xr-x   1 corvvs  staff       7  4  7 11:22 lsls -> /bin/ls
-+lrwxr-xr-x   1 corvvs  staff       7  4  7 11:22 lsls -> ./ft_ls
+-lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> /bin/ls
++lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> ./ft_ls
  lrwxr-xr-x   1 corvvs  staff       8  3 26 18:06 m -> Makefile
  -rw-r--r--   1 corvvs  staff     198  3 28 15:38 m.c
  -rw-r--r--   1 corvvs  staff    2221  4  2 17:56 mac.txt
 @@ -90,9 +90,9 @@
  -rw-r--r--   1 corvvs  staff    3866  4  6 19:26 test_linux.sh
- -rw-r--r--   1 corvvs  staff    3687  4  6 19:26 test_mac.sh
- -rw-r--r--   1 corvvs  staff       0  4  7 11:07 test_mine.err.txt
---rw-r--r--   1 corvvs  staff   17363  4  7 11:22 test_mine.out.txt
-+-rw-r--r--   1 corvvs  staff       0  4  7 11:22 test_mine.out.txt
- -rw-r--r--   1 corvvs  staff       0  4  7 11:07 test_real.err.txt
---rw-r--r--   1 corvvs  staff       0  4  7 11:22 test_real.out.txt
-+-rw-r--r--   1 corvvs  staff    5875  4  7 11:22 test_real.out.txt
- -rw-r--r--   1 corvvs  staff    5679  4  7 11:05 test_result.linux.txt
- -rw-r--r--   1 corvvs  staff    1395  4  7 11:22 test_result.mac.txt
+ -rw-r--r--   1 corvvs  staff    3714  4  7 12:12 test_mac.sh
+ -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_mine.err.txt
+--rw-r--r--   1 corvvs  staff   17594  4  7 13:01 test_mine.out.txt
++-rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_mine.out.txt
+ -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_real.err.txt
+--rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_real.out.txt
++-rw-r--r--   1 corvvs  staff    5875  4  7 13:01 test_real.out.txt
+ -rw-r--r--   1 corvvs  staff    5679  4  7 11:26 test_result.linux.txt
+ -rw-r--r--   1 corvvs  staff    1395  4  7 13:01 test_result.mac.txt
  lrwxr-xr-x   1 corvvs  staff       5  3 27 02:17 to_dummy -> dummy
 [31m[FAIL] tty: -l@[m
---- ./test_real.out.txt	2023-04-07 11:22:54.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:22:55.000000000 +0900
+--- ./test_real.out.txt	2023-04-07 13:01:37.000000000 +0900
++++ ./test_mine.out.txt	2023-04-07 13:01:37.000000000 +0900
 @@ -73,7 +73,7 @@
  lrwxr-xr-x   1 corvvs  staff       5  3 27 02:21 link3 -> link2
  -rw-r--r--   1 corvvs  staff   13416  4  2 17:56 linux.txt
  lrwxr-xr-x   1 corvvs  staff       7  4  3 11:35 ls -> ./ft_ls
--lrwxr-xr-x   1 corvvs  staff       7  4  7 11:22 lsls -> /bin/ls
-+lrwxr-xr-x   1 corvvs  staff       7  4  7 11:22 lsls -> ./ft_ls
+-lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> /bin/ls
++lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> ./ft_ls
  lrwxr-xr-x   1 corvvs  staff       8  3 26 18:06 m -> Makefile
  -rw-r--r--   1 corvvs  staff     198  3 28 15:38 m.c
  -rw-r--r--   1 corvvs  staff    2221  4  2 17:56 mac.txt
 @@ -96,9 +96,9 @@
  -rw-r--r--   1 corvvs  staff    3866  4  6 19:26 test_linux.sh
- -rw-r--r--   1 corvvs  staff    3687  4  6 19:26 test_mac.sh
- -rw-r--r--   1 corvvs  staff       0  4  7 11:07 test_mine.err.txt
---rw-r--r--   1 corvvs  staff    5875  4  7 11:22 test_mine.out.txt
-+-rw-r--r--   1 corvvs  staff       0  4  7 11:22 test_mine.out.txt
- -rw-r--r--   1 corvvs  staff       0  4  7 11:07 test_real.err.txt
---rw-r--r--   1 corvvs  staff       0  4  7 11:22 test_real.out.txt
-+-rw-r--r--   1 corvvs  staff    6555  4  7 11:22 test_real.out.txt
- -rw-r--r--   1 corvvs  staff    5679  4  7 11:05 test_result.linux.txt
- -rw-r--r--   1 corvvs  staff    3037  4  7 11:22 test_result.mac.txt
+ -rw-r--r--   1 corvvs  staff    3714  4  7 12:12 test_mac.sh
+ -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_mine.err.txt
+--rw-r--r--   1 corvvs  staff    5875  4  7 13:01 test_mine.out.txt
++-rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_mine.out.txt
+ -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_real.err.txt
+--rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_real.out.txt
++-rw-r--r--   1 corvvs  staff    6555  4  7 13:01 test_real.out.txt
+ -rw-r--r--   1 corvvs  staff    5679  4  7 11:26 test_result.linux.txt
+ -rw-r--r--   1 corvvs  staff    3037  4  7 13:01 test_result.mac.txt
  lrwxr-xr-x   1 corvvs  staff       5  3 27 02:17 to_dummy -> dummy
 [31m[FAIL] tty: -l@e[m
 [32m[ OK ][m tty: xxx x
@@ -106,28 +106,9 @@
 [32m[ OK ][m tty: test_field/link_dir_1
 [32m[ OK ][m tty: -l test_field/link_dir_1
 [32m[ OK ][m tty: test_field3
---- ./test_real.out.txt	2023-04-07 11:22:56.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:22:56.000000000 +0900
-@@ -2,4 +2,4 @@
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 a
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 b
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 c
--drwxr-xr-x@ 5 corvvs  staff  160  4  6 14:25 dir
-+drwxr-xr-x  5 corvvs  staff  160  4  6 14:25 dir
-[31m[FAIL] tty: -l test_field3[m
+[32m[ OK ][m tty: -l test_field3
 [32m[ OK ][m tty: -R test_field3
---- ./test_real.out.txt	2023-04-07 11:22:56.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:22:56.000000000 +0900
-@@ -2,7 +2,7 @@
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 a
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 b
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 c
--drwxr-xr-x@ 5 corvvs  staff  160  4  6 14:25 dir
-+drwxr-xr-x  5 corvvs  staff  160  4  6 14:25 dir
- 
- test_field3/dir:
- total 0
-[31m[FAIL] tty: -lR test_field3[m
+[32m[ OK ][m tty: -lR test_field3
 [32m[ OK ][m tty: test_field3/*
 [32m[ OK ][m tty: -l test_field3/*
 [32m[ OK ][m tty: -R test_field3/*
@@ -148,6 +129,7 @@
 [32m[ OK ][m tty: -aR pocket/dir
 [32m[ OK ][m tty: -aR pocket/dir/.
 [32m[ OK ][m tty: -aR pocket/dir/..
+[32m[ OK ][m tty: -l@ test_field3
 [32m[ OK ][m file: 
 [32m[ OK ][m file: -R
 [32m[ OK ][m file: -l ./srcs
@@ -157,29 +139,9 @@
 [32m[ OK ][m file: test_field/link_dir_1
 [32m[ OK ][m file: -l test_field/link_dir_1
 [32m[ OK ][m file: test_field3
---- ./test_real.out.txt	2023-04-07 11:23:01.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:23:01.000000000 +0900
-@@ -2,5 +2,5 @@
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 a
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 b
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 c
--drwxr-xr-x@ 5 corvvs  staff  160  4  6 14:25 dir
-+drwxr-xr-x  5 corvvs  staff  160  4  6 14:25 dir
- 0
-[31m[FAIL] file: -l test_field3[m
+[32m[ OK ][m file: -l test_field3
 [32m[ OK ][m file: -R test_field3
---- ./test_real.out.txt	2023-04-07 11:23:01.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 11:23:01.000000000 +0900
-@@ -2,7 +2,7 @@
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 a
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 b
- -rw-r--r--  1 corvvs  staff    0  4  6 14:25 c
--drwxr-xr-x@ 5 corvvs  staff  160  4  6 14:25 dir
-+drwxr-xr-x  5 corvvs  staff  160  4  6 14:25 dir
- 
- test_field3/dir:
- total 0
-[31m[FAIL] file: -lR test_field3[m
+[32m[ OK ][m file: -lR test_field3
 [32m[ OK ][m file: test_field3/*
 [32m[ OK ][m file: -l test_field3/*
 [32m[ OK ][m file: -R test_field3/*

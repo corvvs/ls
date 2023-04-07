@@ -365,6 +365,9 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 		if (item->quote_type != YO_QT_NONE) {
 			batch->bopt.some_quoted = true;
 		}
+		if (item->xattr_len > 0) {
+			batch->bopt.some_has_acl_xattr = true;
+		}
 #ifdef __MACH__
 		if (item->acl != NULL) {
 			batch->bopt.some_has_acl_xattr = true;
@@ -415,7 +418,7 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 
 		// (あれば)拡張属性の方法を詳細に表示
 		if (batch->opt->show_xattr && item->xattr_len > 0) {
-			print_xattr_lines(m, item);
+			print_xattr_lines(m, &measure, item);
 		}
 
 		// (あれば)ACLの情報を詳細に表示
