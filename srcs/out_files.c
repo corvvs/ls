@@ -33,7 +33,6 @@ static void	print_regular_format(t_master* m, t_file_batch* batch, size_t len, t
 
 void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items) {
 	(void)m;
-	// DEBUGINFO("len = %zu", len);
 	if (len == 0) {
 		return;
 	}

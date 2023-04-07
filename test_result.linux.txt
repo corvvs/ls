@@ -14,8 +14,8 @@
 [32m[ OK ][m tty: -l ./includes
 [32m[ OK ][m tty: -l ./srcs ./includes
 [32m[ OK ][m tty: srcs/
---- /dev/fd/63	2023-04-06 19:55:09.789295007 +0000
-+++ /dev/fd/62	2023-04-06 19:55:09.789295007 +0000
+--- /dev/fd/63	2023-04-07 02:24:39.601215002 +0000
++++ /dev/fd/62	2023-04-07 02:24:39.601215002 +0000
 @@ -3,5 +3,5 @@
  
  srcs/b:
@@ -25,8 +25,8 @@
  
 [31m[FAIL] tty: srcs/*[m
 [32m[ OK ][m tty: ./includes/../srcs/
---- /dev/fd/63	2023-04-06 19:55:11.767295008 +0000
-+++ /dev/fd/62	2023-04-06 19:55:11.767295008 +0000
+--- /dev/fd/63	2023-04-07 02:24:41.533215003 +0000
++++ /dev/fd/62	2023-04-07 02:24:41.533215003 +0000
 @@ -5,5 +5,5 @@
  
  ./includes/../srcs/b:
@@ -36,43 +36,40 @@
  
 [31m[FAIL] tty: ./includes/../srcs/*[m
 [32m[ OK ][m tty: -l srcs/
---- /dev/fd/63	2023-04-06 19:55:13.701295009 +0000
-+++ /dev/fd/62	2023-04-06 19:55:13.701295009 +0000
-@@ -21,6 +21,5 @@
- 
+--- /dev/fd/63	2023-04-07 02:24:43.427215004 +0000
++++ /dev/fd/62	2023-04-07 02:24:43.427215004 +0000
+@@ -22,5 +22,5 @@
  srcs/b:
  ./lsls: reading directory 'srcs/b': Operation not permitted
--total 0
+ total 0
 -2
 +1
  
 [31m[FAIL] tty: -l srcs/*[m
 [32m[ OK ][m tty: -l ./includes/../srcs/
---- /dev/fd/63	2023-04-06 19:55:15.650295010 +0000
-+++ /dev/fd/62	2023-04-06 19:55:15.650295010 +0000
-@@ -21,6 +21,5 @@
- 
+--- /dev/fd/63	2023-04-07 02:24:45.335215005 +0000
++++ /dev/fd/62	2023-04-07 02:24:45.336215005 +0000
+@@ -22,5 +22,5 @@
  ./includes/../srcs/b:
  ./lsls: reading directory './includes/../srcs/b': Operation not permitted
--total 0
+ total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
---- /dev/fd/63	2023-04-06 19:55:16.614295010 +0000
-+++ /dev/fd/62	2023-04-06 19:55:16.614295010 +0000
-@@ -21,6 +21,5 @@
- 
+--- /dev/fd/63	2023-04-07 02:24:46.290215005 +0000
++++ /dev/fd/62	2023-04-07 02:24:46.291215005 +0000
+@@ -22,5 +22,5 @@
  ./includes/../srcs/b:
  ./lsls: reading directory './includes/../srcs/b': Operation not permitted
--total 0
+ total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: Makefile
---- /dev/fd/63	2023-04-06 19:55:18.536295011 +0000
-+++ /dev/fd/62	2023-04-06 19:55:18.537295011 +0000
+--- /dev/fd/63	2023-04-07 02:24:48.181215006 +0000
++++ /dev/fd/62	2023-04-07 02:24:48.181215006 +0000
 @@ -1,4 +1,4 @@
  ./lsls: cannot access 'src/': No such file or directory
  Makefile
@@ -103,8 +100,8 @@
 [32m[ OK ][m tty: /var
 [32m[ OK ][m tty: --col /var
 [32m[ OK ][m tty: -l --col /var
---- /dev/fd/63	2023-04-06 19:55:42.158168008 +0000
-+++ /dev/fd/62	2023-04-06 19:55:42.158168008 +0000
+--- /dev/fd/63	2023-04-07 02:25:11.176164003 +0000
++++ /dev/fd/62	2023-04-07 02:25:11.177164003 +0000
 @@ -1,4 +1,4 @@
  ./lsls: cannot access 'xxx': No such file or directory
  x
@@ -116,8 +113,8 @@
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: -l ./srcs
 [32m[ OK ][m tty: -l ./includes
---- /dev/fd/63	2023-04-06 19:55:47.078168011 +0000
-+++ /dev/fd/62	2023-04-06 19:55:47.078168011 +0000
+--- /dev/fd/63	2023-04-07 02:25:16.070164005 +0000
++++ /dev/fd/62	2023-04-07 02:25:16.070164005 +0000
 @@ -1,5 +1,5 @@
  ./lsls: cannot access 'ccc': No such file or directory
  ./lsls: cannot access 'aaa': No such file or directory
@@ -126,8 +123,8 @@
 +1
  
 [31m[FAIL] tty: -lf ccc aaa bbb[m
---- /dev/fd/63	2023-04-06 19:55:48.031168011 +0000
-+++ /dev/fd/62	2023-04-06 19:55:48.031168011 +0000
+--- /dev/fd/63	2023-04-07 02:25:17.013164006 +0000
++++ /dev/fd/62	2023-04-07 02:25:17.014164006 +0000
 @@ -1,5 +1,5 @@
  ./lsls: cannot access 'ccc': No such file or directory
  ./lsls: cannot access 'aaa': No such file or directory
@@ -166,14 +163,14 @@
 [32m[ OK ][m file: -R
 [32m[ OK ][m file: -l ./srcs
 [32m[ OK ][m file: -l ./includes
---- ./test_real.out.txt	2023-04-06 19:56:18.877320771 +0000
-+++ ./test_mine.out.txt	2023-04-06 19:56:19.788073100 +0000
+--- ./test_real.out.txt	2023-04-07 02:25:47.167090798 +0000
++++ ./test_mine.out.txt	2023-04-07 02:25:48.065159127 +0000
 @@ -1 +1 @@
 -2
 +1
 [31m[FAIL] file: -lf ccc aaa bbb[m
---- ./test_real.out.txt	2023-04-06 19:56:19.837661682 +0000
-+++ ./test_mine.out.txt	2023-04-06 19:56:20.741989874 +0000
+--- ./test_real.out.txt	2023-04-07 02:25:48.113281151 +0000
++++ ./test_mine.out.txt	2023-04-07 02:25:49.005542072 +0000
 @@ -1 +1 @@
 -2
 +1

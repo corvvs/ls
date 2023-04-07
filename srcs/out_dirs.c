@@ -24,6 +24,11 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 	errno = 0;
 	DIR*	dir = opendir(dir_path);
 	if (dir == NULL) {
+#ifdef __MACH__
+				if (batch->opt->long_format) {
+					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
+				}
+#endif
 		print_error(m, "reading directory", dir_path);
 		return;
 	}
@@ -38,7 +43,17 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 		entry = readdir(dir);
 		if (entry == NULL) {
 			if (errno) {
+#ifdef __MACH__
+				if (batch->opt->long_format) {
+					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
+				}
 				print_error(m, "reading directory", dir_path);
+#else
+				print_error(m, "reading directory", dir_path);
+				if (batch->opt->long_format) {
+					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
+				}
+#endif
 			}
 			break;
 		}
