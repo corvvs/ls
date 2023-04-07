@@ -128,15 +128,17 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
 	if (batch->bopt.some_has_acl_xattr) {
+#ifdef __MACH__
 		if (item->xattr_len > 0) {
 			yoyo_dprintf(STDOUT_FILENO, "%c", '@');
-#ifdef __MACH__
 		} else if (item->acl != NULL) {
 			yoyo_dprintf(STDOUT_FILENO, "%c", '+');
-#endif
 		} else {
 			yoyo_dprintf(STDOUT_FILENO, "%c", ' ');
 		}
+#else
+		yoyo_dprintf(STDOUT_FILENO, " ");
+#endif
 	}
 }
 
