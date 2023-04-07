@@ -1,150 +1,24 @@
-[32m[ OK ][m tty: ./
-[32m[ OK ][m tty: ./srcs
-[32m[ OK ][m tty: ./includes
-[32m[ OK ][m tty: ./srcs ./includes
-[32m[ OK ][m tty: . ./srcs ./includes
-[32m[ OK ][m tty: . .
-[32m[ OK ][m tty: .. .. .
-[32m[ OK ][m tty: /usr
-[32m[ OK ][m tty: /usr/local
-[32m[ OK ][m tty: /usr/bin
-[32m[ OK ][m tty: /usr/bin /usr
-[32m[ OK ][m tty: /usr/bin /usr/bin
-[32m[ OK ][m tty: -l ./srcs
-[32m[ OK ][m tty: -l ./includes
-[32m[ OK ][m tty: -l ./srcs ./includes
-[32m[ OK ][m tty: srcs/
-[32m[ OK ][m tty: srcs/*
-[32m[ OK ][m tty: ./includes/../srcs/
-[32m[ OK ][m tty: ./includes/../srcs/*
-[32m[ OK ][m tty: -l srcs/
-[32m[ OK ][m tty: -l srcs/*
-[32m[ OK ][m tty: -l ./includes/../srcs/
-[32m[ OK ][m tty: -l ./includes/../srcs/*
-[32m[ OK ][m tty: -l ./includes/../srcs/*
-[32m[ OK ][m tty: Makefile
-[32m[ OK ][m tty: Makefile src/
-[32m[ OK ][m tty: libft libft
-[32m[ OK ][m tty: -l libft libft
-[32m[ OK ][m tty: -R libft libft
-[32m[ OK ][m tty: -lR libft libft
-[32m[ OK ][m tty: -R
-[32m[ OK ][m tty: .
-[32m[ OK ][m tty: -R .
-[32m[ OK ][m tty: -G
-[32m[ OK ][m tty: -G srcs
-[32m[ OK ][m tty: -G includes
-[32m[ OK ][m tty: -G minimini
-[32m[ OK ][m tty: -G /usr
-[32m[ OK ][m tty: -G /usr/bin
-[32m[ OK ][m tty: -l /usr/bin
-[32m[ OK ][m tty: -lG pocket
-[32m[ OK ][m tty: -lG /usr/bin
-[32m[ OK ][m tty:  /dev/
-[32m[ OK ][m tty: -G /dev/
---- ./test_real.out.txt	2023-04-07 13:01:37.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 13:01:37.000000000 +0900
-@@ -1,4 +1,4 @@
--total 1416
-+total 1392
- -rw-r--r--   1 corvvs  staff       6  3 28 21:30  
- -rw-r--r--   1 corvvs  staff       3  3 28 21:09 !
- -rw-r--r--   1 corvvs  staff       8  3 28 21:02 "'
-@@ -67,7 +67,7 @@
- lrwxr-xr-x   1 corvvs  staff       5  3 27 02:21 link3 -> link2
- -rw-r--r--   1 corvvs  staff   13416  4  2 17:56 linux.txt
- lrwxr-xr-x   1 corvvs  staff       7  4  3 11:35 ls -> ./ft_ls
--lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> /bin/ls
-+lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> ./ft_ls
- lrwxr-xr-x   1 corvvs  staff       8  3 26 18:06 m -> Makefile
- -rw-r--r--   1 corvvs  staff     198  3 28 15:38 m.c
- -rw-r--r--   1 corvvs  staff    2221  4  2 17:56 mac.txt
-@@ -90,9 +90,9 @@
- -rw-r--r--   1 corvvs  staff    3866  4  6 19:26 test_linux.sh
- -rw-r--r--   1 corvvs  staff    3714  4  7 12:12 test_mac.sh
- -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_mine.err.txt
---rw-r--r--   1 corvvs  staff   17594  4  7 13:01 test_mine.out.txt
-+-rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_mine.out.txt
- -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_real.err.txt
---rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_real.out.txt
-+-rw-r--r--   1 corvvs  staff    5875  4  7 13:01 test_real.out.txt
- -rw-r--r--   1 corvvs  staff    5679  4  7 11:26 test_result.linux.txt
- -rw-r--r--   1 corvvs  staff    1395  4  7 13:01 test_result.mac.txt
- lrwxr-xr-x   1 corvvs  staff       5  3 27 02:17 to_dummy -> dummy
-[31m[FAIL] tty: -l@[m
---- ./test_real.out.txt	2023-04-07 13:01:37.000000000 +0900
-+++ ./test_mine.out.txt	2023-04-07 13:01:37.000000000 +0900
-@@ -73,7 +73,7 @@
- lrwxr-xr-x   1 corvvs  staff       5  3 27 02:21 link3 -> link2
- -rw-r--r--   1 corvvs  staff   13416  4  2 17:56 linux.txt
- lrwxr-xr-x   1 corvvs  staff       7  4  3 11:35 ls -> ./ft_ls
--lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> /bin/ls
-+lrwxr-xr-x   1 corvvs  staff       7  4  7 13:01 lsls -> ./ft_ls
- lrwxr-xr-x   1 corvvs  staff       8  3 26 18:06 m -> Makefile
- -rw-r--r--   1 corvvs  staff     198  3 28 15:38 m.c
- -rw-r--r--   1 corvvs  staff    2221  4  2 17:56 mac.txt
-@@ -96,9 +96,9 @@
- -rw-r--r--   1 corvvs  staff    3866  4  6 19:26 test_linux.sh
- -rw-r--r--   1 corvvs  staff    3714  4  7 12:12 test_mac.sh
- -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_mine.err.txt
---rw-r--r--   1 corvvs  staff    5875  4  7 13:01 test_mine.out.txt
-+-rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_mine.out.txt
- -rw-r--r--   1 corvvs  staff       0  4  7 12:51 test_real.err.txt
---rw-r--r--   1 corvvs  staff       0  4  7 13:01 test_real.out.txt
-+-rw-r--r--   1 corvvs  staff    6555  4  7 13:01 test_real.out.txt
- -rw-r--r--   1 corvvs  staff    5679  4  7 11:26 test_result.linux.txt
- -rw-r--r--   1 corvvs  staff    3037  4  7 13:01 test_result.mac.txt
- lrwxr-xr-x   1 corvvs  staff       5  3 27 02:17 to_dummy -> dummy
-[31m[FAIL] tty: -l@e[m
-[32m[ OK ][m tty: xxx x
-[32m[ OK ][m tty: 
-[32m[ OK ][m tty: -R
-[32m[ OK ][m tty: -l ./srcs
-[32m[ OK ][m tty: -l ./includes
-[32m[ OK ][m tty: -lf ccc aaa bbb
-[32m[ OK ][m tty: -l ccc aaa bbb
-[32m[ OK ][m tty: test_field/link_dir_1
-[32m[ OK ][m tty: -l test_field/link_dir_1
-[32m[ OK ][m tty: test_field3
-[32m[ OK ][m tty: -l test_field3
-[32m[ OK ][m tty: -R test_field3
-[32m[ OK ][m tty: -lR test_field3
-[32m[ OK ][m tty: test_field3/*
-[32m[ OK ][m tty: -l test_field3/*
-[32m[ OK ][m tty: -R test_field3/*
-[32m[ OK ][m tty: -lR test_field3/*
-[32m[ OK ][m tty: -g srcs includes
-[32m[ OK ][m tty: -gl srcs includes
-[32m[ OK ][m tty: -d
-[32m[ OK ][m tty: -dR
-[32m[ OK ][m tty: -d ..
-[32m[ OK ][m tty: -dR ..
-[32m[ OK ][m tty: -d test_field*
-[32m[ OK ][m tty: -Rd test_field*
-[32m[ OK ][m tty: -lRd test_field*
-[32m[ OK ][m tty: -a ..
-[32m[ OK ][m tty: -a .
-[32m[ OK ][m tty: -a
-[32m[ OK ][m tty: -aR pocket
-[32m[ OK ][m tty: -aR pocket/dir
-[32m[ OK ][m tty: -aR pocket/dir/.
-[32m[ OK ][m tty: -aR pocket/dir/..
-[32m[ OK ][m tty: -l@ test_field3
-[32m[ OK ][m file: 
-[32m[ OK ][m file: -R
-[32m[ OK ][m file: -l ./srcs
-[32m[ OK ][m file: -l ./includes
-[32m[ OK ][m file: -lf ccc aaa bbb
-[32m[ OK ][m file: -l ccc aaa bbb
-[32m[ OK ][m file: test_field/link_dir_1
-[32m[ OK ][m file: -l test_field/link_dir_1
-[32m[ OK ][m file: test_field3
-[32m[ OK ][m file: -l test_field3
-[32m[ OK ][m file: -R test_field3
-[32m[ OK ][m file: -lR test_field3
-[32m[ OK ][m file: test_field3/*
-[32m[ OK ][m file: -l test_field3/*
-[32m[ OK ][m file: -R test_field3/*
-[32m[ OK ][m file: -lR test_field3/*
-[32m[ OK ][m file: -g srcs includes
-[32m[ OK ][m file: -gl srcs includes
+[32m[ OK ][m tty: test_field
+[32m[ OK ][m tty: -d test_field
+[32m[ OK ][m tty: -l test_field
+[32m[ OK ][m tty: -R test_field
+[32m[ OK ][m tty: -a test_field
+[32m[ OK ][m tty: -lR test_field
+[32m[ OK ][m tty: -laR test_field
+[32m[ OK ][m tty: -laR --col test_field
+[32m[ OK ][m tty: -laRu test_field
+[32m[ OK ][m tty: -laRr test_field
+[32m[ OK ][m tty: -laRt test_field
+[32m[ OK ][m tty: -laRf test_field
+[32m[ OK ][m file: test_field
+[32m[ OK ][m file: -d test_field
+[32m[ OK ][m file: -l test_field
+[32m[ OK ][m file: -R test_field
+[32m[ OK ][m file: -a test_field
+[32m[ OK ][m file: -lR test_field
+[32m[ OK ][m file: -laR test_field
+[32m[ OK ][m file: -laR --col test_field
+[32m[ OK ][m file: -laRu test_field
+[32m[ OK ][m file: -laRr test_field
+[32m[ OK ][m file: -laRt test_field
+[32m[ OK ][m file: -laRf test_field

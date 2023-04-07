@@ -144,8 +144,8 @@ static size_t	strquotedlen(const char* s) {
 static bool	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
-	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
-	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|", c);
+	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^ | ~
+	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|~", c);
 }
 #endif
 
