@@ -129,8 +129,8 @@ run_tty "-l ./includes"
 run_tty "-lf ccc aaa bbb"
 run_tty "-l ccc aaa bbb"
 
-run_tty "test_field/link_dir_1"
-run_tty "-l test_field/link_dir_1"
+run_tty "test_field1/link_dir_1"
+run_tty "-l test_field1/link_dir_1"
 
 run_tty "test_field3"
 run_tty "-l test_field3"
@@ -167,8 +167,8 @@ run_file "-l ./includes"
 run_file "-lf ccc aaa bbb"
 run_file "-l ccc aaa bbb"
 
-run_file "test_field/link_dir_1"
-run_file "-l test_field/link_dir_1"
+run_file "test_field1/link_dir_1"
+run_file "-l test_field1/link_dir_1"
 
 run_file "test_field3"
 run_file "-l test_field3"
