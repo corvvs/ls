@@ -30,7 +30,7 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
 				}
 #endif
-		print_error(m, "reading directory", dir_path);
+		print_error(m, "reading directory", dir_path, batch->is_root ? 2 : 1);
 		return;
 	}
 	struct dirent	*entry;
@@ -47,9 +47,9 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 				if (batch->opt->long_format) {
 					yoyo_dprintf(STDOUT_FILENO, "total 0\n");
 				}
-				print_error(m, "reading directory", dir_path);
+				print_error(m, "reading directory", dir_path, 1);
 #else
-				print_error(m, "reading directory", dir_path);
+				print_error(m, "reading directory", dir_path, batch->is_root ? 2 : 1);
 				// if (batch->opt->long_format) {
 				// 	yoyo_dprintf(STDOUT_FILENO, "total 0b\n");
 				// }

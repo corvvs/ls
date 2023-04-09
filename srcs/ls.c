@@ -281,7 +281,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 		t_file_item*	item = &items[i];
 
 		if (!set_item(m, batch, path, item, true)) {
-			print_error(m, "cannot access", path);
+			print_error(m, "cannot access", path, batch->is_root ? 2 : 1);
 			continue;
 		}
 		pointers[n_ok] = item;

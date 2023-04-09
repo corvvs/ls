@@ -115,12 +115,14 @@ void	print_spaces(uint64_t n) {
 	}
 }
 
-void	print_error(t_master* m, const char* operation, const char* path) {
+void	print_error(t_master* m, const char* operation, const char* path, int status) {
 	(void)operation;
 #ifdef __MACH__
+	(void)status;
 	yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, path, strerror(errno));
+	m->exit_status = 1;
 #else
 	yoyo_dprintf(STDERR_FILENO, "%s: %s '%s': %s\n", m->exec_name, operation, path, strerror(errno));
+	m->exit_status = MAX(m->exit_status, status);
 #endif
-	m->exit_status = 1;
 }
