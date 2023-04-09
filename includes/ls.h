@@ -56,7 +56,7 @@ void	print_column_format(t_master* m, t_file_batch* batch, unsigned int term_wid
 int		print_filename_body(const char*	name, t_quote_type qt);
 int		print_filename(const t_file_batch* batch, const t_file_item* item);
 void	print_spaces(uint64_t n);
-void	print_error(t_master* m, const char* operation, const char* path);
+void	print_error(t_master* m, const char* operation, const char* path, int status);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
