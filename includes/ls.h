@@ -33,7 +33,7 @@ bool			is_dot_dir(const t_file_item* item);
 t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name);
 
 // option.c
-bool	parse_arguments(t_file_batch* batch, int argc, char **argv);
+bool	parse_arguments(t_master* m, t_file_batch* batch, int argc, char **argv);
 
 // out_files.c
 void	output_files(t_master* m, t_file_batch* batch, size_t len, t_file_item** items);
@@ -57,6 +57,8 @@ int		print_filename_body(const char*	name, t_quote_type qt);
 int		print_filename(const t_file_batch* batch, const t_file_item* item);
 void	print_spaces(uint64_t n);
 void	print_error(t_master* m, const char* operation, const char* path, int status);
+void	print_short_option_error(t_master* m, char c);
+void	print_long_option_error(t_master* m, const char* option);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
@@ -87,7 +89,7 @@ void	print_xattr_lines(t_master* m, const t_long_format_measure* measure, const 
 ssize_t	get_xattr_len(const char* path);
 
 // acl.c
-void		print_acl_lines(t_master* m, const t_file_item* item);
+void	print_acl_lines(t_master* m, const t_file_item* item);
 
 // debug.c
 void	print_ls(const t_file_batch* batch);

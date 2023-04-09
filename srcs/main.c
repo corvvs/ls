@@ -35,16 +35,15 @@ int main(int argc, char **argv) {
 		.depth = 0,
 		.opt = &option,
 	};
-	if (!parse_arguments(&root, argc, argv)) {
-		yoyo_dprintf(STDERR_FILENO, "error!!\n");
-		return 1;
-	}
 	t_master	m = (t_master){
 		.exec_name = get_exec_name(argv),
 		.root = &root,
 		.opt = &option,
 		.cache = {},
 	};
+	if (!parse_arguments(&m, &root, argc, argv)) {
+		return (m.exit_status);
+	}
 	m.cache.current_unixtime_s = time(NULL);
 	// [lsのメイン処理開始]
 	list_files(&m, &root);
