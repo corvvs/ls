@@ -96,5 +96,9 @@
 [32m[ OK ][m file: -l test_field3/*
 [32m[ OK ][m file: -R test_field3/*
 [32m[ OK ][m file: -lR test_field3/*
+[32m[ OK ][m file: --color
+[32m[ OK ][m file: --color=auto
+[32m[ OK ][m file: --color=always
+[32m[ OK ][m file: --color=none
 [32m[ OK ][m file: -g srcs includes
 [32m[ OK ][m file: -gl srcs includes

@@ -47,17 +47,25 @@ static bool	set_short_option(t_global_option* option, char c) {
 }
 
 static bool	set_long_option(t_global_option* option, char* str) {
+	// --color のみサポートする
 	(void)option;
 	char*	key_end = str + yo_strlen_to(str, '=');
 	char*	value = *key_end ? key_end + 1 : NULL;
 	*key_end = 0;
 	if (yo_starts_with("color", str) != NULL) {
-		if (value == NULL || ft_strcmp(value, "auto") == 0) {
-			option->color = YO_COLOR_AUTO;
-		} else if (ft_strcmp(value, "none") == 0) {
-			option->color = YO_COLOR_NONE;
-		} else if (ft_strcmp(value, "always") == 0) {
+		if (value == NULL || ft_strcmp(value, "always") == 0) {
+			// always
 			option->color = YO_COLOR_ALWAYS;
+		} else if (ft_strcmp(value, "none") == 0) {
+			// none
+			option->color = YO_COLOR_NONE;
+		} else if (ft_strcmp(value, "auto") == 0) {
+			// auto
+			if (option->tty) {
+				option->color = YO_COLOR_AUTO;
+			} else {
+				option->color = YO_COLOR_NONE;
+			}
 		} else {
 			return false;
 		}
