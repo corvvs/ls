@@ -170,6 +170,7 @@ run_tty "-aR pocket/dir/."
 run_tty "-aR pocket/dir/.."
 
 run_tty "-l@ test_field3"
+run_tty "-lG /Applications"
 
 run_file ""
 run_file "-R"
@@ -220,3 +221,6 @@ run_file "-laRu test_field"
 run_file "-laRr test_field"
 run_file "-laRt test_field"
 run_file "-laRf test_field"
+
+run_tty "-l /Applications"
+run_tty "-lG /Applications"

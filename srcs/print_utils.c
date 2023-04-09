@@ -41,19 +41,25 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		color = YO_COLOR_REGULAR;
 		suffix = "";
 	} else if (item->actual_file_type == YO_FT_LINK) {
+		// 正常なシンボリックリンク
 		color = YO_COLOR_GOODLINK;
 		colored = true;
 	} else if (item->actual_file_type == YO_FT_BAD_LINK) {
+		// 不正なシンボリックリンク
 		color = YO_COLOR_BADLINK;
 		colored = true;
 	} else if (item->nominal_file_type == YO_FT_CHAR_DEVICE) {
+		// キャラクタデバイス
 		color = YO_COLOR_CHAR_DEVICE;
 		colored = true;
 	} else if (item->nominal_file_type == YO_FT_BLOCK_DEVICE) {
+		// ブロックデバイス
 		color = YO_COLOR_BLOCK_DEVICE;
 		colored = true;
 	} else if (item->nominal_file_type == YO_FT_DIR) {
+		// ディレクトリ
 		if (item->st.st_mode & S_IWOTH) {
+			// other が書き込み可能なディレクトリ
 			// IS DIR and OTHER WRITABLE and STICKY
 			if (item->st.st_mode & S_ISVTX) {
 				color = YO_COLOR_DIR_WRITABLE_STICKY;
@@ -65,12 +71,19 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		}
 		colored = true;
 	} else if (item->st.st_mode & S_ISUID) {
+		// 実行可能な uid が制限されている
 		color = YO_COLOR_UID;
 		colored = true;
 	} else if (item->st.st_mode & S_ISGID) {
+		// 実行可能な gid が制限されている
 		color = YO_COLOR_GID;
 		colored = true;
 	} else if (item->st.st_mode & S_IXUSR) {
+		// オーナーが実行可能
+		color = YO_COLOR_EXE;
+		colored = true;
+	} else if (item->st.st_mode & S_IXGRP) {
+		// グループが実行可能
 		color = YO_COLOR_EXE;
 		colored = true;
 	} else {

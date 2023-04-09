@@ -21,7 +21,18 @@
 [32m[ OK ][m tty: -l srcs/*
 [32m[ OK ][m tty: -l ./includes/../srcs/
 [32m[ OK ][m tty: -l ./includes/../srcs/*
-[32m[ OK ][m tty: -l ./includes/../srcs/*
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.5WO74rsd	2023-04-09 18:23:54.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.FZGOIdmP	2023-04-09 18:23:54.000000000 +0900
+@@ -17,7 +17,7 @@
+ -rw-r--r--  1 corvvs  staff   3533  4  9 18:14 ./includes/../srcs/print_utils.c
+ -rw-r--r--  1 corvvs  staff   6873  4  8 01:27 ./includes/../srcs/printf.c
+ -rw-r--r--  1 corvvs  staff   2076  4  7 14:38 ./includes/../srcs/time.c
+--rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
++-rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
+ 
+ ./includes/../srcs/b:
+ total 0
+[31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft
@@ -42,6 +53,9 @@
 [32m[ OK ][m tty: -lG /usr/bin
 [32m[ OK ][m tty:  /dev/
 [32m[ OK ][m tty: -G /dev/
+[32m[ OK ][m tty: /
+[32m[ OK ][m tty: -l /
+[32m[ OK ][m tty: -lG /
 [32m[ OK ][m tty: -l@
 [32m[ OK ][m tty: -l@e
 [32m[ OK ][m tty: xxx x
@@ -78,6 +92,7 @@
 [32m[ OK ][m tty: -aR pocket/dir/.
 [32m[ OK ][m tty: -aR pocket/dir/..
 [32m[ OK ][m tty: -l@ test_field3
+[32m[ OK ][m tty: -lG /Applications
 [32m[ OK ][m file: 
 [32m[ OK ][m file: -R
 [32m[ OK ][m file: -l ./srcs
@@ -120,3 +135,5 @@
 [32m[ OK ][m file: -laRr test_field
 [32m[ OK ][m file: -laRt test_field
 [32m[ OK ][m file: -laRf test_field
+[32m[ OK ][m tty: -l /Applications
+[32m[ OK ][m tty: -lG /Applications
