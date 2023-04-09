@@ -19,20 +19,21 @@ uint64_t	number_width(uint64_t i) {
 	return n;
 }
 
-// "Total:" 用のブロックサイズの計算
+// "Total" 用のブロックサイズの計算
 static size_t	subtotal_blocks(const t_file_item* item) {
 #ifdef __MACH__
-	if (item->nominal_file_type == YO_FT_DIR) {
-		return 0;
-	}
-	if (item->nominal_file_type == YO_FT_LINK) {
-		return 0;
-	}
-	// 各ファイルのブロック数を8で割った値を切り上げたものの合計
-	if (item->st.st_blocks == 0) {
-		return 0;
-	}
-	return CEIL_BY(item->st.st_blocks, 8);
+	// if (item->nominal_file_type == YO_FT_DIR) {
+	// 	return 0;
+	// }
+	// if (item->nominal_file_type == YO_FT_LINK) {
+	// 	return 0;
+	// }
+	// // 各ファイルのブロック数を8で割った値を切り上げたものの合計
+	// if (item->st.st_blocks == 0) {
+	// 	return 0;
+	// }
+	// return CEIL_BY(item->st.st_blocks, 8);
+	return item->st.st_blocks;
 #else
 	// すべてのファイルに割り当てられたブロック数の合計
 	const size_t bytes_by_blocks = item->st.st_blocks * 512;
@@ -40,20 +41,8 @@ static size_t	subtotal_blocks(const t_file_item* item) {
 #endif
 }
 
-// // ファイル別表示用のブロックサイズの計算
-// static size_t	individual_blocks(const t_file_item* item) {
-// #ifdef __MACH__
-// 	// 512バイト単位でファイルサイズを切り上げた値
-// 	return CEIL_BY(item->st.st_size, 512) / 512;
-// #else
-// 	// ファイルが占めるディスク上の領域を、1KB (1024バイト) ごとにまとめたブロック数
-// 	return CEIL_BY(item->st.st_size, BLOCKSIZE_FOR_LINUX_LS) / BLOCKSIZE_FOR_LINUX_LS;
-// #endif
-// }
-
-// "Total: " 部分の出力
+// "Total " 部分の出力
 static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** items) {
-	// DEBUGOUT("len = %zu", len);
 	if (batch->is_root) {
 		return;
 	}
@@ -61,7 +50,6 @@ static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** it
 	for (size_t i = 0; i < len; ++i) {
 		const size_t	blocks = subtotal_blocks(items[i]);
 		total_blocks += blocks;
-		// DEBUGOUT("%zu -> total %zu %s", blocks, total_blocks, items[i]->name);
 	}
 	yoyo_dprintf(STDOUT_FILENO, "total %zu\n", total_blocks);
 }
@@ -109,9 +97,8 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IRGRP) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWGRP) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_IXGRP) ? 'x' : '-';
 		perm[2] = (item->st.st_mode & S_ISGID)
-			? 's' : (item->st.st_mode & S_IXUSR)
+			? 's' : (item->st.st_mode & S_IXGRP)
 			? 'x' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}

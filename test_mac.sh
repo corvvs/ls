@@ -25,28 +25,33 @@ function print_result() {
 
 function run_tty() {
 	P=$1
+	echo "[tty: $P]" > /dev/stderr
+	rm ${EXEC}
 	cp /bin/ls ${EXEC}
-	script -q ${REAL_OUT_FILE} ${EXEC} $P > /dev/null
+	time script -t 0 -q ${REAL_OUT_FILE} ${EXEC} $P > /dev/null
+	rm ${EXEC}
 	cp ./ft_ls ${EXEC}
-	script -q ${MINE_OUT_FILE} ${EXEC} $P > /dev/null
+	time script -t 0 -q ${MINE_OUT_FILE} ${EXEC} $P > /dev/null
 	compare_tty
 	print_result "tty: $P"
 }
 
 function run_file() {
 	P=$1
+	echo "[file: $P]" > /dev/stderr
+	rm ${EXEC}
 	cp /bin/ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${REAL_OUT_FILE} 2> ${REAL_ERR_FILE}
+	time bash -c "(${EXEC} $P; echo $?) > ${REAL_OUT_FILE} 2> ${REAL_ERR_FILE}"
+	rm ${EXEC}
 	cp ./ft_ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${MINE_OUT_FILE} 2> ${MINE_ERR_FILE}
+	time bash -c "(${EXEC} $P; echo $?) > ${MINE_OUT_FILE} 2> ${MINE_ERR_FILE}"
 	compare_file
 	print_result "file: $P"
 }
 
 rm -rf	$RESULTFILE
 
-EXEC=`mktemp`
-chmod a+x ${EXEC}
+EXEC=~/yo_ft_ls
 REAL_OUT_FILE=`mktemp`
 MINE_OUT_FILE=`mktemp`
 REAL_ERR_FILE=`mktemp`
@@ -55,9 +60,12 @@ MINE_ERR_FILE=`mktemp`
 # argv が存在する場合は, それだけでテストする
 if [ $# -eq 1 ]; then
 	run_tty "$1"
+	cp ${REAL_OUT_FILE} "./test_real_out.txt"
+	cp ${MINE_OUT_FILE} "./test_mine_out.txt"
+	cp ${REAL_ERR_FILE} "./test_real_err.txt"
+	cp ${MINE_ERR_FILE} "./test_mine_err.txt"
 	exit 0
 fi
-
 
 run_tty "./"
 run_tty "./srcs"
@@ -114,6 +122,9 @@ run_tty "-lG /usr/bin"
 
 run_tty " /dev/"
 run_tty "-G /dev/"
+run_tty "/"
+run_tty "-l /"
+run_tty "-lG /"
 
 run_tty "-l@"
 run_tty "-l@e"

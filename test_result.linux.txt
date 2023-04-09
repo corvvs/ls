@@ -14,64 +14,64 @@
 [32m[ OK ][m tty: -l ./includes
 [32m[ OK ][m tty: -l ./srcs ./includes
 [32m[ OK ][m tty: srcs/
---- /dev/fd/63	2023-04-07 05:53:27.699897006 +0000
-+++ /dev/fd/62	2023-04-07 05:53:27.699897006 +0000
+--- /dev/fd/63	2023-04-09 08:16:14.370129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.371129001 +0000
 @@ -3,5 +3,5 @@
  
  srcs/b:
- /tmp/tmp.ouauwByeNM: reading directory 'srcs/b': Operation not permitted
+ /tmp/tmp.cSHbVn9GMq: reading directory 'srcs/b': Operation not permitted
 -2
 +1
  
 [31m[FAIL] tty: srcs/*[m
 [32m[ OK ][m tty: ./includes/../srcs/
---- /dev/fd/63	2023-04-07 05:53:29.520897006 +0000
-+++ /dev/fd/62	2023-04-07 05:53:29.520897006 +0000
-@@ -5,5 +5,5 @@
+--- /dev/fd/63	2023-04-09 08:16:14.471129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.471129001 +0000
+@@ -4,5 +4,5 @@
  
  ./includes/../srcs/b:
- /tmp/tmp.ouauwByeNM: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.cSHbVn9GMq: reading directory './includes/../srcs/b': Operation not permitted
 -2
 +1
  
 [31m[FAIL] tty: ./includes/../srcs/*[m
 [32m[ OK ][m tty: -l srcs/
---- /dev/fd/63	2023-04-07 05:53:31.362897007 +0000
-+++ /dev/fd/62	2023-04-07 05:53:31.362897007 +0000
+--- /dev/fd/63	2023-04-09 08:16:14.568129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.568129001 +0000
 @@ -22,5 +22,5 @@
  srcs/b:
- /tmp/tmp.ouauwByeNM: reading directory 'srcs/b': Operation not permitted
+ /tmp/tmp.cSHbVn9GMq: reading directory 'srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l srcs/*[m
 [32m[ OK ][m tty: -l ./includes/../srcs/
---- /dev/fd/63	2023-04-07 05:53:33.203897008 +0000
-+++ /dev/fd/62	2023-04-07 05:53:33.203897008 +0000
+--- /dev/fd/63	2023-04-09 08:16:14.664129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.665129001 +0000
 @@ -22,5 +22,5 @@
  ./includes/../srcs/b:
- /tmp/tmp.ouauwByeNM: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.cSHbVn9GMq: reading directory './includes/../srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
---- /dev/fd/63	2023-04-07 05:53:34.121897009 +0000
-+++ /dev/fd/62	2023-04-07 05:53:34.121897009 +0000
+--- /dev/fd/63	2023-04-09 08:16:14.718129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.718129001 +0000
 @@ -22,5 +22,5 @@
  ./includes/../srcs/b:
- /tmp/tmp.ouauwByeNM: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.cSHbVn9GMq: reading directory './includes/../srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: Makefile
---- /dev/fd/63	2023-04-07 05:53:35.937897009 +0000
-+++ /dev/fd/62	2023-04-07 05:53:35.937897009 +0000
+--- /dev/fd/63	2023-04-09 08:16:14.812129001 +0000
++++ /dev/fd/62	2023-04-09 08:16:14.812129001 +0000
 @@ -1,4 +1,4 @@
- /tmp/tmp.ouauwByeNM: cannot access 'src/': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'src/': No such file or directory
  Makefile
 -2
 +1
@@ -100,10 +100,10 @@
 [32m[ OK ][m tty: /var
 [32m[ OK ][m tty: --col /var
 [32m[ OK ][m tty: -l --col /var
---- /dev/fd/63	2023-04-07 05:53:58.140121006 +0000
-+++ /dev/fd/62	2023-04-07 05:53:58.140121006 +0000
+--- /dev/fd/63	2023-04-09 08:16:21.304129004 +0000
++++ /dev/fd/62	2023-04-09 08:16:21.304129004 +0000
 @@ -1,4 +1,4 @@
- /tmp/tmp.ouauwByeNM: cannot access 'xxx': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'xxx': No such file or directory
  x
 -2
 +1
@@ -113,22 +113,22 @@
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: -l ./srcs
 [32m[ OK ][m tty: -l ./includes
---- /dev/fd/63	2023-04-07 05:54:02.942121008 +0000
-+++ /dev/fd/62	2023-04-07 05:54:02.942121008 +0000
+--- /dev/fd/63	2023-04-09 08:16:21.648129004 +0000
++++ /dev/fd/62	2023-04-09 08:16:21.648129004 +0000
 @@ -1,5 +1,5 @@
- /tmp/tmp.ouauwByeNM: cannot access 'ccc': No such file or directory
- /tmp/tmp.ouauwByeNM: cannot access 'aaa': No such file or directory
- /tmp/tmp.ouauwByeNM: cannot access 'bbb': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'ccc': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'aaa': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'bbb': No such file or directory
 -2
 +1
  
 [31m[FAIL] tty: -lf ccc aaa bbb[m
---- /dev/fd/63	2023-04-07 05:54:03.884121008 +0000
-+++ /dev/fd/62	2023-04-07 05:54:03.884121008 +0000
+--- /dev/fd/63	2023-04-09 08:16:21.703129004 +0000
++++ /dev/fd/62	2023-04-09 08:16:21.703129004 +0000
 @@ -1,5 +1,5 @@
- /tmp/tmp.ouauwByeNM: cannot access 'ccc': No such file or directory
- /tmp/tmp.ouauwByeNM: cannot access 'aaa': No such file or directory
- /tmp/tmp.ouauwByeNM: cannot access 'bbb': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'ccc': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'aaa': No such file or directory
+ /tmp/tmp.cSHbVn9GMq: cannot access 'bbb': No such file or directory
 -2
 +1
  
@@ -163,14 +163,14 @@
 [32m[ OK ][m file: -R
 [32m[ OK ][m file: -l ./srcs
 [32m[ OK ][m file: -l ./includes
---- /tmp/tmp.9aHjV3xG9x	2023-04-07 05:54:31.565932007 +0000
-+++ /tmp/tmp.UFiKfSYgSt	2023-04-07 05:54:32.439932008 +0000
+--- /tmp/tmp.XP1WrKPnkV	2023-04-09 08:16:23.095129005 +0000
++++ /tmp/tmp.SqmF6cb3DZ	2023-04-09 08:16:23.101129005 +0000
 @@ -1 +1 @@
 -2
 +1
 [31m[FAIL] file: -lf ccc aaa bbb[m
---- /tmp/tmp.9aHjV3xG9x	2023-04-07 05:54:32.457932008 +0000
-+++ /tmp/tmp.UFiKfSYgSt	2023-04-07 05:54:33.327932008 +0000
+--- /tmp/tmp.XP1WrKPnkV	2023-04-09 08:16:23.116129005 +0000
++++ /tmp/tmp.SqmF6cb3DZ	2023-04-09 08:16:23.121129005 +0000
 @@ -1 +1 @@
 -2
 +1

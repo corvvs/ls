@@ -26,16 +26,20 @@ function print_result() {
 
 function run_tty() {
 	P=$1
+	echo "[tty: $P]" > /dev/stderr
+	rm ${EXEC}
 	cp /bin/ls ${EXEC}
-	script -q -c "${EXEC} $P; echo \$?" ${REAL_OUT_FILE} > /dev/null
+	time script -q -c "${EXEC} $P; echo \$?" ${REAL_OUT_FILE} > /dev/null
+	rm ${EXEC}
 	cp ./ft_ls ${EXEC}
-	script -q -c "${EXEC} $P; echo \$?" ${MINE_OUT_FILE} > /dev/null
+	time script -q -c "${EXEC} $P; echo \$?" ${MINE_OUT_FILE} > /dev/null
 	compare_tty
 	print_result "tty: $P"
 }
 
 function run_file() {
 	P=$1
+	echo "[file: $P]" > /dev/stderr
 	cp /bin/ls ${EXEC}
 	(${EXEC} $P; echo $?) > ${REAL_OUT_FILE} 2> ${REAL_ERR_FILE}
 	cp ./ft_ls ${EXEC}
@@ -56,6 +60,10 @@ MINE_ERR_FILE=`mktemp`
 # argv が存在する場合は, それだけでテストする
 if [ $# -eq 1 ]; then
 	run_tty "$1"
+	cp ${REAL_OUT_FILE} "./test_real_out.txt"
+	cp ${MINE_OUT_FILE} "./test_mine_out.txt"
+	cp ${REAL_ERR_FILE} "./test_real_err.txt"
+	cp ${MINE_ERR_FILE} "./test_mine_err.txt"
 	exit 0
 fi
 

@@ -19,5 +19,6 @@ exotic_names:
 
 # 大量のファイルを含む平坦なディレクトリ
 massive_plain:
+	mkdir -p $@
 	perl make_massive_plain.pl
 

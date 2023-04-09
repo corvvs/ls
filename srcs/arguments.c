@@ -75,12 +75,16 @@ static bool	is_long_option(const char* str) {
 
 #ifdef __MACH__
 
+static int	compare_paths(const char* pa, const char* pb) {
+	return ft_strcmp(pa, pb);
+}
+
 // paths を文字列でバブルソートする
 static void	sort_paths(char** paths, size_t len) {
 	if (len < 1) { return; }
 	for (size_t i = 0; i < len - 1; ++i) {
 		for (size_t j = i + 1; j < len; ++j) {
-			if (ft_strcmp(paths[i], paths[j]) > 0) {
+			if (compare_paths(paths[i], paths[j]) > 0) {
 				char*	tmp = paths[i];
 				paths[i] = paths[j];
 				paths[j] = tmp;
