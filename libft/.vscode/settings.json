@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"yasl_fact": "plaintext",
-		"stdlib.h": "c",
-		"sstream": "c",
-		"libft.h": "c",
-		"unistd.h": "c"
-	}
-}
