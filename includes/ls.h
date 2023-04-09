@@ -67,6 +67,7 @@ struct group*	retrieve_group(t_cache* cache, gid_t gid);
 
 // time.c
 uint64_t	unixtime_us(const t_stat_time* ts);
+uint64_t	unixtime_sort(const t_stat_time* ts);
 uint64_t	unixtime_s(const t_stat_time* ts);
 void		unixtime_to_date_utc(time_t unixtime, struct tm* time_s);
 void 		unixtime_to_date_local(time_t unix_time, struct tm* time_s);

@@ -14,64 +14,64 @@
 [32m[ OK ][m tty: -l ./includes
 [32m[ OK ][m tty: -l ./srcs ./includes
 [32m[ OK ][m tty: srcs/
---- /dev/fd/63	2023-04-07 04:03:40.499597003 +0000
-+++ /dev/fd/62	2023-04-07 04:03:40.499597003 +0000
+--- /dev/fd/63	2023-04-09 09:27:45.536670004 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.536670004 +0000
 @@ -3,5 +3,5 @@
  
  srcs/b:
- ./lsls: reading directory 'srcs/b': Operation not permitted
+ /tmp/tmp.l5EpDVvntt: reading directory 'srcs/b': Operation not permitted
 -2
 +1
  
 [31m[FAIL] tty: srcs/*[m
 [32m[ OK ][m tty: ./includes/../srcs/
---- /dev/fd/63	2023-04-07 04:03:42.475597003 +0000
-+++ /dev/fd/62	2023-04-07 04:03:42.475597003 +0000
-@@ -5,5 +5,5 @@
+--- /dev/fd/63	2023-04-09 09:27:45.627670004 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.627670004 +0000
+@@ -4,5 +4,5 @@
  
  ./includes/../srcs/b:
- ./lsls: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.l5EpDVvntt: reading directory './includes/../srcs/b': Operation not permitted
 -2
 +1
  
 [31m[FAIL] tty: ./includes/../srcs/*[m
 [32m[ OK ][m tty: -l srcs/
---- /dev/fd/63	2023-04-07 04:03:44.482597004 +0000
-+++ /dev/fd/62	2023-04-07 04:03:44.482597004 +0000
+--- /dev/fd/63	2023-04-09 09:27:45.715670004 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.715670004 +0000
 @@ -22,5 +22,5 @@
  srcs/b:
- ./lsls: reading directory 'srcs/b': Operation not permitted
+ /tmp/tmp.l5EpDVvntt: reading directory 'srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l srcs/*[m
 [32m[ OK ][m tty: -l ./includes/../srcs/
---- /dev/fd/63	2023-04-07 04:03:46.455597005 +0000
-+++ /dev/fd/62	2023-04-07 04:03:46.456597005 +0000
+--- /dev/fd/63	2023-04-09 09:27:45.803670004 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.803670004 +0000
 @@ -22,5 +22,5 @@
  ./includes/../srcs/b:
- ./lsls: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.l5EpDVvntt: reading directory './includes/../srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
---- /dev/fd/63	2023-04-07 04:03:47.448597006 +0000
-+++ /dev/fd/62	2023-04-07 04:03:47.449597006 +0000
+--- /dev/fd/63	2023-04-09 09:27:45.849670004 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.850670004 +0000
 @@ -22,5 +22,5 @@
  ./includes/../srcs/b:
- ./lsls: reading directory './includes/../srcs/b': Operation not permitted
+ /tmp/tmp.l5EpDVvntt: reading directory './includes/../srcs/b': Operation not permitted
  total 0
 -2
 +1
  
 [31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: Makefile
---- /dev/fd/63	2023-04-07 04:03:49.412597007 +0000
-+++ /dev/fd/62	2023-04-07 04:03:49.412597007 +0000
+--- /dev/fd/63	2023-04-09 09:27:45.933670005 +0000
++++ /dev/fd/62	2023-04-09 09:27:45.933670005 +0000
 @@ -1,4 +1,4 @@
- ./lsls: cannot access 'src/': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'src/': No such file or directory
  Makefile
 -2
 +1
@@ -99,27 +99,11 @@
 [32m[ OK ][m tty: -l --col /dev
 [32m[ OK ][m tty: /var
 [32m[ OK ][m tty: --col /var
---- /dev/fd/63	2023-04-07 04:04:12.590027004 +0000
-+++ /dev/fd/62	2023-04-07 04:04:12.590027004 +0000
-@@ -1,10 +1,10 @@
- total 48
- drwxr-xr-x 2 root root  4096 Apr 18  2022 [0m[01;34mbackups[0m
--drwxr-xr-x 1 root root  4096 Mar  8 02:12 [01;34mcache[0m
--drwxr-xr-x 1 root root  4096 Mar 26 12:11 [01;34mlib[0m
-+drwxr-xr-x@1 root root  4096 Mar  8 02:12 [01;34mcache[0m
-+drwxr-xr-x@1 root root  4096 Mar 26 12:11 [01;34mlib[0m
- drwxrwsr-x 2 root staff 4096 Apr 18  2022 [01;34mlocal[0m
- lrwxrwxrwx 1 root root     9 Mar  8 02:08 [01;36mlock[0m -> [30;42m/run/lock[0m
--drwxr-xr-x 1 root root  4096 Mar  8 02:08 [01;34mlog[0m
-+drwxr-xr-x@1 root root  4096 Mar  8 02:08 [01;34mlog[0m
- drwxrwsr-x 2 root mail  4096 Mar  8 02:08 [01;34mmail[0m
- drwxr-xr-x 2 root root  4096 Mar  8 02:08 [01;34mopt[0m
- lrwxrwxrwx 1 root root     4 Mar  8 02:08 [01;36mrun[0m -> [01;34m/run[0m
-[31m[FAIL] tty: -l --col /var[m
---- /dev/fd/63	2023-04-07 04:04:13.542027004 +0000
-+++ /dev/fd/62	2023-04-07 04:04:13.543027004 +0000
+[32m[ OK ][m tty: -l --col /var
+--- /dev/fd/63	2023-04-09 09:28:24.773575009 +0000
++++ /dev/fd/62	2023-04-09 09:28:24.773575009 +0000
 @@ -1,4 +1,4 @@
- ./lsls: cannot access 'xxx': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'xxx': No such file or directory
  x
 -2
 +1
@@ -129,28 +113,28 @@
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: -l ./srcs
 [32m[ OK ][m tty: -l ./includes
---- /dev/fd/63	2023-04-07 04:04:18.424027006 +0000
-+++ /dev/fd/62	2023-04-07 04:04:18.424027006 +0000
+--- /dev/fd/63	2023-04-09 09:28:25.369575009 +0000
++++ /dev/fd/62	2023-04-09 09:28:25.369575009 +0000
 @@ -1,5 +1,5 @@
- ./lsls: cannot access 'ccc': No such file or directory
- ./lsls: cannot access 'aaa': No such file or directory
- ./lsls: cannot access 'bbb': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'ccc': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'aaa': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'bbb': No such file or directory
 -2
 +1
  
 [31m[FAIL] tty: -lf ccc aaa bbb[m
---- /dev/fd/63	2023-04-07 04:04:19.373027007 +0000
-+++ /dev/fd/62	2023-04-07 04:04:19.373027007 +0000
+--- /dev/fd/63	2023-04-09 09:28:25.416575009 +0000
++++ /dev/fd/62	2023-04-09 09:28:25.416575009 +0000
 @@ -1,5 +1,5 @@
- ./lsls: cannot access 'ccc': No such file or directory
- ./lsls: cannot access 'aaa': No such file or directory
- ./lsls: cannot access 'bbb': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'ccc': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'aaa': No such file or directory
+ /tmp/tmp.l5EpDVvntt: cannot access 'bbb': No such file or directory
 -2
 +1
  
 [31m[FAIL] tty: -l ccc aaa bbb[m
-[32m[ OK ][m tty: test_field/link_dir_1
-[32m[ OK ][m tty: -l test_field/link_dir_1
+[32m[ OK ][m tty: test_field1/link_dir_1
+[32m[ OK ][m tty: -l test_field1/link_dir_1
 [32m[ OK ][m tty: test_field3
 [32m[ OK ][m tty: -l test_field3
 [32m[ OK ][m tty: -R test_field3
@@ -179,20 +163,20 @@
 [32m[ OK ][m file: -R
 [32m[ OK ][m file: -l ./srcs
 [32m[ OK ][m file: -l ./includes
---- ./test_real.out.txt	2023-04-07 04:04:49.685593206 +0000
-+++ ./test_mine.out.txt	2023-04-07 04:04:50.579996082 +0000
+--- /tmp/tmp.O3zCXifVdt	2023-04-09 09:28:26.895575010 +0000
++++ /tmp/tmp.knCEBtC7ya	2023-04-09 09:28:26.902575010 +0000
 @@ -1 +1 @@
 -2
 +1
 [31m[FAIL] file: -lf ccc aaa bbb[m
---- ./test_real.out.txt	2023-04-07 04:04:50.626268369 +0000
-+++ ./test_mine.out.txt	2023-04-07 04:04:51.521772035 +0000
+--- /tmp/tmp.O3zCXifVdt	2023-04-09 09:28:26.913575010 +0000
++++ /tmp/tmp.knCEBtC7ya	2023-04-09 09:28:26.918575010 +0000
 @@ -1 +1 @@
 -2
 +1
 [31m[FAIL] file: -l ccc aaa bbb[m
-[32m[ OK ][m file: test_field/link_dir_1
-[32m[ OK ][m file: -l test_field/link_dir_1
+[32m[ OK ][m file: test_field1/link_dir_1
+[32m[ OK ][m file: -l test_field1/link_dir_1
 [32m[ OK ][m file: test_field3
 [32m[ OK ][m file: -l test_field3
 [32m[ OK ][m file: -R test_field3

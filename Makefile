@@ -32,6 +32,8 @@ CCOREFLAGS	=	-Wall -Wextra -Werror -O2 -I$(INCDIR) -I$(LIBFT_DIR)
 CFLAGS		=	$(CCOREFLAGS) -D DEBUG -g -fsanitize=address -fsanitize=undefined
 RM			:=	rm -rf
 
+TEST_FIELD	:=	test_field
+
 all:			$(NAME)
 
 bonus:
@@ -87,4 +89,14 @@ t:	$(NAME)
 	cat test_result.linux.txt
 endif
 
+.PHONY:	rt
 rt:	fclean t
+
+.PHONY:	$(TEST_FIELD)
+$(TEST_FIELD):
+	make -C $(TEST_FIELD)
+
+.PHONY:	test_clean
+test_clean:
+	make -C $(TEST_FIELD) clean
+

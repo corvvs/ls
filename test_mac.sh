@@ -1,17 +1,13 @@
 TEST_DIR="./"
 RESULTFILE=$TEST_DIR"result.txt"
-REAL_OUT_FILE="test_real.out.txt"
-MINE_OUT_FILE="test_mine.out.txt"
-REAL_ERR_FILE="test_real.err.txt"
-MINE_ERR_FILE="test_mine.err.txt"
 EXEC="./lsls"
 
 function compare_tty() {
-	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE}
+	diff -u ${REAL_OUT_FILE} ${MINE_OUT_FILE}
 }
 
 function compare_file() {
-	diff -u ${TEST_DIR}${REAL_OUT_FILE} ${TEST_DIR}${MINE_OUT_FILE} && diff -u ${TEST_DIR}${REAL_ERR_FILE} ${TEST_DIR}${MINE_ERR_FILE}
+	diff -u ${REAL_OUT_FILE} ${MINE_OUT_FILE} && diff -u ${REAL_ERR_FILE} ${MINE_ERR_FILE}
 }
 
 function print_result() {
@@ -29,33 +25,45 @@ function print_result() {
 
 function run_tty() {
 	P=$1
-	rm -rf ${EXEC}
-	ln -s /bin/ls ${EXEC}
-	script -q ${TEST_DIR}${REAL_OUT_FILE} ${EXEC} $P > /dev/null
-	rm -rf ${EXEC}
-	ln -s ./ft_ls ${EXEC}
-	script -q ${TEST_DIR}${MINE_OUT_FILE} ${EXEC} $P > /dev/null
+	echo "[tty: $P]" > /dev/stderr
+	rm ${EXEC}
+	cp /bin/ls ${EXEC}
+	time script -t 0 -q ${REAL_OUT_FILE} ${EXEC} $P > /dev/null
+	rm ${EXEC}
+	cp ./ft_ls ${EXEC}
+	time script -t 0 -q ${MINE_OUT_FILE} ${EXEC} $P > /dev/null
 	compare_tty
 	print_result "tty: $P"
 }
 
 function run_file() {
 	P=$1
-	rm -rf ${EXEC}
-	ln -s /bin/ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${TEST_DIR}${REAL_OUT_FILE} 2> ${TEST_DIR}${REAL_ERR_FILE}
-	rm -rf ${EXEC}
-	ln -s ./ft_ls ${EXEC}
-	(${EXEC} $P; echo $?) > ${TEST_DIR}${MINE_OUT_FILE} 2> ${TEST_DIR}${MINE_ERR_FILE}
+	echo "[file: $P]" > /dev/stderr
+	rm ${EXEC}
+	cp /bin/ls ${EXEC}
+	time bash -c "(${EXEC} $P; echo $?) > ${REAL_OUT_FILE} 2> ${REAL_ERR_FILE}"
+	rm ${EXEC}
+	cp ./ft_ls ${EXEC}
+	time bash -c "(${EXEC} $P; echo $?) > ${MINE_OUT_FILE} 2> ${MINE_ERR_FILE}"
 	compare_file
 	print_result "file: $P"
 }
 
 rm -rf	$RESULTFILE
 
+EXEC=~/yo_ft_ls
+REAL_OUT_FILE=`mktemp`
+MINE_OUT_FILE=`mktemp`
+REAL_ERR_FILE=`mktemp`
+MINE_ERR_FILE=`mktemp`
+
 # argv が存在する場合は, それだけでテストする
 if [ $# -eq 1 ]; then
 	run_tty "$1"
+	cp ${REAL_OUT_FILE} "./test_real_out.txt"
+	cp ${MINE_OUT_FILE} "./test_mine_out.txt"
+	cp ${REAL_ERR_FILE} "./test_real_err.txt"
+	cp ${MINE_ERR_FILE} "./test_mine_err.txt"
 	exit 0
 fi
 
@@ -114,6 +122,9 @@ run_tty "-lG /usr/bin"
 
 run_tty " /dev/"
 run_tty "-G /dev/"
+run_tty "/"
+run_tty "-l /"
+run_tty "-lG /"
 
 run_tty "-l@"
 run_tty "-l@e"
@@ -127,8 +138,8 @@ run_tty "-l ./includes"
 run_tty "-lf ccc aaa bbb"
 run_tty "-l ccc aaa bbb"
 
-run_tty "test_field/link_dir_1"
-run_tty "-l test_field/link_dir_1"
+run_tty "test_field1/link_dir_1"
+run_tty "-l test_field1/link_dir_1"
 
 run_tty "test_field3"
 run_tty "-l test_field3"
@@ -159,6 +170,7 @@ run_tty "-aR pocket/dir/."
 run_tty "-aR pocket/dir/.."
 
 run_tty "-l@ test_field3"
+run_tty "-lG /Applications"
 
 run_file ""
 run_file "-R"
@@ -167,8 +179,8 @@ run_file "-l ./includes"
 run_file "-lf ccc aaa bbb"
 run_file "-l ccc aaa bbb"
 
-run_file "test_field/link_dir_1"
-run_file "-l test_field/link_dir_1"
+run_file "test_field1/link_dir_1"
+run_file "-l test_field1/link_dir_1"
 
 run_file "test_field3"
 run_file "-l test_field3"
@@ -183,3 +195,32 @@ run_file "-g srcs includes"
 run_file "-gl srcs includes"
 
 
+run_tty "test_field"
+run_tty "-d test_field"
+run_tty "-l test_field"
+run_tty "-R test_field"
+run_tty "-a test_field"
+run_tty "-lR test_field"
+run_tty "-laR test_field"
+run_tty "-laR --col test_field"
+run_tty "-laRu test_field"
+run_tty "-laRr test_field"
+run_tty "-laRt test_field"
+run_tty "-laRf test_field"
+
+
+run_file "test_field"
+run_file "-d test_field"
+run_file "-l test_field"
+run_file "-R test_field"
+run_file "-a test_field"
+run_file "-lR test_field"
+run_file "-laR test_field"
+run_file "-laR --col test_field"
+run_file "-laRu test_field"
+run_file "-laRr test_field"
+run_file "-laRt test_field"
+run_file "-laRf test_field"
+
+run_tty "-l /Applications"
+run_tty "-lG /Applications"

@@ -23,61 +23,68 @@ static t_filetype	determine_file_type(struct stat* st) {
 	}
 }
 
-// 時間 ta, tb の値に基づき pa, pb を入れ替える.
-// その後, 比較がこれで十分かどうかを返す.
-static bool	swap_by_time(t_global_option* option, t_file_item** pa, t_stat_time* ta, t_file_item** pb, t_stat_time* tb) {
-	int64_t diff = unixtime_us(ta) - unixtime_us(tb);
-	if ((!option->sort_reverse && diff > 0) || (option->sort_reverse && diff < 0)) {
-		// DEBUGOUT("SWAP BY TIME %s, %llu <-> %s, %llu", (*pa)->name, unixtime_us(ta), (*pb)->name, unixtime_us(tb));
-		swap_item(pa, pb);
+static int	compare_times(const t_stat_time* ta, const t_stat_time* tb) {
+	int64_t diff = unixtime_sort(tb) - unixtime_sort(ta);
+	return diff > 0 ? +1 : diff < 0 ? -1 : 0;
+}
+
+static int	compare_entries(const t_global_option* option, const t_file_item* pa, const t_file_item* pb) {
+	if (option->sort_by_time) {
+		int diff;
+		if (option->time_access) {
+			diff = compare_times(&pa->st.ATIME, &pb->st.ATIME);
+		} else {
+			diff = compare_times(&pa->st.MTIME, &pb->st.MTIME);
+		}
+		// DEBUGOUT("BY TIME: %s - %s: %d", pa->name, pb->name, diff);
+		if (option->sort_reverse) {
+			diff = -diff;
+		}
+		if (diff != 0) {
+			return diff;
+		}
 	}
-	return diff != 0;
+	int diff = ft_strcmp(pa->name, pb->name);
+	if (option->sort_reverse) {
+		diff = -diff;
+	}
+	return diff;
+}
+
+// クイックソート
+static void	quick_sort(const t_global_option* option, size_t len, t_file_item** pointers) {
+	if (len <= 1) {
+		return;
+	}
+	// [ピボットを選ぶ]
+	t_file_item* pivot = pointers[len / 2];
+	// [ピボットより小さいものを左に、大きいものを右に集める]
+	size_t	i = 0;
+	size_t	j = len - 1;
+	while (i <= j) {
+		while (compare_entries(option, pointers[i], pivot) < 0) {
+			++i;
+		}
+		while (compare_entries(option, pointers[j], pivot) > 0) {
+			--j;
+		}
+		if (i <= j) {
+			swap_item(&pointers[i], &pointers[j]);
+			++i;
+			--j;
+		}
+	}
+	// [再帰的にソートする]
+	quick_sort(option, j + 1, pointers);
+	quick_sort(option, len - i, pointers + i);
 }
 
 // ファイルをオプションに応じてソートする
 static void	sort_entries(t_global_option* option, size_t len, t_file_item** pointers) {
-	const bool sort_reverse = option->sort_reverse;
-	for (size_t i = 0; i < len; ++i) {
-		// DEBUGWARN("n = %zu", len - i);
-		bool	swapped = false;
-		for (size_t j = 1; j < len - i; ++j) {
-			t_file_item** pa = &pointers[j - 1];
-			t_file_item** pb = &pointers[j];
-			if (option->sort_in_fs) {
-				continue;
-			}
-			// タイムスタンプ順にソート
-			// (-r が効く)
-			if (option->sort_by_time) {
-				bool over;
-				if (!option->time_access) {
-					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.MTIME), &pointers[j - 1], (&pointers[j - 1]->st.MTIME));
-					if (over) {
-						swapped = true;
-						continue;
-					}
-				} else {
-					over = swap_by_time(option, &pointers[j], (&pointers[j]->st.ATIME), &pointers[j - 1], (&pointers[j - 1]->st.ATIME));
-					if (over) {
-						swapped = true;
-						continue;
-					}
-				}
-			}
-			int diff;
-			diff = ft_strcmp(pointers[j - 1]->name, pointers[j]->name);
-			if ((!sort_reverse && diff > 0) || (sort_reverse && diff < 0)) {
-				swap_item(pa, pb);
-				swapped = true;
-			}
-			if (diff != 0) {
-				continue;
-			}
-		}
-		if (!swapped) {
-			break;
-		}
+	if (option->sort_in_fs) {
+		return;
 	}
+	quick_sort(option, len, pointers);
 }
 
 // item が `.` または `..` かどうか
@@ -144,8 +151,8 @@ static size_t	strquotedlen(const char* s) {
 static bool	should_quote_char(char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
-	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^
-	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|", c);
+	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^ | ~
+	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|~", c);
 }
 #endif
 
@@ -296,6 +303,8 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	// [ファイル情報を(オプションに従って)ソートする]
 	sort_entries(m->opt, n_ok, pointers);
 
+
+	// DEBUGOUT("%u, %zu, %zu", batch->depth, n_ok, n_dirs);
 	// [非ディレクトリ情報を出力]
 	output_files(m, batch, n_ok, pointers);
 
