@@ -47,22 +47,35 @@ static bool	set_short_option(t_global_option* option, char c) {
 }
 
 static bool	set_long_option(t_global_option* option, char* str) {
+	// --color のみサポートする
 	(void)option;
 	char*	key_end = str + yo_strlen_to(str, '=');
 	char*	value = *key_end ? key_end + 1 : NULL;
 	*key_end = 0;
 	if (yo_starts_with("color", str) != NULL) {
-		if (value == NULL || ft_strcmp(value, "auto") == 0) {
-			option->color = YO_COLOR_AUTO;
-		} else if (ft_strcmp(value, "none") == 0) {
-			option->color = YO_COLOR_NONE;
-		} else if (ft_strcmp(value, "always") == 0) {
+		if (value == NULL || ft_strcmp(value, "always") == 0) {
+			// always
 			option->color = YO_COLOR_ALWAYS;
+		} else if (ft_strcmp(value, "none") == 0) {
+			// none
+			option->color = YO_COLOR_NONE;
+		} else if (ft_strcmp(value, "auto") == 0) {
+			// auto
+			if (option->tty) {
+				option->color = YO_COLOR_AUTO;
+			} else {
+				option->color = YO_COLOR_NONE;
+			}
 		} else {
 			return false;
 		}
+		return true;
 	}
-	return true;
+	return false;
+}
+
+static bool	is_cutoff(const char* str) {
+	return (str[0] == '-' && str[1] == '-' && !str[2]);
 }
 
 static bool	is_short_option(const char* str) {
@@ -97,22 +110,25 @@ static void	sort_paths(char** paths, size_t len) {
 #endif
 
 // argc, argv を読み取り, 初期設定を行う
-bool	parse_arguments(t_file_batch* batch, int argc, char **argv) {
+bool	parse_arguments(t_master* m, t_file_batch* batch, int argc, char **argv) {
 	batch->opt->tty = isatty(STDOUT_FILENO);
 	batch->opt->color = YO_COLOR_NONE;
 	int i;
 	for (i = 1; i < argc; ++i) {
 		char*	s = argv[i];
-		if (is_short_option(s)) {
+		if (is_cutoff(s)) {
+			i += 1;
+			break;
+		} else if (is_short_option(s)) {
 			for (size_t k = 1; s[k]; ++k) {
 				if (!set_short_option(batch->opt, s[k])) {
-					DEBUGERR("error?: %c", s[k]);
+					print_short_option_error(m, s[k]);
 					return false;
 				}
 			}
 		} else if (is_long_option(s)) {
 			if (!set_long_option(batch->opt, s + 2)) {
-				DEBUGERR("error?: %s", s);
+				print_long_option_error(m, s);
 				return false;
 			}
 		} else {

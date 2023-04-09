@@ -222,5 +222,10 @@ run_file "-laRr test_field"
 run_file "-laRt test_field"
 run_file "-laRf test_field"
 
+run_file "--color"
+run_file "--color=auto"
+run_file "--color=always"
+run_file "--color=none"
+
 run_tty "-l /Applications"
 run_tty "-lG /Applications"

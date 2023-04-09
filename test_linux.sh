@@ -187,5 +187,10 @@ run_file "-l test_field3/*"
 run_file "-R test_field3/*"
 run_file "-lR test_field3/*"
 
+run_file "--color"
+run_file "--color=auto"
+run_file "--color=always"
+run_file "--color=none"
+
 run_file "-g srcs includes"
 run_file "-gl srcs includes"

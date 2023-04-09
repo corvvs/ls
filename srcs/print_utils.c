@@ -126,3 +126,24 @@ void	print_error(t_master* m, const char* operation, const char* path, int statu
 	m->exit_status = MAX(m->exit_status, status);
 #endif
 }
+
+void	print_short_option_error(t_master* m, char c) {
+#ifdef __MACH__
+	yoyo_dprintf(STDERR_FILENO, "%s: invalid option -- %c\n", m->exec_name, c);
+	m->exit_status = 1;
+#else
+	yoyo_dprintf(STDERR_FILENO, "%s: invalid option -- '%c'\n", m->exec_name, c);
+	m->exit_status = MAX(m->exit_status, 2);
+#endif
+}
+
+void	print_long_option_error(t_master* m, const char* option) {
+#ifdef __MACH__
+	yoyo_dprintf(STDERR_FILENO, "%s: unrecognized option `%s'\n", m->exec_name, option);
+	m->exit_status = 1;
+#else
+	yoyo_dprintf(STDERR_FILENO, "%s: unrecognized option '%s'\n", m->exec_name, option);
+	m->exit_status = MAX(m->exit_status, 2);
+#endif
+}
+
