@@ -5,7 +5,9 @@
 
 static int parse_guid(acl_entry_t entry, uid_t* id, int* id_type) {
 	guid_t*	guid_ptr = (guid_t *)acl_get_qualifier(entry);
-	return mbr_uuid_to_id((void*)guid_ptr, id, id_type);
+	int rv = mbr_uuid_to_id((void*)guid_ptr, id, id_type);
+	acl_free(guid_ptr);
+	return rv;
 }
 
 static bool	print_acl_file(acl_permset_t* permset) {
