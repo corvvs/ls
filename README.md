@@ -10,9 +10,11 @@
 
 ```
 $ ls srcs/
-a                       assert.c                c                       ls.c                    out_dirs.c              print_column_macos.c    printf.c
-acl.c                   b                       cache.c                 ls_utils.c              out_files.c             print_long_format.c     time.c
-arguments.c             basic_utils.c           debug.c                 main.c                  print_column_linux.c    print_utils.c           xattr.c
+a                       basic_utils.c           ls_utils.c              print_column_macos.c    xattr.c
+acl.c                   c                       main.c                  print_long_format.c
+arguments.c             cache.c                 out_dirs.c              print_utils.c
+assert.c                debug.c                 out_files.c             printf.c
+b                       ls.c                    print_column_linux.c    time.c
 $ ls -l srcs/
 total 200
 -rw-r--r--  1 corvvs  staff      0  4  5 13:49 a

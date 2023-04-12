@@ -29,7 +29,7 @@ LIBFT		:=	libft.a
 LIBFT_DIR	:=	libft
 CC			:=	gcc
 CCOREFLAGS	=	-Wall -Wextra -Werror -O2 -I$(INCDIR) -I$(LIBFT_DIR)
-CFLAGS		=	$(CCOREFLAGS) -D DEBUG -g# -fsanitize=address -fsanitize=undefined
+CFLAGS		=	$(CCOREFLAGS) -D DEBUG -g -D USE_FORBIDDEN_FUNCTIONS #-fsanitize=address -fsanitize=undefined
 RM			:=	rm -rf
 
 TEST_FIELD	:=	test_field
