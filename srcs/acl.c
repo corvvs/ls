@@ -53,6 +53,7 @@ static bool	print_acl_dir(acl_permset_t* permset) {
 		ACL_LIST_DIRECTORY,
 		ACL_ADD_FILE,
 		ACL_SEARCH,
+		ACL_DELETE,
 		ACL_ADD_SUBDIRECTORY,
 		ACL_DELETE_CHILD,
 		ACL_READ_ATTRIBUTES,
@@ -62,12 +63,12 @@ static bool	print_acl_dir(acl_permset_t* permset) {
 		ACL_READ_SECURITY,
 		ACL_WRITE_SECURITY,
 		ACL_CHANGE_OWNER,
-		ACL_SYNCHRONIZE,
 	};
 	const static char* perm_names[] = {
 		"list",
 		"add_file",
 		"search",
+		"delete",
 		"add_subdirectory",
 		"delete_child",
 		"readattr",
@@ -77,7 +78,6 @@ static bool	print_acl_dir(acl_permset_t* permset) {
 		"readsecurity",
 		"writesecurity",
 		"chown",
-		"synch",
 	};
 	for (size_t i = 0; i < sizeof(perm_types) / sizeof(perm_types[0]); ++i) {
 		if (acl_get_perm_np(*permset, perm_types[i])) {

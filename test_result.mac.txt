@@ -21,34 +21,34 @@
 [32m[ OK ][m tty: -l srcs/*
 [32m[ OK ][m tty: -l ./includes/../srcs/
 [32m[ OK ][m tty: -l ./includes/../srcs/*
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZCDhYRnR	2023-04-09 20:05:17.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZMwC4l5U	2023-04-09 20:05:17.000000000 +0900
-@@ -16,7 +16,7 @@
- -rw-r--r--  1 corvvs  staff  11655  4  9 17:22 ./includes/../srcs/print_long_format.c
- -rw-r--r--  1 corvvs  staff   4244  4  9 20:05 ./includes/../srcs/print_utils.c
- -rw-r--r--  1 corvvs  staff   6873  4  8 01:27 ./includes/../srcs/printf.c
---rw-r--r--  1 corvvs  staff   2076  4  7 14:38 ./includes/../srcs/time.c
-+-rw-r--r--  1 corvvs  staff   2076  4  7 14:38 ./includes/../srcs/time.c
- -rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
- 
- ./includes/../srcs/b:
-[31m[FAIL] tty: -l ./includes/../srcs/*[m
+[32m[ OK ][m tty: -l ./includes/../srcs/*
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft
-[32m[ OK ][m tty: -l libft libft
-[32m[ OK ][m tty: -R libft libft
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZCDhYRnR	2023-04-09 20:05:18.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZMwC4l5U	2023-04-09 20:05:18.000000000 +0900
-@@ -107,7 +107,7 @@
- -rw-r--r--  1 corvvs  staff    528  4  9 20:05 ft_isascii.o
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.lLeBxvIz	2023-04-13 03:00:17.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.e2A5J7mv	2023-04-13 03:00:17.000000000 +0900
+@@ -103,7 +103,7 @@
+ -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isascii.o
  -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
- -rw-r--r--  1 corvvs  staff    544  4  9 20:05 ft_isdigit.o
+ -rw-r--r--  1 corvvs  staff    544  4 13 02:58 ft_isdigit.o
 --rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
 +-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
- -rw-r--r--  1 corvvs  staff    528  4  9 20:05 ft_isprint.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isprint.o
  -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
- -rw-r--r--  1 corvvs  staff    912  4  9 20:05 ft_itoa.o
+ -rw-r--r--  1 corvvs  staff    912  4 13 02:58 ft_itoa.o
+[31m[FAIL] tty: -l libft libft[m
+[32m[ OK ][m tty: -R libft libft
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.lLeBxvIz	2023-04-13 03:00:17.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.e2A5J7mv	2023-04-13 03:00:17.000000000 +0900
+@@ -107,7 +107,7 @@
+ -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isascii.o
+ -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
+ -rw-r--r--  1 corvvs  staff    544  4 13 02:58 ft_isdigit.o
+--rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
++-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
+ -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isprint.o
+ -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
+ -rw-r--r--  1 corvvs  staff    912  4 13 02:58 ft_itoa.o
 [31m[FAIL] tty: -lR libft libft[m
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: .
@@ -130,18 +130,7 @@
 [32m[ OK ][m tty: -lR test_field
 [32m[ OK ][m tty: -laR test_field
 [32m[ OK ][m tty: -laR --col test_field
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZCDhYRnR	2023-04-09 20:05:36.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.ZMwC4l5U	2023-04-09 20:05:37.000000000 +0900
-@@ -14842,7 +14842,7 @@
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IEgKdJy9y50v
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IEhzbeh4nwBh
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IEs2VxsHrjAZ
---rw-r--r--      1 corvvs  staff        0  4  9 18:15 IEuOmtTM9g4q
-+-rw-r--r--      1 corvvs  staff        0  4  9 18:15 IEuOmtTM9g4q
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IF9HnadQfx4j
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IFHJ2q632asV
- -rw-r--r--      1 corvvs  staff        0  4  9 18:15 IFIdZLsldCgk
-[31m[FAIL] tty: -laRu test_field[m
+[32m[ OK ][m tty: -laRu test_field
 [32m[ OK ][m tty: -laRr test_field
 [32m[ OK ][m tty: -laRt test_field
 [32m[ OK ][m tty: -laRf test_field
