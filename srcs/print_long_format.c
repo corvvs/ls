@@ -88,8 +88,12 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IRUSR) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWUSR) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_ISUID)
-			? 's' : (item->st.st_mode & S_IXUSR)
+		// 実行権限 と setuid の状態に応じて変わる
+		const bool is_x = !!(item->st.st_mode & S_IXUSR);
+		const bool is_s = !!(item->st.st_mode & S_ISUID);
+		perm[2] = (is_x && is_s)
+			? 's' : (!is_x && is_s)
+			? 'S' : (!is_x && is_s)
 			? 'x' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
@@ -97,8 +101,12 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 		char perm[4] = "---";
 		perm[0] = (item->st.st_mode & S_IRGRP) ? 'r' : '-';
 		perm[1] = (item->st.st_mode & S_IWGRP) ? 'w' : '-';
-		perm[2] = (item->st.st_mode & S_ISGID)
-			? 's' : (item->st.st_mode & S_IXGRP)
+		// 実行権限 と setgid の状態に応じて変わる
+		const bool is_x = !!(item->st.st_mode & S_IXGRP);
+		const bool is_s = !!(item->st.st_mode & S_ISGID);
+		perm[2] = (is_x && is_s)
+			? 's' : (!is_x && is_s)
+			? 'S' : (!is_x && is_s)
 			? 'x' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
@@ -110,9 +118,9 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 		const bool is_x = !!(item->st.st_mode & S_IXOTH);
 		const bool is_t = !!(item->st.st_mode & S_ISVTX);
 		perm[2] = (is_x && is_t)
-			? 't' : (is_x && !is_t)
-			? 'x' : (!is_x && is_t)
-			? 'T' : '-';
+			? 't' : (!is_x && is_t)
+			? 'T' : (!is_x && is_t)
+			? 'x' : '-';
 		yoyo_dprintf(STDOUT_FILENO, "%s", perm);
 	}
 	if (batch->bopt.some_has_acl_xattr) {
