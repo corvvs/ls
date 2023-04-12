@@ -260,7 +260,6 @@ static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* 
 		}
 		item->nominal_file_type = link_item->actual_file_type;
 		item->link_to = link_item;
-		// DEBUGOUT("link_item = %s", link_item->name);
 	}
 	// DEBUGOUT("path = %s, actual = %d, nominal = %d", path, item->actual_file_type, item->nominal_file_type);
 	return true;
@@ -314,7 +313,7 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	}
 
 	// [後始末]
-	for (size_t i = 0; i < n_ok; ++i) {
+	for (size_t i = 0; i < batch->len; ++i) {
 		if (items[i].link_to) {
 			free(items[i].link_to->name);
 			free(items[i].link_to);
