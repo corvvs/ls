@@ -31,7 +31,18 @@ uint64_t	unixtime_s(const t_stat_time* ts) {
 	return unixtime_us(ts) / 1000000;
 }
 
-void unixtime_to_date_utc(time_t unix_time, struct tm* time_s) {
+#ifdef USE_FORBIDDEN_FUNCTIONS
+
+// unix_time からローカルの時刻情報を取得する
+// localtime を使っていることに注意
+// (使用可能関数の中にタイムゾーン情報を得られるものがないため)
+void unixtime_to_tm(time_t unix_time, struct tm* time_s) {
+	*time_s = *localtime(&unix_time);
+}
+
+#else
+
+void unixtime_to_tm(time_t unix_time, struct tm* time_s) {
 	time_t	ss = unix_time % 60;
 	unix_time = (unix_time - ss) / 60;
 	time_t	mi = unix_time % 60;
@@ -55,17 +66,12 @@ void unixtime_to_date_utc(time_t unix_time, struct tm* time_s) {
 	time_t	mm = (m + 2) % 12 + 1;
 	time_t	dd = d + 1;
 
-	time_s->tm_year = yyyy;
-	time_s->tm_mon = mm;
+	time_s->tm_year = yyyy - 1900;
+	time_s->tm_mon = mm - 1;
 	time_s->tm_mday = dd;
 	time_s->tm_hour = hh;
 	time_s->tm_min = mi;
 	time_s->tm_sec = ss;
 }
 
-// unix_time からローカルの時刻情報を取得する
-// localtime を使っていることに注意
-// (使用可能関数の中にタイムゾーン情報を得られるものがないため)
-void unixtime_to_date_local(time_t unix_time, struct tm* time_s) {
-	*time_s = *localtime(&unix_time);
-}
+#endif

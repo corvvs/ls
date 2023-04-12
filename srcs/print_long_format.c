@@ -246,8 +246,7 @@ static void	print_month(const t_long_format_measure* measure, const t_file_item*
 
 static void	print_datetime(const t_long_format_measure* measure, t_master* m, t_file_item* item) {
 	uint64_t	ut_s = unixtime_s(m->opt->time_access ? &item->st.ATIME : &item->st.MTIME);
-	// unixtime_to_date_utc(ut_s, &item->time_st);
-	unixtime_to_date_local(ut_s, &item->time_st);
+	unixtime_to_tm(ut_s, &item->time_st);
 
 	const bool show_years = m->cache.current_unixtime_s < ut_s || (m->cache.current_unixtime_s - ut_s) > NEAR_TIME_DAYS;
 	print_month(measure, item);
