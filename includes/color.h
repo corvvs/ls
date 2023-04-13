@@ -12,8 +12,11 @@
 #  define YO_COLOR_EXE TX_RED
 #  define YO_COLOR_CHAR_DEVICE TX_BLU BG_YLW
 #  define YO_COLOR_BLOCK_DEVICE TX_BLU BG_CYN
+#  define YO_COLOR_PIPE TX_YLW
+#  define YO_COLOR_SOCK TX_GRN
 #  define YO_COLOR_GOODLINK TX_MAZ
 #  define YO_COLOR_BADLINK TX_MAZ
+#  define YO_COLOR_DOOR YO_COLOR_SOCK
 #  define YO_COLOR_REGULAR ""
 # else
 #  define YO_COLOR_DIR "\e[01;34m"
@@ -24,8 +27,11 @@
 #  define YO_COLOR_EXE "\e[01;32m"
 #  define YO_COLOR_CHAR_DEVICE "\e[40;33;01m"
 #  define YO_COLOR_BLOCK_DEVICE "\e[40;33;01m"
+#  define YO_COLOR_PIPE "\e[40;33m"
+#  define YO_COLOR_SOCK "\e[01;35m"
 #  define YO_COLOR_GOODLINK "\e[01;36m"
 #  define YO_COLOR_BADLINK "\e[40;31;01m"
+#  define YO_COLOR_DOOR YO_COLOR_SOCK
 #  define YO_COLOR_REGULAR ""
 # endif
 
