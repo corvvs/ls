@@ -18,6 +18,18 @@ static t_filetype	determine_file_type(struct stat* st) {
 		return YO_FT_CHAR_DEVICE;
 	} else if (S_ISLNK(st->st_mode)) {
 		return YO_FT_LINK;
+	} else if (S_ISFIFO(st->st_mode)) {
+		return YO_FT_PIPE;
+	} else if (S_ISSOCK(st->st_mode)) {
+		return YO_FT_SOCKET;
+#ifdef S_ISDOOR
+	} else if (S_ISDOOR(st->st_mode)) {
+		return YO_FT_DOOR;
+#endif
+#ifdef S_ISWHT
+	} else if (S_ISWHT(st->st_mode)) {
+		return YO_FT_WHITEOUT;
+#endif
 	} else {
 		return YO_FT_OTHER;
 	}

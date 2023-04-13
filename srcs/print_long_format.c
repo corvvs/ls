@@ -54,6 +54,32 @@ static void	print_total_blocks(t_file_batch* batch, size_t len, t_file_item** it
 	yoyo_dprintf(STDOUT_FILENO, "total %zu\n", total_blocks);
 }
 
+static char	get_filetype_char(const t_file_item* item) {
+	switch (item->actual_file_type) {
+		case YO_FT_REGULAR:
+			return '-';
+		case YO_FT_DIR:
+			return 'd';
+		case YO_FT_CHAR_DEVICE:
+			return 'c';
+		case YO_FT_BLOCK_DEVICE:
+			return 'b';
+		case YO_FT_PIPE:
+			return 'p';
+		case YO_FT_SOCKET:
+			return 's';
+		case YO_FT_DOOR:
+			return 'D';
+		case YO_FT_WHITEOUT:
+			return 'w';
+		case YO_FT_LINK:
+		case YO_FT_BAD_LINK:
+			return 'l';
+		default:
+			return '?';
+	}
+}
+
 static void	print_filemode_part(const t_file_batch* batch, const t_file_item* item) {
 	(void)batch;
 	// DEBUGOUT("[%s] %d %d", item->path, item->actual_file_type, item->nominal_file_type);
@@ -62,26 +88,7 @@ static void	print_filemode_part(const t_file_batch* batch, const t_file_item* it
 	if (is_dot_dir(item)) {
 		c = 'd';
 	} else {
-		switch (item->actual_file_type) {
-			case YO_FT_REGULAR:
-				c = '-';
-				break;
-			case YO_FT_DIR:
-				c = 'd';
-				break;
-			case YO_FT_CHAR_DEVICE:
-				c = 'c';
-				break;
-			case YO_FT_BLOCK_DEVICE:
-				c = 'b';
-				break;
-			case YO_FT_LINK:
-			case YO_FT_BAD_LINK:
-				c = 'l';
-				break;
-			default:
-				c = '?';
-		}
+		c = get_filetype_char(item);
 	}
 	yoyo_dprintf(STDOUT_FILENO, "%c", c);
 	{ // 所有者

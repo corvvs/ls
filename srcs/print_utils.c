@@ -136,6 +136,18 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 		// ブロックデバイス
 		color = YO_COLOR_BLOCK_DEVICE;
 		colored = true;
+	} else if (item->nominal_file_type == YO_FT_PIPE) {
+		// 名前付きパイプ
+		color = YO_COLOR_PIPE;
+		colored = true;
+	} else if (item->nominal_file_type == YO_FT_DOOR) {
+		// 名前付きパイプ
+		color = YO_COLOR_DOOR;
+		colored = true;
+	} else if (item->nominal_file_type == YO_FT_SOCKET) {
+		// ソケット
+		color = YO_COLOR_SOCK;
+		colored = true;
 	} else if (item->nominal_file_type == YO_FT_DIR) {
 		// ディレクトリ
 		if (item->st.st_mode & S_IWOTH) {
