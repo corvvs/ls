@@ -148,11 +148,13 @@ typedef struct	s_file_batch {
 
 typedef struct	s_passwd_cache {
 	bool			cached;
+	bool			exists;
 	struct passwd	passwd;
 }	t_passwd_cache;
 
 typedef struct	s_group_cache {
 	bool			cached;
+	bool			exists;
 	struct group	group;
 }	t_group_cache;
 

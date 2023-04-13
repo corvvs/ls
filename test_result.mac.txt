@@ -21,35 +21,24 @@
 [32m[ OK ][m tty: -l srcs/*
 [32m[ OK ][m tty: -l ./includes/../srcs/
 [32m[ OK ][m tty: -l ./includes/../srcs/*
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.Z7RlQ2HC	2023-04-13 13:58:05.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.U4ij78ZO	2023-04-13 13:58:05.000000000 +0900
-@@ -14,7 +14,7 @@
- -rw-r--r--  1 corvvs  staff   3970  4  7 14:40 ./includes/../srcs/print_column_linux.c
- -rw-r--r--  1 corvvs  staff   2974  4  7 02:58 ./includes/../srcs/print_column_macos.c
- -rw-r--r--  1 corvvs  staff  12674  4 13 13:35 ./includes/../srcs/print_long_format.c
---rw-r--r--  1 corvvs  staff   8639  4 13 13:36 ./includes/../srcs/print_utils.c
-+-rw-r--r--  1 corvvs  staff   8639  4 13 13:36 ./includes/../srcs/print_utils.c
- -rw-r--r--  1 corvvs  staff   6873  4  8 01:27 ./includes/../srcs/printf.c
- -rw-r--r--  1 corvvs  staff    720  4 13 12:42 ./includes/../srcs/time.c
- -rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
-[31m[FAIL] tty: -l ./includes/../srcs/*[m
+[32m[ OK ][m tty: -l ./includes/../srcs/*
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft
-[32m[ OK ][m tty: -l libft libft
-[32m[ OK ][m tty: -R libft libft
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.Z7RlQ2HC	2023-04-13 13:58:06.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.U4ij78ZO	2023-04-13 13:58:06.000000000 +0900
-@@ -107,7 +107,7 @@
- -rw-r--r--  1 corvvs  staff    528  4 13 13:57 ft_isascii.o
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.nMoE9L7I	2023-04-13 14:36:48.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.tkgt95DR	2023-04-13 14:36:48.000000000 +0900
+@@ -103,7 +103,7 @@
+ -rw-r--r--  1 corvvs  staff    528  4 13 14:32 ft_isascii.o
  -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
- -rw-r--r--  1 corvvs  staff    544  4 13 13:57 ft_isdigit.o
+ -rw-r--r--  1 corvvs  staff    544  4 13 14:32 ft_isdigit.o
 --rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
 +-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
- -rw-r--r--  1 corvvs  staff    528  4 13 13:57 ft_isprint.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 14:32 ft_isprint.o
  -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
- -rw-r--r--  1 corvvs  staff    912  4 13 13:58 ft_itoa.o
-[31m[FAIL] tty: -lR libft libft[m
+ -rw-r--r--  1 corvvs  staff    912  4 13 14:32 ft_itoa.o
+[31m[FAIL] tty: -l libft libft[m
+[32m[ OK ][m tty: -R libft libft
+[32m[ OK ][m tty: -lR libft libft
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: .
 [32m[ OK ][m tty: -R .
