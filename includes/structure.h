@@ -90,6 +90,14 @@ typedef struct	s_global_option {
 # include <sys/acl.h>
 #endif
 
+typedef struct s_time_string {
+	char	mon[4];
+	char	mday[3];
+	char	year[5];
+	char	hour[3];
+	char	min[3];
+}	t_time_string;
+
 typedef struct s_file_item {
 	// ファイルのbasename
 	char*	name;
@@ -111,8 +119,8 @@ typedef struct s_file_item {
 	t_filetype	nominal_file_type;
 	// stat構造体
 	struct stat	st;
-	// 時刻構造体
-	struct tm	time_st;
+	// 時刻文字列構造体
+	t_time_string	time_str;
 	// errno (errnoがマクロなのでerrnoという名前は使えない)
 	int			errn;
 
