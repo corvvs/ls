@@ -20,40 +20,62 @@
 [32m[ OK ][m tty: -l srcs/
 [32m[ OK ][m tty: -l srcs/*
 [32m[ OK ][m tty: -l ./includes/../srcs/
-[32m[ OK ][m tty: -l ./includes/../srcs/*
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:21.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:21.000000000 +0900
+@@ -16,7 +16,7 @@
+ -rw-r--r--  1 corvvs  staff  12493  4 13 12:40 ./includes/../srcs/print_long_format.c
+ -rw-r--r--  1 corvvs  staff   4244  4  9 20:05 ./includes/../srcs/print_utils.c
+ -rw-r--r--  1 corvvs  staff   6873  4  8 01:27 ./includes/../srcs/printf.c
+--rw-r--r--  1 corvvs  staff    720  4 13 12:42 ./includes/../srcs/time.c
++-rw-r--r--  1 corvvs  staff    720  4 13 12:42 ./includes/../srcs/time.c
+ -rw-r--r--  1 corvvs  staff   1462  4  7 13:01 ./includes/../srcs/xattr.c
+ 
+ ./includes/../srcs/b:
+[31m[FAIL] tty: -l ./includes/../srcs/*[m
 [32m[ OK ][m tty: -l ./includes/../srcs/*
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.lLeBxvIz	2023-04-13 03:00:17.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.e2A5J7mv	2023-04-13 03:00:17.000000000 +0900
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:21.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:21.000000000 +0900
 @@ -103,7 +103,7 @@
- -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isascii.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 12:44 ft_isascii.o
  -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
- -rw-r--r--  1 corvvs  staff    544  4 13 02:58 ft_isdigit.o
+ -rw-r--r--  1 corvvs  staff    544  4 13 12:44 ft_isdigit.o
 --rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
 +-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
- -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isprint.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 12:44 ft_isprint.o
  -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
- -rw-r--r--  1 corvvs  staff    912  4 13 02:58 ft_itoa.o
+ -rw-r--r--  1 corvvs  staff    912  4 13 12:44 ft_itoa.o
 [31m[FAIL] tty: -l libft libft[m
 [32m[ OK ][m tty: -R libft libft
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.lLeBxvIz	2023-04-13 03:00:17.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.e2A5J7mv	2023-04-13 03:00:17.000000000 +0900
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:21.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:21.000000000 +0900
 @@ -107,7 +107,7 @@
- -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isascii.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 12:44 ft_isascii.o
  -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
- -rw-r--r--  1 corvvs  staff    544  4 13 02:58 ft_isdigit.o
+ -rw-r--r--  1 corvvs  staff    544  4 13 12:44 ft_isdigit.o
 --rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
 +-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
- -rw-r--r--  1 corvvs  staff    528  4 13 02:58 ft_isprint.o
+ -rw-r--r--  1 corvvs  staff    528  4 13 12:44 ft_isprint.o
  -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
- -rw-r--r--  1 corvvs  staff    912  4 13 02:58 ft_itoa.o
+ -rw-r--r--  1 corvvs  staff    912  4 13 12:44 ft_itoa.o
 [31m[FAIL] tty: -lR libft libft[m
 [32m[ OK ][m tty: -R
 [32m[ OK ][m tty: .
 [32m[ OK ][m tty: -R .
-[32m[ OK ][m tty: -G
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:21.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:21.000000000 +0900
+@@ -1,7 +1,7 @@
+                       '"'                   -                     NEW                   a.txt                 h''h                  [35mlink2[39;49m[0m                 [34mminimini[39;49m[0m              sl                    test_mac.sh           xc
+ !                     '#                    --l                   OLD                   a\tb                  h'h'                  [35mlink3[39;49m[0m                 noones                [34msrcs[39;49m[0m                  test_mine_err.txt     {
+ "'                    ''                    -l                    README.md             b.txt                 hello"world"          linux.txt             [34mobjs[39;49m[0m                  [30m[41msstk[39;49m[0m                  test_mine_out.txt     |
+-#                     '\'                   :                     STK                   c.txt                 hello'world'          [35mls[39;49m[0m                    [34mpocket[39;49m[0m                t                     test_real_err.txt     }
++#                     '\'                   :                     [30m[41mSTK[39;49m[0m                   c.txt                 hello'world'          [35mls[39;49m[0m                    [34mpocket[39;49m[0m                t                     test_real_err.txt     }
+ $                     'h'h'                 ;                     [                     [34md[39;49m[0m                     [34mincludes[39;49m[0m              [31mlsls[39;49m[0m                  pocketdir             [34mtest1[39;49m[0m                 test_real_out.txt
+ %                     'hello'               <                     \                     dir.c                 [34miunreadable[39;49m[0m           [35mm[39;49m[0m                     r                     [34mtest_field[39;49m[0m            test_result.linux.txt
+ &                     (                     =                     ]                     [34mdocker[39;49m[0m                kkk                   m.c                   real                  [34mtest_field1[39;49m[0m           test_result.mac.txt
+[31m[FAIL] tty: -G[m
 [32m[ OK ][m tty: -G srcs
 [32m[ OK ][m tty: -G includes
 [32m[ OK ][m tty: -G minimini
@@ -146,9 +168,31 @@
 [32m[ OK ][m file: -laRr test_field
 [32m[ OK ][m file: -laRt test_field
 [32m[ OK ][m file: -laRf test_field
-[32m[ OK ][m file: --color
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:29.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:29.000000000 +0900
+@@ -34,7 +34,7 @@
+ NEW
+ OLD
+ README.md
+-STK
++[30m[41mSTK[39;49m[0m
+ [
+ \
+ ]
+[31m[FAIL] file: --color[m
 [32m[ OK ][m file: --color=auto
-[32m[ OK ][m file: --color=always
+--- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.648Qg9V6	2023-04-13 12:44:29.000000000 +0900
++++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.fRcL9bS4	2023-04-13 12:44:29.000000000 +0900
+@@ -34,7 +34,7 @@
+ NEW
+ OLD
+ README.md
+-STK
++[30m[41mSTK[39;49m[0m
+ [
+ \
+ ]
+[31m[FAIL] file: --color=always[m
 [32m[ OK ][m file: --color=none
 [32m[ OK ][m tty: -l /Applications
 [32m[ OK ][m tty: -lG /Applications

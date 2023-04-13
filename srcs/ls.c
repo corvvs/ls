@@ -90,7 +90,7 @@ static void	sort_entries(t_global_option* option, size_t len, t_file_item** poin
 // item が `.` または `..` かどうか
 bool	is_dot_dir(const t_file_item* item) {
 	return item->nominal_file_type == YO_FT_DIR &&
-		(ft_strncmp(item->name, ".", 2) == 0 || ft_strncmp(item->name, "..", 3) == 0);
+		(item->name[0] == '.' && (!item->name[1] || (item->name[1] == '.' && !item->name[2])));
 }
 
 static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* item, bool trace_link);
