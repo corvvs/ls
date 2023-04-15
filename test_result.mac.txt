@@ -25,18 +25,7 @@
 [32m[ OK ][m tty: Makefile
 [32m[ OK ][m tty: Makefile src/
 [32m[ OK ][m tty: libft libft
---- /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.nMoE9L7I	2023-04-13 14:36:48.000000000 +0900
-+++ /var/folders/5q/_j05yjln22n75gbqwpnjvzz00000gn/T/tmp.tkgt95DR	2023-04-13 14:36:48.000000000 +0900
-@@ -103,7 +103,7 @@
- -rw-r--r--  1 corvvs  staff    528  4 13 14:32 ft_isascii.o
- -rw-r--r--  1 corvvs  staff   1020  3 26 16:37 ft_isdigit.c
- -rw-r--r--  1 corvvs  staff    544  4 13 14:32 ft_isdigit.o
---rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
-+-rw-r--r--  1 corvvs  staff    973  3 26 16:37 ft_isprint.c
- -rw-r--r--  1 corvvs  staff    528  4 13 14:32 ft_isprint.o
- -rw-r--r--  1 corvvs  staff   1402  3 26 16:37 ft_itoa.c
- -rw-r--r--  1 corvvs  staff    912  4 13 14:32 ft_itoa.o
-[31m[FAIL] tty: -l libft libft[m
+[32m[ OK ][m tty: -l libft libft
 [32m[ OK ][m tty: -R libft libft
 [32m[ OK ][m tty: -lR libft libft
 [32m[ OK ][m tty: -R

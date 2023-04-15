@@ -21,12 +21,12 @@ static char*	get_dirent_fullpath(const t_file_item* dir_item, const struct diren
 	tpath += dir_len;
 	ft_memcpy(tpath, "/", 1);
 	tpath += 1;
-	ft_memcpy(tpath, entry->d_name, entry->d_namlen);
-	tpath += entry->d_namlen;
+	const size_t name_len = ft_strlen(entry->d_name);
+	ft_memcpy(tpath, entry->d_name, name_len);
+	tpath += name_len;
 	*tpath = '\0';
 	return path;
 }
-
 
 static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item* dir_item) {
 	// DEBUGINFO("%u %s", batch->depth, dir_item->name);
