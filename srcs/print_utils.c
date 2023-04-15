@@ -227,6 +227,7 @@ void	print_error(t_master* m, const char* operation, const char* path, int statu
 #ifdef __MACH__
 	(void)status;
 	yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, path, strerror(errno));
+	// yoyo_dprintf(STDERR_FILENO, "%s: %s %s: %s\n", m->exec_name, operation, path, strerror(errno));
 	m->exit_status = 1;
 #else
 	yoyo_dprintf(STDERR_FILENO, "%s: %s '%s': %s\n", m->exec_name, operation, path, strerror(errno));

@@ -73,14 +73,15 @@ uint64_t	unixtime_sort(const t_stat_time* ts);
 uint64_t	unixtime_s(const t_stat_time* ts);
 
 // basic_utils.c
-char*		yo_basename(char* path);
+char*		yo_basename(const char* path);
+char*		yo_basename_headed(const char* path);
 char*		yo_replace_basename(const char* path, const char* basename);
 const char*	yo_starts_with(const char* str, const char* prefix);
 size_t		yo_strlen_to(const char* str, int c);
 
 // ls_utils.c
 bool	show_in_file_section(const t_file_batch* batch, const t_file_item* item);
-bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item);
+bool	should_expand_as_dir(const t_file_batch* batch, const t_file_item* item);
 
 // xattr.c
 void	print_xattr_lines(t_master* m, const t_long_format_measure* measure, const t_file_item* item);
