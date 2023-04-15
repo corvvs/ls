@@ -113,7 +113,6 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	char	name_buf[PATH_MAX + 1];
 	errno = 0;
 	ssize_t actual_len = readlink(path, name_buf, PATH_MAX);
-	// DEBUGOUT("path = %s, link_len = %zu, actual_len = %zd, errno = %d, %s", path, link_len, actual_len, errno, strerror(errno));
 	if (actual_len < 0) {
 		return false;
 	}
@@ -123,15 +122,11 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 		return false;
 	}
 	ft_memcpy(link_to, name_buf, actual_len + 1);
-	// DEBUGOUT("link_len: %zu, actual_len: %zd", link_len, actual_len);
 	link_to[actual_len] = '\0';
-	// DEBUGOUT("link_to: %p", link_to);
-	// DEBUGOUT("link_to: %s", link_to);
 	// [リンク先のパスを取得する]
 	errno = 0;
 	char*	full_link_to = yo_replace_basename(path, link_to);
 	YOYO_ASSERT(full_link_to != NULL);
-	// DEBUGINFO("%s + %s -> %s", path, link_to, full_link_to);
 
 	// [リンク先の情報を取得する]
 	if (set_item(m, batch, full_link_to, link_item, false)) {
@@ -142,7 +137,6 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	}
 	link_item->name = link_to;
 	free(full_link_to);
-	// DEBUGINFO("%s -> %s, a %d, n %d", path, link_to, link_item->actual_file_type, link_item->nominal_file_type);
 	return true;
 }
 
@@ -233,7 +227,6 @@ static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* 
 	errno = 0;
 	int rv = trace_link ? lstat(path, &item->st) : stat(path, &item->st);
 	if (rv) {
-		// DEBUGERR("errno = %d, %s", errno, strerror(errno));
 		return false;
 	}
 
@@ -290,15 +283,18 @@ void	list_files(t_master* m, t_file_batch* batch) {
 	for (size_t i = 0; i < batch->len; ++i) {
 		char*			path = batch->path[i];
 		t_file_item*	item = &items[i];
-
 		if (!set_item(m, batch, path, item, true)) {
-			print_error(m, "cannot access", path, batch->is_root ? 2 : 1);
+			if (batch->is_root) {
+				print_error(m, "cannot access", path, 2);
+			} else {
+				print_error(m, "cannot access", yo_basename_headed(path), 1);
+			}
 			continue;
 		}
 		pointers[n_ok] = item;
 		n_ok += 1;
 		// `.`, `..` をディレクトリとして扱うのは, ルートの時だけ.
-		if (expand_as_dir(batch, item)) {
+		if (should_expand_as_dir(batch, item)) {
 			n_dirs += 1;
 		}
 		// DEBUGOUT("%u, %s, %zu, %zu", batch->depth, item->name, n_ok, n_dirs);

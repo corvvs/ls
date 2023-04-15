@@ -27,23 +27,21 @@ static int	flush_buffer(t_yoyo_printf_buffer* buffer) {
 	if (written < 0) {
 		buffer->printed = -1;
 		return -1;
-	} else {
-		buffer->printed += written;
 	}
 	return 0;
 }
 
 static void	write_into_buffer(t_yoyo_printf_buffer* buffer, const void* data, size_t size) {
 	const char*	uc = data;
-	for (size_t i = 0; i < size;) {
-		if (YOYO_PRINT_BUFSIZE <= buffer->size) {
+	for (size_t i = 0; i < size; ++i) {
+		buffer->buffer[buffer->size] = uc[i];
+		++buffer->size;
+		++buffer->printed;
+		if (YOYO_PRINT_BUFSIZE <= buffer->size || uc[i] == '\n') {
 			if (flush_buffer(buffer)) {
 				return;
 			}
 		}
-		buffer->buffer[buffer->size] = uc[i];
-		++i;
-		++buffer->size;
 	}
 }
 
@@ -224,28 +222,32 @@ static ssize_t	exec_conversion(t_yoyo_printf_buffer* buffer, const char *format,
 	return conversion.size;
 }
 
+#define FD_MAX 10
+
 // dprintf のような関数
 int	yoyo_dprintf(int fd, const char* format, ...) {
 	va_list	args;
-	t_yoyo_printf_buffer	buffer = {
-		.fd = fd,
-		.printed = 0,
-		.size = 0,
-	};
+
+	static t_yoyo_printf_buffer	buffers[FD_MAX];
+
+	if (fd < 0 || FD_MAX <= fd) { return -1; }
+
+	t_yoyo_printf_buffer	*buffer = &buffers[fd];
+	buffer->fd = fd;
+	buffer->printed = 0;
 
 	size_t i = 0;
 	va_start(args, format);
-	while (format[i] && buffer.printed >= 0) {
+	while (format[i] && buffer->printed >= 0) {
 		if (format[i] != '%') {
-			write_into_buffer(&buffer, &format[i], 1);
+			write_into_buffer(buffer, &format[i], 1);
 			++i;
 		} else {
 			++i;
-			i += exec_conversion(&buffer, &format[i], &args);
+			i += exec_conversion(buffer, &format[i], &args);
 		}
 	}
 	va_end(args);
 
-	flush_buffer(&buffer);
-	return buffer.printed;
+	return buffer->printed;
 }

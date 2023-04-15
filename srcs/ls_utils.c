@@ -44,7 +44,7 @@ bool	show_in_file_section(const t_file_batch* batch, const t_file_item* item) {
 }
 
 // この item をディレクトリとして展開すべきかどうか
-bool	expand_as_dir(const t_file_batch* batch, const t_file_item* item) {
+bool	should_expand_as_dir(const t_file_batch* batch, const t_file_item* item) {
 	if (batch->opt->show_everything_as_file) {
 		// `-d` オプションがある場合は展開しない
 		return false;

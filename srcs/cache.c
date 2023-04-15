@@ -22,9 +22,6 @@ struct passwd*	retrieve_user(t_cache* cache, uid_t uid) {
 		} else {
 			char*	name = ft_strdup(ud->pw_name);
 			YOYO_ASSERT(name != NULL);
-			if (table[index].cached) {
-				free(table[index].passwd.pw_name);
-			}
 			table[index].cached = true;
 			table[index].exists = true;
 			table[index].passwd = *ud;

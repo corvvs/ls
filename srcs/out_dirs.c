@@ -10,6 +10,23 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 	return extended;
 }
 
+// ディレクトリパス dir_item->path とファイル名 entry->d_name を結合する.
+// ただし dir_item->path が "/" の場合は "/" を省略する.
+static char*	get_dirent_fullpath(const t_file_item* dir_item, const struct dirent* entry) {
+	size_t	dir_len = (dir_item->path_len == 1 && dir_item->path[0] == '/') ? 0 : dir_item->path_len;
+	char* path = malloc(sizeof(char) * (dir_len + 1 + ft_strlen(entry->d_name) + 1));
+	YOYO_ASSERT(path != NULL);
+	char* tpath = path;
+	ft_memcpy(tpath, dir_item->path, dir_len);
+	tpath += dir_len;
+	ft_memcpy(tpath, "/", 1);
+	tpath += 1;
+	const size_t name_len = ft_strlen(entry->d_name);
+	ft_memcpy(tpath, entry->d_name, name_len);
+	tpath += name_len;
+	*tpath = '\0';
+	return path;
+}
 
 static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item* dir_item) {
 	// DEBUGINFO("%u %s", batch->depth, dir_item->name);
@@ -50,9 +67,6 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 				print_error(m, "reading directory", dir_path, 1);
 #else
 				print_error(m, "reading directory", dir_path, batch->is_root ? 2 : 1);
-				// if (batch->opt->long_format) {
-				// 	yoyo_dprintf(STDOUT_FILENO, "total 0b\n");
-				// }
 #endif
 			}
 			break;
@@ -61,12 +75,9 @@ static void	output_dir(t_master* m, const t_file_batch* batch, const t_file_item
 		if (!m->opt->show_dot_files && entry->d_name[0] == '.') {
 			continue;
 		}
-		char* path = malloc(sizeof(char) * (dir_item->path_len + 1 + ft_strlen(entry->d_name) + 1));
-		YOYO_ASSERT(path != NULL);
-		char* tpath = path;
-		tpath += ft_strlcpy(tpath, dir_item->path, -1);
-		tpath += ft_strlcpy(tpath, "/", -1);
-		tpath += ft_strlcpy(tpath, entry->d_name, -1);
+
+		char* path = get_dirent_fullpath(dir_item, entry);
+
 		if (len <= i) {
 			size_t extended_len = len * 2;
 			names = extend_buffer(names, len * sizeof(char*), extended_len * sizeof(char*));
@@ -103,7 +114,7 @@ void	output_dirs(t_master* m, t_file_batch* batch, size_t total_len, size_t dir_
 #endif
 	for (size_t i = 0; i < total_len; ++i) {
 		t_file_item*	item = items[i];
-		if (!expand_as_dir(batch, item)) {
+		if (!should_expand_as_dir(batch, item)) {
 			// DEBUGOUT("!! %s", item->path);
 			continue;
 		}

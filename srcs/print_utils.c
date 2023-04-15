@@ -214,11 +214,13 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 #define SPACES "                                                                                                   "
 
 void	print_spaces(uint64_t n) {
+	static char spaces[] = SPACES;
 	while (n > 0) {
 		uint64_t	m = n > 80 ? 80 : n;
 		n -= m;
-		int rv = write(STDOUT_FILENO, SPACES, m);
-		(void)rv;
+		spaces[m] = 0;
+		yoyo_dprintf(STDOUT_FILENO, spaces);
+		spaces[m] = ' ';
 	}
 }
 
@@ -227,6 +229,7 @@ void	print_error(t_master* m, const char* operation, const char* path, int statu
 #ifdef __MACH__
 	(void)status;
 	yoyo_dprintf(STDERR_FILENO, "%s: %s: %s\n", m->exec_name, path, strerror(errno));
+	// yoyo_dprintf(STDERR_FILENO, "%s: %s %s: %s\n", m->exec_name, operation, path, strerror(errno));
 	m->exit_status = 1;
 #else
 	yoyo_dprintf(STDERR_FILENO, "%s: %s '%s': %s\n", m->exec_name, operation, path, strerror(errno));

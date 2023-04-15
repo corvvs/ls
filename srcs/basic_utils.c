@@ -1,12 +1,26 @@
 #include "ls.h"
 
 // path の basename 部分先頭のポインタを返す
-char*	yo_basename(char* path) {
+char*	yo_basename(const char* path) {
 	char*	last_slash = ft_strrchr(path, '/');
 	if (last_slash == NULL) {
-		return path;
+		return (char *)path;
 	} else {
-		return last_slash + 1;
+		return (char *)(last_slash + 1);
+	}
+}
+
+// path の basename 部分先頭のポインタを返す
+// ただし, path が "/" の場合は "/" を返す.
+// TODO: また path が "/" で終わる場合は, その "/" を含めた部分を返す.
+char*	yo_basename_headed(const char* path) {
+	char*	last_slash = ft_strrchr(path, '/');
+	if (last_slash == NULL) {
+		return (char *)path;
+	} else if (last_slash == path) {
+		return (char *)path;
+	} else {
+		return (char *)(last_slash + 1);
 	}
 }
 
