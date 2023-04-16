@@ -2,23 +2,20 @@
 
 static bool	set_short_option(t_global_option* option, char c) {
 	switch (c) {
-		case 'l':
-			option->long_format = true;
+		case 'G':
+			option->color = YO_COLOR_AUTO;
 			break;
 		case 'R':
 			option->recursive = true;
 			break;
-		case 't':
-			option->sort_by_time = true;
-			break;
-		case 'r':
-			option->sort_reverse = true;
-			break;
 		case 'a':
 			option->show_dot_files = true;
 			break;
-		case 'u':
-			option->time_access = true;
+		case 'd':
+			option->show_everything_as_file = true;
+			break;
+		case 'e':
+			option->show_acl = true;
 			break;
 		case 'f':
 			option->sort_in_fs = true;
@@ -28,17 +25,20 @@ static bool	set_short_option(t_global_option* option, char c) {
 			option->show_group_only = true;
 			option->long_format = true;
 			break;
+		case 'l':
+			option->long_format = true;
+			break;
+		case 'r':
+			option->sort_reverse = true;
+			break;
+		case 't':
+			option->sort_by_time = true;
+			break;
+		case 'u':
+			option->time_access = true;
+			break;
 		case '@':
 			option->show_xattr = true;
-			break;
-		case 'e':
-			option->show_acl = true;
-			break;
-		case 'G':
-			option->color = YO_COLOR_AUTO;
-			break;
-		case 'd':
-			option->show_everything_as_file = true;
 			break;
 		default:
 			return false;
