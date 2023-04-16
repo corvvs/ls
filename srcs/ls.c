@@ -121,7 +121,7 @@ static bool	trace_simlink(t_master* m, t_file_batch* batch, t_file_item* link_it
 	if (link_to == NULL) {
 		return false;
 	}
-	ft_memcpy(link_to, name_buf, actual_len + 1);
+	ft_memcpy(link_to, name_buf, actual_len);
 	link_to[actual_len] = '\0';
 	// [リンク先のパスを取得する]
 	errno = 0;
@@ -154,11 +154,17 @@ static size_t	strquotedlen(const char* s) {
 #ifdef __MACH__
 #else
 
-static bool	should_quote_char(char c) {
+static const unsigned char	quote_char_field[] = (unsigned char[]){
+	255, 255, 255, 255, 223, 7, 0, 248,
+	0, 0, 0, 88, 1, 0, 0, 248,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255
+};
+static bool	should_quote_char(unsigned char c) {
 	// 以下のいずれかを満たすならクオートすべき
 	// - 非表示文字である
 	// - 次のいずれかの文字である: (sp) ! * \ " ' ? $ # ; < > = & ( ) [ { } ` ^ | ~
-	return !ft_isprint(c) || !!ft_strchr(" !*\\\"'?$#;<>=&()[{}`^|~", c);
+	return !!(quote_char_field[c / CHAR_BIT] & (1 << (c % CHAR_BIT)));
 }
 #endif
 
@@ -199,15 +205,15 @@ t_quote_type	determine_quote_type(const t_file_batch* batch, const char* name) {
 #endif
 }
 
-static size_t	determine_name_len(const char* name, t_quote_type qt) {
+static size_t	determine_name_len(const t_file_item* item, t_quote_type qt) {
 	switch (qt) {
 		case YO_QT_NONE:
-			return ft_strlen(name);
+			return ft_strlen(item->name);
 		case YO_QT_DQ:
-			return ft_strlen(name) + 2;
+			return ft_strlen(item->name) + 2;
 		case YO_QT_SQ:
 		default:
-			return strquotedlen(name);
+			return strquotedlen(item->name);
 	}
 }
 
@@ -218,7 +224,7 @@ static void	determine_file_name(const t_file_batch* batch, t_file_item* item, ch
 	item->name = name;
 	item->path = path;
 	item->path_len = ft_strlen(path);
-	item->display_len = determine_name_len(name, item->quote_type);
+	item->display_len = determine_name_len(item, item->quote_type);
 }
 
 static bool	set_item(t_master* m, t_file_batch* batch, char* path, t_file_item* item, bool trace_link) {

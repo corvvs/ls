@@ -62,10 +62,11 @@ void	print_long_option_error(t_master* m, const char* option);
 
 // printf.c
 int		yoyo_dprintf(int fd, const char* format, ...);
+int		yoyo_print_direct(int fd, const void* data, size_t size);
 
 // cache.c
-struct passwd*	retrieve_user(t_cache* cache, uid_t uid);
-struct group*	retrieve_group(t_cache* cache, gid_t gid);
+t_passwd_cache*	retrieve_user(t_cache* cache, uid_t uid);
+t_group_cache*	retrieve_group(t_cache* cache, gid_t gid);
 
 // time.c
 uint64_t	unixtime_us(const t_stat_time* ts);

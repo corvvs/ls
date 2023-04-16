@@ -6,7 +6,7 @@
 /*   By: corvvs <corvvs@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 18:59:26 by corvvs            #+#    #+#             */
-/*   Updated: 2023/02/19 23:14:21 by corvvs           ###   ########.fr       */
+/*   Updated: 2023/04/16 00:34:55 by corvvs           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	*mini_strlen(const unsigned char *dst, size_t n)
 	return ((void *)dst);
 }
 
-#ifdef GO_FAST
+#if GO_FAST
 
 # define HIMAGIC 0x8080808080808080ull
 # define LOMAGIC 0x0101010101010101ull

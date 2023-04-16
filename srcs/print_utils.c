@@ -214,13 +214,10 @@ int	print_filename(const t_file_batch* batch, const t_file_item* item) {
 #define SPACES "                                                                                                   "
 
 void	print_spaces(uint64_t n) {
-	static char spaces[] = SPACES;
 	while (n > 0) {
 		uint64_t	m = n > 80 ? 80 : n;
 		n -= m;
-		spaces[m] = 0;
-		yoyo_dprintf(STDOUT_FILENO, spaces);
-		spaces[m] = ' ';
+		yoyo_print_direct(STDOUT_FILENO, SPACES, m);
 	}
 }
 

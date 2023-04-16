@@ -122,11 +122,11 @@ static void	process_acl_entry(t_master* m, const t_file_item* item, acl_entry_t 
 		int		id_type;
 		parse_guid(entry, &id, &id_type);
 		if (id_type == ID_TYPE_UID) {
-			struct passwd* pw = retrieve_user(&m->cache, id);
-			yoyo_dprintf(STDOUT_FILENO, "user:%s ", pw->pw_name);
+			const t_passwd_cache* pw = retrieve_user(&m->cache, id);
+			yoyo_dprintf(STDOUT_FILENO, "user:%s ", pw->name);
 		} else if (id_type == ID_TYPE_GID) {
-			struct group* gr = retrieve_group(&m->cache, id);
-			yoyo_dprintf(STDOUT_FILENO, "group:%s ", gr->gr_name);
+			const t_group_cache* gr = retrieve_group(&m->cache, id);
+			yoyo_dprintf(STDOUT_FILENO, "group:%s ", gr->name);
 		} else {
 			return;
 		}
