@@ -150,12 +150,16 @@ typedef struct	s_passwd_cache {
 	bool			cached;
 	bool			exists;
 	struct passwd	passwd;
+	char*			name;
+	size_t			name_len;
 }	t_passwd_cache;
 
 typedef struct	s_group_cache {
 	bool			cached;
 	bool			exists;
 	struct group	group;
+	char*			name;
+	size_t			name_len;
 }	t_group_cache;
 
 #define N_CACHE	128

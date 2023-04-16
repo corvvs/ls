@@ -1,6 +1,8 @@
 #include "printf_internal.h"
 
-static char*	yoyo_strchr(char* s, char c) {
+#define STATIC 
+
+STATIC char*	yoyo_strchr(char* s, char c) {
 	while (*s) {
 		if (*s == c) {
 			return s;
@@ -10,7 +12,7 @@ static char*	yoyo_strchr(char* s, char c) {
 	return *s == c ? s : NULL;
 }
 
-static size_t	yoyo_strlen(const char* s) {
+STATIC size_t	yoyo_strlen(const char* s) {
 	size_t	n = 0;
 	while (s[n]) {
 		++n;
@@ -19,7 +21,7 @@ static size_t	yoyo_strlen(const char* s) {
 }
 
 // buffer の中身が残っている場合は出力する
-static int	flush_buffer(t_yoyo_printf_buffer* buffer) {
+STATIC int	flush_buffer(t_yoyo_printf_buffer* buffer) {
 	if (buffer->printed < 0) { return -1; }
 	if (buffer->size == 0) { return 0; }
 	ssize_t written = write(buffer->fd, buffer->buffer, buffer->size);
@@ -31,7 +33,7 @@ static int	flush_buffer(t_yoyo_printf_buffer* buffer) {
 	return 0;
 }
 
-static void	write_into_buffer(t_yoyo_printf_buffer* buffer, const void* data, size_t size) {
+STATIC void	write_into_buffer(t_yoyo_printf_buffer* buffer, const void* data, size_t size) {
 	const char*	uc = data;
 	for (size_t i = 0; i < size; ++i) {
 		buffer->buffer[buffer->size] = uc[i];
@@ -45,7 +47,7 @@ static void	write_into_buffer(t_yoyo_printf_buffer* buffer, const void* data, si
 	}
 }
 
-static bool patch_length_modifier(t_yoyo_conversion* conversion, char c) {
+STATIC bool patch_length_modifier(t_yoyo_conversion* conversion, char c) {
 	switch (c) {
 		case 'l':
 			if (conversion->length_modifier == YOYO_LM_DEFAULT) {
@@ -69,13 +71,13 @@ static bool patch_length_modifier(t_yoyo_conversion* conversion, char c) {
 	return false;
 }
 
-static bool	resolve_c(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, char c) {
+STATIC bool	resolve_c(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, char c) {
 	(void)conversion;
 	write_into_buffer(buffer, &c, 1);
 	return true;
 }
 
-static bool	resolve_s(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, const char* s) {
+STATIC bool	resolve_s(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, const char* s) {
 	(void)conversion;
 	if (s == NULL) {
 		s = "(null)";
@@ -84,7 +86,7 @@ static bool	resolve_s(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversio
 	return true;
 }
 
-static bool	resolve_d(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, long long d) {
+STATIC bool	resolve_d(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, long long d) {
 	if (d / 10)
 		resolve_d(buffer, conversion, d / 10);
 	else
@@ -93,40 +95,45 @@ static bool	resolve_d(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversio
 	return true;
 }
 
-static bool	resolve_u(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
-	if (d / 10)
-		resolve_u(buffer, conversion, d / 10);
-	write_into_buffer(buffer, &("0123456789"[d % 10]), 1);
+STATIC bool	resolve_u(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
+	(void)conversion;
+	char	buf[101];
+	size_t	n = 101;
+	do {
+		buf[--n] = "0123456789"[d % 10];
+		d /= 10;
+	}	while (d);
+	write_into_buffer(buffer, buf + n, 101 - n);
 	return true;
 }
 
 
-static bool	resolve_x(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
+STATIC bool	resolve_x(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
 	if (d / 16)
 		resolve_x(buffer, conversion, d / 16);
 	write_into_buffer(buffer, &("0123456789abcdef"[d % 16]), 1);
 	return true;
 }
 
-static bool	resolve_p(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
+STATIC bool	resolve_p(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
 	resolve_s(buffer, conversion, "0x");
 	resolve_x(buffer, conversion, d);
 	return true;
 }
 
-static bool	resolve_b_val(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
+STATIC bool	resolve_b_val(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
 	if (d / 2)
 		resolve_b_val(buffer, conversion, d / 2);
 	write_into_buffer(buffer, &("01"[d % 2]), 1);
 	return true;
 }
 
-static bool	resolve_b(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
+STATIC bool	resolve_b(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, unsigned long long d) {
 	resolve_s(buffer, conversion, "0b");
 	return resolve_b_val(buffer, conversion, d);
 }
 
-static bool	resolve_conversion(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, va_list* args) {
+STATIC bool	resolve_conversion(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* conversion, va_list* args) {
 	switch (conversion->conversion_type) {
 		case '%':
 			return resolve_c(buffer, conversion, '%');
@@ -191,7 +198,7 @@ static bool	resolve_conversion(t_yoyo_printf_buffer* buffer, t_yoyo_conversion* 
 	return false;
 }
 
-static ssize_t	exec_conversion(t_yoyo_printf_buffer* buffer, const char *format, va_list* args) {
+STATIC ssize_t	exec_conversion(t_yoyo_printf_buffer* buffer, const char *format, va_list* args) {
 	t_yoyo_conversion	conversion = {
 		.body = format,
 		.size = 0,
@@ -222,15 +229,16 @@ static ssize_t	exec_conversion(t_yoyo_printf_buffer* buffer, const char *format,
 	return conversion.size;
 }
 
-#define FD_MAX 10
+// 汎用性いらないから 2 でええやろ
+#define FD_MAX 2
+
+static t_yoyo_printf_buffer	buffers[FD_MAX + 1];
 
 // dprintf のような関数
 int	yoyo_dprintf(int fd, const char* format, ...) {
 	va_list	args;
 
-	static t_yoyo_printf_buffer	buffers[FD_MAX];
-
-	if (fd < 0 || FD_MAX <= fd) { return -1; }
+	if (fd < 0 || FD_MAX < fd) { return -1; }
 
 	t_yoyo_printf_buffer	*buffer = &buffers[fd];
 	buffer->fd = fd;
@@ -249,5 +257,16 @@ int	yoyo_dprintf(int fd, const char* format, ...) {
 	}
 	va_end(args);
 
+	return buffer->printed;
+}
+
+int	yoyo_print_direct(int fd, const void* data, size_t size) {
+	if (fd < 0 || FD_MAX < fd) { return -1; }
+
+	t_yoyo_printf_buffer	*buffer = &buffers[fd];
+	buffer->fd = fd;
+	buffer->printed = 0;
+
+	write_into_buffer(buffer, data, size);
 	return buffer->printed;
 }

@@ -158,44 +158,22 @@ static void	print_link_number_part(const t_long_format_measure* measure, const t
 	yoyo_dprintf(STDOUT_FILENO, "%zu", item->st.st_nlink);
 }
 
-// 所有者名
-static char*	get_owner_name(t_cache* cache, const t_file_item* item) {
-	struct passwd*	ud = retrieve_user(cache, item->st.st_uid);
-	if (ud == NULL) {
-		return NULL;
-	}
-	return ud->pw_name;
-}
-
-// 所有者名
+// グループ名
 static void	print_owner_name(const t_long_format_measure* measure, t_cache* cache, const t_file_item* item) {
-	const char*	name = get_owner_name(cache, item);
-	if (name == NULL) {
-		return;
-	}
-	const uint64_t w = ft_strlen(name);
+	const t_passwd_cache*	user = retrieve_user(cache, item->st.st_uid);
+	YOYO_ASSERT(user != NULL);
+	const uint64_t w = user->name_len;
 	print_spaces(1);
-	yoyo_dprintf(STDOUT_FILENO, "%s", name);
+	yoyo_dprintf(STDOUT_FILENO, "%s", user->name);
 	print_spaces(measure->owner_width - w);
 }
 
 // グループ名
-static char*	get_group_name(t_cache* cache, const t_file_item* item) {
-	struct group*	gd = retrieve_group(cache, item->st.st_gid);
-	if (gd == NULL) {
-		return NULL;
-	}
-	return gd->gr_name;
-}
-
-// グループ名
 static void	print_group_name(const t_long_format_measure* measure, t_cache* cache, const t_file_item* item) {
-	const char*	name = get_group_name(cache, item);
-	if (name == NULL) {
-		return;
-	}
-	const uint64_t w = ft_strlen(name);
-	yoyo_dprintf(STDOUT_FILENO, "%s", name);
+	t_group_cache*	group = retrieve_group(cache, item->st.st_gid);
+	YOYO_ASSERT(group != NULL);
+	const uint64_t w = group->name_len;
+	yoyo_dprintf(STDOUT_FILENO, "%s", group->name);
 	print_spaces(measure->group_width - w);
 }
 
@@ -362,26 +340,24 @@ void	print_long_format(t_master* m, t_file_batch* batch, size_t len, t_file_item
 	for (size_t i = 0; i < len_mesure; ++i) {
 		const t_file_item*	item  = items_measure[i];
 		{
-			uint64_t	link_number = get_link_number(item);
+			const uint64_t	link_number = get_link_number(item);
 			measure.link_number_width = MAX(measure.link_number_width, number_width(link_number));
 		}
 		if (!batch->opt->show_group_only) {
-			char*		name = get_owner_name(&m->cache, item);
-			if (name != NULL) {
-				measure.owner_width = MAX(measure.owner_width, ft_strlen(name));
-			}
+			const t_passwd_cache*	user = retrieve_user(&m->cache, item->st.st_uid);
+			YOYO_ASSERT(user != NULL);
+			measure.owner_width = MAX(measure.owner_width, user->name_len);
 		}
 		{
-			char*		name = get_group_name(&m->cache, item);
-			if (name != NULL) {
-				measure.group_width = MAX(measure.group_width, ft_strlen(name));
-			}
+			const t_group_cache*	group = retrieve_group(&m->cache, item->st.st_gid);
+			YOYO_ASSERT(group != NULL);
+			measure.group_width = MAX(measure.group_width, group->name_len);
 		}
 		// デバイスID or ファイルサイズ
 		if (item->actual_file_type == YO_FT_CHAR_DEVICE || item->actual_file_type == YO_FT_BLOCK_DEVICE) {
 			measure.size_width = MAX(measure.size_width, get_device_id_width(item));
 		} else {
-			uint64_t	size = get_file_size(item);
+			const uint64_t	size = get_file_size(item);
 			measure.size_width = MAX(measure.size_width, number_width(size));
 		}
 	}

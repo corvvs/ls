@@ -13,15 +13,15 @@ static void*	extend_buffer(void* buffer, size_t current_len, size_t extended_len
 // ディレクトリパス dir_item->path とファイル名 entry->d_name を結合する.
 // ただし dir_item->path が "/" の場合は "/" を省略する.
 static char*	get_dirent_fullpath(const t_file_item* dir_item, const struct dirent* entry) {
-	size_t	dir_len = (dir_item->path_len == 1 && dir_item->path[0] == '/') ? 0 : dir_item->path_len;
-	char* path = malloc(sizeof(char) * (dir_len + 1 + ft_strlen(entry->d_name) + 1));
+	const size_t	dir_len = (dir_item->path_len == 1 && dir_item->path[0] == '/') ? 0 : dir_item->path_len;
+	const size_t	name_len = ft_strlen(entry->d_name);
+	char* path = malloc(sizeof(char) * (dir_len + 1 + name_len + 1));
 	YOYO_ASSERT(path != NULL);
 	char* tpath = path;
 	ft_memcpy(tpath, dir_item->path, dir_len);
 	tpath += dir_len;
 	ft_memcpy(tpath, "/", 1);
 	tpath += 1;
-	const size_t name_len = ft_strlen(entry->d_name);
 	ft_memcpy(tpath, entry->d_name, name_len);
 	tpath += name_len;
 	*tpath = '\0';
